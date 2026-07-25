@@ -4,28 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mã Hoá và Giải Mã AES-256 - Bảo Mật Tuyệt Đối - D.T.Chánh</title>
+    <title>Mã Hoá & Giải Mã AES-256 (Có Nén) - D.T.Chánh</title>
     <style>
         :root {
-            --bg-color: #0b071e;
-            --card-bg: rgba(20, 16, 43, 0.6);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent-primary: #8b5cf6;
-            --accent-secondary: #d946ef;
-            --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #d946ef 100%);
-            --gradient-btn: linear-gradient(135deg, #7c3aed 0%, #c026d3 100%);
-            --gradient-btn-hover: linear-gradient(135deg, #6d28d9 0%, #a21caf 100%);
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --success: #10b981;
-            --success-bg: rgba(16, 185, 129, 0.1);
-            --error: #ef4444;
-            --error-bg: rgba(239, 68, 68, 0.1);
-            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --bg-color: #0d1117;
+            --card-bg: rgba(22, 27, 34, 0.85);
+            --card-border: #30363d;
+            --primary-color: #5000a0;
+            --btn-encrypt-bg: #0000a0;
+            --btn-encrypt-hover: #505050;
+            --btn-decrypt-bg: #3c00a0;
+            --btn-decrypt-hover: #505050;
+            --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            --gradient-btn: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
+            --text-color: #f0f6fc;
+            --text-muted: #8b949e;
+            --success-color: #238636;
+            --success-bg: rgba(35, 134, 54, 0.15);
+            --error-color: #da3633;
+            --error-bg: rgba(218, 54, 51, 0.15);
+            --info-bg: rgba(56, 139, 253, 0.15);
+            --info-border: rgba(56, 139, 253, 0.4);
+            --info-text: #58a6ff;
         }
 
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -33,81 +36,76 @@
 
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 1.1rem;
+            font-weight: normal;
+            color: var(--text-color);
             background-color: var(--bg-color);
             background-image:
-                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(217, 70, 239, 0.12) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
             background-attachment: fixed;
-            color: var(--text-main);
-            min-height: 100vh;
-            line-height: 1.6;
-            padding: 2rem 1rem 5rem 1rem;
+            padding: 0.5rem;
+            padding-bottom: 5rem;
+            line-height: 1.5;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        .container {
+        .main-container {
             max-width: 48rem;
             width: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            margin-top: 1rem;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .logo-area {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 4.5rem;
-            height: 4.5rem;
-            border-radius: 1.2rem;
-            background: var(--gradient-accent);
-            margin-bottom: 1.2rem;
-            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.3);
-            animation: pulse 3s infinite alternate;
-        }
-
-        .logo-area svg {
-            width: 2.5rem;
-            height: 2.5rem;
-            fill: #ffffff;
+            background-color: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-top: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         }
 
         h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(to right, #ffffff, #d946ef);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 0.5rem;
+            margin-bottom: 0.25rem;
+            color: #ffffff;
         }
 
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            font-weight: 300;
+        .author {
+            font-size: 1.2rem;
+            font-style: normal;
+            text-align: right;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-weight: normal;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
         }
 
         /* Tabs System */
         .tabs {
             display: flex;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 0.8rem;
-            padding: 0.3rem;
-            margin-bottom: 2.2rem;
-            gap: 0.3rem;
+            background: #161b22;
+            border: 2px solid var(--card-border);
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+            margin-bottom: 1rem;
+            gap: 0.25rem;
         }
 
         .tab-btn {
@@ -115,32 +113,30 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            padding: 0.8rem 1rem;
-            border-radius: 0.6rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.38rem;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: bold;
             cursor: pointer;
-            transition: var(--transition);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
         }
 
         .tab-btn:hover {
-            color: var(--text-main);
-            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-color);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .tab-btn.active {
             color: #ffffff;
             background: var(--gradient-btn);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
         }
 
         .tab-content {
             display: none;
-            animation: fadeIn 0.4s ease-out;
         }
 
         .tab-content.active {
@@ -148,45 +144,43 @@
         }
 
         /* Form Controls */
-        .input-group {
-            margin-bottom: 1.5rem;
+        .form-group {
+            margin-bottom: 1rem;
         }
 
         label {
             display: block;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-main);
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.4rem;
+            font-weight: bold;
+            font-size: 1rem;
+            color: var(--text-color);
         }
 
         textarea,
         input[type="text"],
         input[type="password"] {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 2px solid rgba(255, 255, 255, 0.07);
-            border-radius: 0.8rem;
-            padding: 1rem;
-            color: var(--text-main);
-            font-size: 1rem;
             font-family: inherit;
-            transition: var(--transition);
+            font-size: 1.1rem;
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 2px solid var(--card-border);
+            border-radius: 0.4rem;
+            background-color: #0d1117;
+            color: var(--text-color);
+            transition: border-color 0.2s;
         }
 
         textarea {
-            min-height: 8rem;
+            min-height: 7.5rem;
             resize: vertical;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         textarea:focus,
         input[type="text"]:focus,
         input[type="password"]:focus {
             outline: none;
-            border-color: var(--accent-primary);
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.15);
+            border-color: var(--primary-color);
         }
 
         /* Password Input Wrapper */
@@ -197,134 +191,142 @@
         }
 
         .password-wrapper input {
-            padding-right: 3rem;
+            padding-right: 2.8rem;
         }
 
         .toggle-password {
             position: absolute;
-            right: 0.75rem;
+            right: 0.4rem;
             background: transparent;
             border: none;
             color: var(--text-muted);
             cursor: pointer;
-            padding: 0.5rem;
+            padding: 0.4rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
         }
 
         .toggle-password:hover {
-            color: var(--text-main);
+            color: var(--text-color);
         }
 
-        /* Actions block */
-        .actions {
+        /* Mode indicator badge */
+        .mode-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.25rem 0.6rem;
+            border: 2px solid var(--info-border);
+            background: var(--info-bg);
+            color: var(--info-text);
+            border-radius: 0.4rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 0.4rem;
+        }
+
+        /* Actions buttons */
+        .actions-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin: 2rem 0;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
         }
 
-        .btn {
-            background: var(--gradient-btn);
-            color: #ffffff;
-            border: none;
-            border-radius: 0.8rem;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
+        .actions-secondary {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        button.btn {
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: bold;
+            padding: 0.6rem 1rem;
+            border-radius: 0.4rem;
             cursor: pointer;
-            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.6rem;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            gap: 0.4rem;
+            transition: all 0.2s;
+            border: 2px solid transparent;
         }
 
-        .btn:hover:not(:disabled) {
-            background: var(--gradient-btn-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35);
+        button.btn:focus {
+            outline: none;
         }
 
-        .btn:active:not(:disabled) {
-            transform: translateY(0);
+        .btn-secondary {
+            background-color: #21262d;
+            color: var(--text-color);
+            border: 2px solid var(--card-border);
         }
 
-        .btn:disabled {
-            background: rgba(255, 255, 255, 0.08);
-            color: var(--text-muted);
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
+        .btn-secondary:hover {
+            background-color: #30363d;
+            border-color: #8b949e;
         }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-main);
-            box-shadow: none;
+        .btn-danger {
+            background-color: #21262d;
+            color: #ff8040;
+            border: 2px solid rgba(255, 128, 64, 0.4);
         }
 
-        .btn-outline:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
+        .btn-danger:hover {
+            background-color: rgba(255, 128, 64, 0.15);
+            border-color: #ff8040;
         }
 
-        /* File drop zone */
+        .btn-encrypt {
+            background-color: var(--btn-encrypt-bg);
+            color: #ffffff;
+            border: 2px solid var(--btn-encrypt-bg);
+        }
+
+        .btn-encrypt:hover {
+            background-color: var(--btn-encrypt-hover);
+            border-color: var(--btn-encrypt-hover);
+        }
+
+        .btn-decrypt {
+            background-color: var(--btn-decrypt-bg);
+            color: #ffffff;
+            border: 2px solid var(--btn-decrypt-bg);
+        }
+
+        .btn-decrypt:hover {
+            background-color: var(--btn-decrypt-hover);
+            border-color: var(--btn-decrypt-hover);
+        }
+
+        /* Drag & Drop Zone */
         .drop-zone {
-            border: 2px dashed rgba(255, 255, 255, 0.15);
-            border-radius: 1rem;
-            padding: 3rem 2rem;
+            border: 2px dashed var(--card-border);
+            border-radius: 0.5rem;
+            padding: 1.5rem 1rem;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition);
-            background: rgba(255, 255, 255, 0.01);
+            background: #0d1117;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1rem;
+            gap: 0.5rem;
+            transition: all 0.2s;
         }
 
         .drop-zone:hover,
         .drop-zone.dragover {
-            border-color: var(--accent-primary);
-            background: rgba(139, 92, 246, 0.05);
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+            border-color: var(--primary-color);
+            background: rgba(139, 92, 246, 0.1);
         }
 
         .drop-zone-icon {
-            width: 3.5rem;
-            height: 3.5rem;
-            border-radius: 50%;
-            background: rgba(139, 92, 246, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent-primary);
-            font-size: 1.5rem;
-            transition: var(--transition);
-        }
-
-        .drop-zone:hover .drop-zone-icon,
-        .drop-zone.dragover .drop-zone-icon {
-            background: var(--gradient-accent);
-            color: #ffffff;
-            transform: scale(1.1);
-        }
-
-        .drop-zone p {
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-
-        .drop-zone p span {
-            color: var(--accent-primary);
-            font-weight: 500;
-            text-decoration: underline;
+            color: var(--primary-color);
         }
 
         .hidden-file-input {
@@ -335,237 +337,164 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 0.8rem;
-            padding: 1rem 1.2rem;
-            margin-top: 1rem;
-            animation: slideDown 0.3s ease-out;
+            background: #0d1117;
+            border: 2px solid var(--card-border);
+            border-radius: 0.4rem;
+            padding: 0.6rem 0.8rem;
+            margin-top: 0.6rem;
         }
 
         .file-details {
             display: flex;
             align-items: center;
-            gap: 0.8rem;
-            min-width: 0;
-            flex: 1;
-        }
-
-        .file-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
+            gap: 0.6rem;
+            overflow: hidden;
         }
 
         .file-name-text {
-            font-weight: 500;
-            color: var(--text-main);
-            max-width: 100%;
+            font-weight: bold;
+            color: var(--text-color);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .file-size-text {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
         }
 
-        .btn-remove-file {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0.3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
+        /* Result Panel & Info Box */
+        .result-box {
+            background-color: #0d1117;
+            border: 2px solid var(--card-border);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1rem;
         }
 
-        .btn-remove-file:hover {
-            color: var(--error);
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        /* Result Panel */
-        .result-panel {
-            margin-top: 2rem;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            display: none;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .result-panel.active {
-            display: block;
+        .result-box.success {
+            border-color: var(--success-color);
+            background-color: var(--success-bg);
         }
 
         .result-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         .result-title {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-weight: 600;
-            color: var(--success);
+            gap: 0.4rem;
+            font-weight: bold;
+            color: #3fb950;
         }
 
-        .result-code-box {
-            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-            background: #070412;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 0.6rem;
-            padding: 1rem;
+        .result-code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            background-color: #161b22;
+            border: 2px solid var(--card-border);
+            border-radius: 0.4rem;
+            padding: 0.8rem;
             font-size: 0.95rem;
-            line-height: 1.5;
             max-height: 12rem;
             overflow-y: auto;
             white-space: pre-wrap;
             word-break: break-all;
-            margin-bottom: 1rem;
-            user-select: all;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #e6edf3;
+        }
+
+        /* Ratio Indicator badge */
+        .ratio-badge {
+            display: inline-block;
+            padding: 0.3rem 0.6rem;
+            border: 2px solid var(--info-border);
+            background: var(--info-bg);
+            color: var(--info-text);
+            border-radius: 0.4rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 0.4rem;
         }
 
         /* Alert notifications */
         .alert {
             display: flex;
             align-items: flex-start;
-            gap: 0.8rem;
-            padding: 1rem 1.2rem;
-            border-radius: 0.8rem;
+            gap: 0.6rem;
+            padding: 0.8rem;
+            border-radius: 0.4rem;
             margin-top: 1rem;
-            font-size: 0.95rem;
-            animation: slideDown 0.3s ease-out;
+            font-size: 1rem;
         }
 
         .alert-error {
-            background: var(--error-bg);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-        }
-
-        .alert-icon {
-            font-size: 1.1rem;
-            flex-shrink: 0;
-            margin-top: 0.1rem;
+            background-color: var(--error-bg);
+            border: 2px solid var(--error-color);
+            color: #f85149;
         }
 
         /* Progress Bar */
         .progress-box {
-            margin-top: 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 0.8rem;
-            padding: 1.2rem;
-            display: none;
+            margin-top: 1rem;
+            background: #0d1117;
+            border: 2px solid var(--card-border);
+            border-radius: 0.4rem;
+            padding: 0.8rem;
         }
 
         .progress-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            margin-bottom: 0.4rem;
             color: var(--text-muted);
+            font-weight: bold;
         }
 
         .progress-bar-bg {
-            height: 0.5rem;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 1rem;
+            height: 0.6rem;
+            background: #21262d;
+            border-radius: 0.3rem;
             overflow: hidden;
+            border: 1px solid var(--card-border);
         }
 
         .progress-bar-fill {
             height: 100%;
             width: 0%;
             background: var(--gradient-accent);
-            border-radius: 1rem;
-            transition: width 0.1s ease-out;
-        }
-
-        /* Author name */
-        .author-box {
-            text-align: right;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-top: 1.5rem;
-            padding-right: 0.5rem;
-        }
-
-        .author-box span {
-            color: var(--accent-secondary);
-            font-weight: 500;
+            transition: width 0.15s linear;
         }
 
         footer {
-            margin-top: 2.5rem;
+            margin-top: 2rem;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: var(--text-muted);
-            max-width: 38rem;
-            line-height: 1.5;
+            max-width: 44rem;
         }
 
-        /* Animations */
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 8px 20px rgba(139, 92, 246, 0.25);
-            }
-
-            100% {
-                box-shadow: 0 8px 25px rgba(217, 70, 239, 0.4);
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
+        @media (max-width: 600px) {
             body {
-                padding: 1rem 0.5rem 4rem 0.5rem;
+                padding: 0.4rem;
+                padding-bottom: 5rem;
             }
 
-            .container {
-                padding: 1.5rem 1rem;
-            }
-
-            .actions {
+            .actions-grid {
                 grid-template-columns: 1fr;
             }
 
-            h1 {
-                font-size: 1.6rem;
+            .result-header {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -573,162 +502,158 @@
 
 <body>
 
-    <div class="container">
-        <header>
-            <div class="logo-area">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
-                </svg>
-            </div>
-            <h1>MÃ HOÁ & GIẢI MÃ<br>AES-256</h1>
-            <p class="subtitle">Bảo mật hoàn hảo, mã hoá trực tiếp ngay trên trình duyệt của bạn</p>
-        </header>
+    <div class="main-container">
+        <h1>MÃ HOÁ & GIẢI MÃ AES-256</h1>
+        <div class="author">D.T.Chánh</div>
 
-        <!-- Tabs -->
+        <!-- Tabs Navigation -->
         <div class="tabs">
             <button id="tab-text-btn" class="tab-btn active" onclick="switchTab('text')">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
                 </svg>
-                Văn bản
+                Xử lý Văn bản
             </button>
             <button id="tab-file-btn" class="tab-btn" onclick="switchTab('file')">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                Tập tin
+                Xử lý Tập tin
             </button>
         </div>
 
-        <!-- Tab Văn bản -->
+        <!-- Tab 1: Xử lý Văn bản -->
         <div id="tab-text" class="tab-content active">
-            <div class="input-group">
-                <label for="text-input">Dữ liệu đầu vào (Văn bản thường hoặc Chuỗi mã hoá Base64):</label>
-                <textarea id="text-input"
-                    placeholder="Nhập nội dung cần mã hoá hoặc bản mã Base64 cần giải mã..."></textarea>
+            <div class="form-group">
+                <label for="text-input">Dữ liệu văn bản đầu vào (Văn bản thường hoặc Chuỗi mã hoá Base64):</label>
+                <textarea id="text-input" placeholder="Nhập nội dung cần mã hoá hoặc dán bản mã Base64 vào đây..." oninput="autoDetectFormat()"></textarea>
+                <div id="auto-detect-badge" class="mode-badge" style="display: none;">
+                    🔍 Phát hiện chuỗi mã hoá Base64 — Sẵn sàng giải mã
+                </div>
             </div>
 
-            <div class="input-group">
-                <label for="text-password">Mật mã (Password):</label>
+            <div class="form-group">
+                <label for="text-password">Mật mã bảo vệ (Password):</label>
                 <div class="password-wrapper">
-                    <input type="password" id="text-password" placeholder="Nhập mật mã để bảo vệ dữ liệu...">
-                    <button class="toggle-password" type="button" onclick="togglePassword('text-password', this)">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
+                    <input type="password" id="text-password" placeholder="Nhập mật mã mã hoá / giải mã...">
+                    <button class="toggle-password" type="button" onclick="togglePassword('text-password', this)" title="Ẩn/Hiện mật mã">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <div class="actions">
-                <button class="btn btn-outline" onclick="processText(true)">
+            <div class="actions-grid">
+                <button type="button" class="btn btn-encrypt" onclick="processText(true)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Mã hoá
+                    Mã hoá (có nén)
                 </button>
-                <button class="btn" onclick="processText(false)">
+                <button type="button" class="btn btn-decrypt" onclick="processText(false)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
-                    Giải mã
+                    Giải mã & Giải nén
+                </button>
+            </div>
+
+            <div class="actions-secondary">
+                <button type="button" class="btn btn-danger" onclick="clearAllText()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Xoá sạch
                 </button>
             </div>
 
             <!-- Kết quả văn bản -->
-            <div id="text-result-panel" class="result-panel">
+            <div id="text-result-panel" class="result-box success" style="display: none;">
                 <div class="result-header">
                     <span id="text-result-title" class="result-title">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Xử lý thành công
+                        ✓ Xử lý thành công
                     </span>
-                    <button class="btn btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;"
-                        onclick="copyToClipboard('text-output', this)">
-                        Sao chép
+                    <button type="button" id="btn-copy-text" class="btn btn-secondary" onclick="copyResultWithTimer('text-output', this)">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        Sao chép kết quả
                     </button>
                 </div>
-                <div id="text-output" class="result-code-box"></div>
+
+                <div id="text-ratio-display" class="ratio-badge" style="display: none;"></div>
+                <div id="text-output" class="result-code"></div>
+                <div id="copy-countdown-notice" style="font-size: 0.85rem; color: var(--text-muted); text-align: right; display: none;">
+                    ⏱ Bộ nhớ tạm (Clipboard) sẽ được xoá sau <span id="timer-seconds">45</span> giây để bảo mật.
+                </div>
             </div>
 
-            <!-- Thông báo lỗi văn bản -->
+            <!-- Lỗi văn bản -->
             <div id="text-error" class="alert alert-error" style="display: none;">
-                <span class="alert-icon">⚠️</span>
+                <span>⚠️</span>
                 <span id="text-error-msg">Đã xảy ra lỗi</span>
             </div>
         </div>
 
-        <!-- Tab Tập tin -->
+        <!-- Tab 2: Xử lý Tập tin -->
         <div id="tab-file" class="tab-content">
-            <div class="input-group">
+            <div class="form-group">
                 <label>Tập tin xử lý:</label>
                 <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
                     <div class="drop-zone-icon">
-                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
                     </div>
-                    <p>Kéo và thả tập tin của bạn vào đây hoặc <span>nhấp để tải lên</span></p>
+                    <p style="font-weight: bold;">Kéo và thả tập tin vào đây hoặc nhấp để chọn tập tin</p>
                     <input type="file" id="file-input" class="hidden-file-input" onchange="handleFileSelect(this)">
                 </div>
 
                 <div id="file-info" class="file-info-box" style="display: none;">
                     <div class="file-details">
-                        <span class="file-icon">📄</span>
-                        <div style="min-width: 0; flex: 1;">
+                        <span style="font-size: 1.4rem;">📄</span>
+                        <div>
                             <div id="file-name-display" class="file-name-text">filename.txt</div>
                             <div id="file-size-display" class="file-size-text">0 KB</div>
                         </div>
                     </div>
-                    <button class="btn-remove-file" onclick="clearSelectedFile()" title="Xoá tập tin đã chọn">✕</button>
+                    <button type="button" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.9rem;" onclick="clearSelectedFile()">Bỏ chọn</button>
                 </div>
             </div>
 
-            <div class="input-group">
-                <label for="file-password">Mật mã (Password):</label>
+            <div class="form-group">
+                <label for="file-password">Mật mã bảo vệ (Password):</label>
                 <div class="password-wrapper">
                     <input type="password" id="file-password" placeholder="Nhập mật mã bảo vệ tập tin...">
-                    <button class="toggle-password" type="button" onclick="togglePassword('file-password', this)">
-                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
+                    <button class="toggle-password" type="button" onclick="togglePassword('file-password', this)" title="Ẩn/Hiện mật mã">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <div class="actions">
-                <button id="btn-file-encrypt" class="btn btn-outline" onclick="processFile(true)">
+            <div class="actions-grid">
+                <button type="button" id="btn-file-encrypt" class="btn btn-encrypt" onclick="processFile(true)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Mã hoá tập tin
+                    Mã hoá Tập tin (có nén)
                 </button>
-                <button id="btn-file-decrypt" class="btn" onclick="processFile(false)">
+                <button type="button" id="btn-file-decrypt" class="btn btn-decrypt" onclick="processFile(false)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
-                    Giải mã tập tin
+                    Giải mã Tập tin
                 </button>
             </div>
 
-            <!-- Tiến trình xử lý tập tin -->
-            <div id="file-progress-box" class="progress-box">
+            <!-- Progress bar -->
+            <div id="file-progress-box" class="progress-box" style="display: none;">
                 <div class="progress-info">
                     <span id="progress-status">Đang xử lý...</span>
                     <span id="progress-percent">0%</span>
@@ -739,39 +664,35 @@
             </div>
 
             <!-- Kết quả tập tin -->
-            <div id="file-result-panel" class="result-panel">
+            <div id="file-result-panel" class="result-box success" style="display: none;">
                 <div class="result-header">
                     <span id="file-result-title" class="result-title">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        Đã xử lý xong tập tin
+                        ✓ Tải xuống tập tin hoàn tất
                     </span>
                 </div>
-                <div class="alert"
-                    style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); color: #a7f3d0; margin-top: 0;">
-                    <span id="file-success-msg">Tập tin đã được mã hoá và tải xuống thành công.</span>
-                </div>
+                <div id="file-ratio-display" class="ratio-badge" style="display: none;"></div>
+                <p id="file-success-msg" style="margin-top: 0.5rem; color: #e6edf3;">Tập tin đã được xử lý thành công.</p>
             </div>
 
-            <!-- Thông báo lỗi tập tin -->
+            <!-- Lỗi tập tin -->
             <div id="file-error" class="alert alert-error" style="display: none;">
-                <span class="alert-icon">⚠️</span>
+                <span>⚠️</span>
                 <span id="file-error-msg">Đã xảy ra lỗi</span>
             </div>
         </div>
-
-        <div class="author-box">💻&nbsp;&nbsp;<span>D.T.Chánh</span></div>
     </div>
 
     <footer>
-        <p>Ứng dụng bảo mật cao hoạt động trực tiếp ở chế độ offline (không truyền dữ liệu lên máy chủ mạng). Sử dụng
-            thuật toán AES-GCM 256-bit được cấp phép bởi tiêu chuẩn Web Crypto API tích hợp sẵn trong trình duyệt.</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; font-size: 0.95rem;">
+            <span>🛡️ AES-256-GCM Tiêu chuẩn quân sự</span>
+            <span>⚡ Nén Gzip Giảm kích thước</span>
+            <span>📡 Offline 100% Không dùng Server</span>
+            <span>⏱️ Tự động xoá Clipboard</span>
+        </div>
     </footer>
 
     <script>
-        // Quản lý chuyển Tab
+        // Switch tab interface
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -779,19 +700,17 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
             document.getElementById(`tab-${tabName}-btn`).classList.add('active');
 
-            // Ẩn các thông báo kết quả/lỗi khi chuyển tab
             hideAlerts();
         }
 
         function hideAlerts() {
-            document.getElementById('text-result-panel').classList.remove('active');
+            document.getElementById('text-result-panel').style.display = 'none';
             document.getElementById('text-error').style.display = 'none';
-            document.getElementById('file-result-panel').classList.remove('active');
+            document.getElementById('file-result-panel').style.display = 'none';
             document.getElementById('file-error').style.display = 'none';
             document.getElementById('file-progress-box').style.display = 'none';
         }
 
-        // Ẩn/Hiện mật mã
         function togglePassword(inputId, btn) {
             const input = document.getElementById(inputId);
             if (input.type === "password") {
@@ -812,7 +731,22 @@
             }
         }
 
-        // Chuyển đổi dữ liệu nhị phân ArrayBuffer <-> Base64
+        // Tự động nhận diện chuỗi Base64
+        function autoDetectFormat() {
+            const val = document.getElementById('text-input').value.trim();
+            const badge = document.getElementById('auto-detect-badge');
+            
+            // Kiểu kiểm tra sơ bộ xem có phải chuỗi mã hoá Base64 hay không
+            const isBase64Pattern = val.length >= 28 && /^[A-Za-z0-9+/=]+$/.test(val) && !val.includes(' ');
+            
+            if (isBase64Pattern) {
+                badge.style.display = 'inline-flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Chuyển đổi ArrayBuffer <-> Base64
         function arrayBufferToBase64(buffer) {
             let binary = '';
             const bytes = new Uint8Array(buffer);
@@ -824,7 +758,7 @@
         }
 
         function base64ToArrayBuffer(base64) {
-            const binaryString = atob(base64.trim());
+            const binaryString = atob(base64.trim().replace(/\s+/g, ''));
             const len = binaryString.length;
             const bytes = new Uint8Array(len);
             for (let i = 0; i < len; i++) {
@@ -833,10 +767,35 @@
             return bytes.buffer;
         }
 
-        // Hàm dẫn xuất khoá bảo mật từ mật mã văn bản (PBKDF2)
+        // Nén & Giải nén bằng CompressionStream / DecompressionStream (Gzip)
+        async function compressGzip(uint8Data) {
+            if (typeof CompressionStream === 'undefined') {
+                return uint8Data; // Fallback nếu trình duyệt quá cũ
+            }
+            const stream = new Blob([uint8Data]).stream().pipeThrough(new CompressionStream('gzip'));
+            const response = new Response(stream);
+            const buffer = await response.arrayBuffer();
+            return new Uint8Array(buffer);
+        }
+
+        async function decompressGzip(uint8Data) {
+            if (typeof DecompressionStream === 'undefined') {
+                return uint8Data;
+            }
+            try {
+                const stream = new Blob([uint8Data]).stream().pipeThrough(new DecompressionStream('gzip'));
+                const response = new Response(stream);
+                const buffer = await response.arrayBuffer();
+                return new Uint8Array(buffer);
+            } catch (err) {
+                // Nếu dữ liệu cũ không nén, trả về dữ liệu gốc
+                return uint8Data;
+            }
+        }
+
+        // Dẫn xuất khoá mã hoá PBKDF2 (600.000 vòng lặp)
         async function deriveKey(password, salt) {
             const encoder = new TextEncoder();
-            // Khởi tạo khoá nguồn cơ bản
             const baseKey = await window.crypto.subtle.importKey(
                 "raw",
                 encoder.encode(password),
@@ -844,12 +803,11 @@
                 false,
                 ["deriveKey"]
             );
-            // Dẫn xuất khoá mã hoá AES-GCM 256-bit
             return await window.crypto.subtle.deriveKey(
                 {
                     name: "PBKDF2",
                     salt: salt,
-                    iterations: 100000,
+                    iterations: 600000,
                     hash: "SHA-256"
                 },
                 baseKey,
@@ -857,6 +815,16 @@
                 false,
                 ["encrypt", "decrypt"]
             );
+        }
+
+        // Định dạng dung lượng Byte chuẩn tiếng Việt
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Byte';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            const num = (bytes / Math.pow(k, i)).toFixed(2).replace('.', ',');
+            return num + ' ' + sizes[i];
         }
 
         // ==========================================
@@ -870,101 +838,129 @@
             const resultPanel = document.getElementById('text-result-panel');
             const outputBox = document.getElementById('text-output');
             const errorAlert = document.getElementById('text-error');
-            const errorMsg = document.getElementById('text-error-msg');
+            const ratioBadge = document.getElementById('text-ratio-display');
             const resultTitle = document.getElementById('text-result-title');
 
-            // Ẩn các thông báo trước đó
-            resultPanel.classList.remove('active');
+            // Đặt lại trạng thái bộ đếm giờ sao chép và thông báo cũ
+            if (clipboardTimer) {
+                clearInterval(clipboardTimer);
+                clipboardTimer = null;
+            }
+            const copyBtn = document.getElementById('btn-copy-text');
+            if (copyBtn) {
+                copyBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg> Sao chép kết quả`;
+                copyBtn.style.borderColor = "";
+                copyBtn.style.color = "";
+            }
+            const copyNotice = document.getElementById('copy-countdown-notice');
+            if (copyNotice) copyNotice.style.display = 'none';
+
+            resultPanel.style.display = 'none';
             errorAlert.style.display = 'none';
+            ratioBadge.style.display = 'none';
 
             if (!inputVal.trim()) {
-                showTextError("Vui lòng nhập dữ liệu đầu vào.");
+                showTextError("Vui lòng nhập văn bản đầu vào.");
                 return;
             }
             if (!password) {
-                showTextError("Vui lòng nhập mật mã.");
+                showTextError("Vui lòng nhập mật mã bảo vệ.");
                 return;
             }
 
             try {
                 if (isEncrypt) {
-                    // --- MÃ HOÁ VĂN BẢN ---
-                    const encoder = new TextEncoder();
-                    const dataBytes = encoder.encode(inputVal);
+                    // 1. Chuyển văn bản thành Uint8Array
+                    const rawBytes = new TextEncoder().encode(inputVal);
+                    const originalSize = rawBytes.length;
 
-                    // Sinh ngẫu nhiên muối và vectơ khởi tạo
+                    // 2. Nén bằng Gzip
+                    const compressedBytes = await compressGzip(rawBytes);
+
+                    // 3. Tạo Salt (16b) và IV (12b)
                     const salt = window.crypto.getRandomValues(new Uint8Array(16));
                     const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
-                    // Dẫn xuất khoá và thực thi mã hoá
+                    // 4. Mã hoá AES-GCM 256-bit với PBKDF2 (600.000 vòng)
                     const key = await deriveKey(password, salt);
-                    const ciphertext = await window.crypto.subtle.encrypt(
+                    const ciphertextBuffer = await window.crypto.subtle.encrypt(
                         { name: "AES-GCM", iv: iv },
                         key,
-                        dataBytes
+                        compressedBytes
                     );
 
-                    // Ghép gói: Salt (16b) + IV (12b) + Ciphertext
-                    const combined = new Uint8Array(salt.length + iv.length + ciphertext.byteLength);
+                    // 5. Đóng gói: Salt (16b) + IV (12b) + Ciphertext
+                    const combined = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
                     combined.set(salt, 0);
                     combined.set(iv, salt.length);
-                    combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
+                    combined.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
 
                     const base64Result = arrayBufferToBase64(combined.buffer);
+                    const finalSize = base64Result.length; // Độ dài chuỗi Base64
 
-                    resultTitle.innerHTML = `
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg> Mã hoá thành công!
-                    `;
-                    resultTitle.style.color = "var(--success)";
+                    // Tính chỉ số nén/mã hoá
+                    let ratioText = `Kích thước gốc: ${formatBytes(originalSize)} | Bản mã Base64: ${formatBytes(finalSize)}`;
+                    if (originalSize > 0) {
+                        const diff = originalSize - finalSize;
+                        if (diff > 0) {
+                            const percent = ((diff / originalSize) * 100).toFixed(1).replace('.', ',');
+                            ratioText += ` (Tiết kiệm ${percent}% dung lượng)`;
+                        } else {
+                            const percent = ((Math.abs(diff) / originalSize) * 100).toFixed(1).replace('.', ',');
+                            ratioText += ` (+${percent}% do overhead mã hoá/Base64)`;
+                        }
+                    }
+
+                    ratioBadge.textContent = ratioText;
+                    ratioBadge.style.display = 'inline-block';
+
+                    resultTitle.textContent = "✓ Mã hoá & Nén Gzip thành công!";
                     outputBox.textContent = base64Result;
-                    resultPanel.classList.add('active');
+                    resultPanel.style.display = 'block';
+
+                    // Tự động sao chép bản mã sau khi mã hoá thành công
+                    copyResultWithTimer('text-output', copyBtn);
+
                 } else {
-                    // --- GIẢI MÃ VĂN BẢN ---
+                    // Giải mã văn bản (KHÔNG tự động sao chép để đảm bảo bảo mật)
                     let combinedBytes;
                     try {
                         combinedBytes = new Uint8Array(base64ToArrayBuffer(inputVal));
                     } catch (e) {
-                        throw new Error("Định dạng dữ liệu mã hoá không hợp lệ (không phải chuỗi Base64 chuẩn).");
+                        throw new Error("Định dạng dữ liệu không hợp lệ (không phải chuỗi mã hoá Base64 chuẩn).");
                     }
 
                     if (combinedBytes.length < 28) {
-                        throw new Error("Kích thước bản mã quá ngắn. Dữ liệu có thể bị lỗi hoặc bị thiếu.");
+                        throw new Error("Kích thước bản mã quá ngắn hoặc đã bị hư hỏng.");
                     }
 
-                    // Tách các thành phần dữ liệu
                     const salt = combinedBytes.slice(0, 16);
                     const iv = combinedBytes.slice(16, 28);
                     const ciphertext = combinedBytes.slice(28);
 
-                    // Dẫn xuất khoá và giải mã
                     const key = await deriveKey(password, salt);
 
-                    let decryptedBuffer;
+                    let decryptedCompressedBuffer;
                     try {
-                        decryptedBuffer = await window.crypto.subtle.decrypt(
+                        decryptedCompressedBuffer = await window.crypto.subtle.decrypt(
                             { name: "AES-GCM", iv: iv },
                             key,
                             ciphertext
                         );
                     } catch (err) {
-                        throw new Error("Giải mã thất bại! Mật mã không chính xác hoặc dữ liệu bản mã đã bị thay đổi.");
+                        throw new Error("Mật mã không đúng hoặc dữ liệu bản mã đã bị thay đổi.");
                     }
 
-                    const decodedText = new TextDecoder().decode(decryptedBuffer);
+                    // Giải nén Gzip
+                    const decompressedBytes = await decompressGzip(new Uint8Array(decryptedCompressedBuffer));
+                    const originalText = new TextDecoder().decode(decompressedBytes);
 
-                    resultTitle.innerHTML = `
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
-                        </svg> Giải mã thành công!
-                    `;
-                    resultTitle.style.color = "var(--success)";
-                    outputBox.textContent = decodedText;
-                    resultPanel.classList.add('active');
+                    resultTitle.textContent = "✓ Giải mã & Giải nén thành công!";
+                    outputBox.textContent = originalText;
+                    resultPanel.style.display = 'block';
                 }
-            } catch (error) {
-                showTextError(error.message);
+            } catch (err) {
+                showTextError(err.message || "Đã xảy ra lỗi trong quá trình xử lý.");
             }
         }
 
@@ -975,23 +971,50 @@
             errorAlert.style.display = 'flex';
         }
 
-        async function copyToClipboard(elementId, btn) {
+        function clearAllText() {
+            document.getElementById('text-input').value = '';
+            document.getElementById('text-password').value = '';
+            document.getElementById('auto-detect-badge').style.display = 'none';
+            hideAlerts();
+        }
+
+        // Tự động xoá bộ nhớ tạm (Clipboard) sau 45s
+        let clipboardTimer = null;
+        async function copyResultWithTimer(elementId, btn) {
             const textToCopy = document.getElementById(elementId).textContent;
             if (!textToCopy) return;
 
             try {
                 await navigator.clipboard.writeText(textToCopy);
-                const originalText = btn.textContent;
-                btn.textContent = "Đã chép!";
-                btn.style.borderColor = "var(--success)";
-                btn.style.color = "var(--success)";
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.borderColor = "";
-                    btn.style.color = "";
-                }, 2000);
+                const originalText = btn.innerHTML;
+                btn.innerHTML = "✓ Đã sao chép!";
+                btn.style.borderColor = "#3fb950";
+                btn.style.color = "#3fb950";
+
+                const notice = document.getElementById('copy-countdown-notice');
+                const secondsSpan = document.getElementById('timer-seconds');
+                notice.style.display = 'block';
+
+                let remaining = 60;
+                secondsSpan.textContent = remaining;
+
+                if (clipboardTimer) clearInterval(clipboardTimer);
+
+                clipboardTimer = setInterval(() => {
+                    remaining--;
+                    secondsSpan.textContent = remaining;
+                    if (remaining <= 0) {
+                        clearInterval(clipboardTimer);
+                        navigator.clipboard.writeText(''); // Clear clipboard
+                        notice.style.display = 'none';
+                        btn.innerHTML = originalText;
+                        btn.style.borderColor = "";
+                        btn.style.color = "";
+                    }
+                }, 1000);
+
             } catch (err) {
-                alert("Không thể tự động sao chép. Vui lòng chọn thủ công toàn bộ văn bản.");
+                alert("Không thể sao chép tự động. Vui lòng chọn thủ công toàn bộ kết quả.");
             }
         }
 
@@ -1000,19 +1023,17 @@
         // ==========================================
 
         let selectedFile = null;
-
-        // Quản lý kéo thả tập tin
         const dropZone = document.getElementById('drop-zone');
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
+        ['dragenter', 'dragover'].forEach(name => {
+            dropZone.addEventListener(name, (e) => {
                 e.preventDefault();
                 dropZone.classList.add('dragover');
             }, false);
         });
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, (e) => {
+        ['dragleave', 'drop'].forEach(name => {
+            dropZone.addEventListener(name, (e) => {
                 e.preventDefault();
                 dropZone.classList.remove('dragover');
             }, false);
@@ -1020,9 +1041,8 @@
 
         dropZone.addEventListener('drop', (e) => {
             const dt = e.dataTransfer;
-            const files = dt.files;
-            if (files.length > 0) {
-                setFile(files[0]);
+            if (dt.files.length > 0) {
+                setFile(dt.files[0]);
             }
         });
 
@@ -1035,18 +1055,7 @@
         function setFile(file) {
             selectedFile = file;
             document.getElementById('file-name-display').textContent = file.name;
-
-            // Format dung lượng tập tin theo quy chuẩn tiếng Việt
-            let sizeStr = "";
-            if (file.size < 1024) {
-                sizeStr = file.size + " Bytes";
-            } else if (file.size < 1024 * 1024) {
-                sizeStr = (file.size / 1024).toFixed(2).replace('.', ',') + " KB";
-            } else {
-                sizeStr = (file.size / (1024 * 1024)).toFixed(2).replace('.', ',') + " MB";
-            }
-            document.getElementById('file-size-display').textContent = sizeStr;
-
+            document.getElementById('file-size-display').textContent = formatBytes(file.size);
             document.getElementById('file-info').style.display = 'flex';
             dropZone.style.display = 'none';
             hideAlerts();
@@ -1061,182 +1070,233 @@
         }
 
         function showFileProgress(status, percent) {
-            const progressBox = document.getElementById('file-progress-box');
-            const progressStatus = document.getElementById('progress-status');
-            const progressPercent = document.getElementById('progress-percent');
-            const progressFill = document.getElementById('progress-bar-fill');
-
-            progressBox.style.display = 'block';
-            progressStatus.textContent = status;
-            progressPercent.textContent = percent + '%';
-            progressFill.style.width = percent + '%';
-        }
-
-        function hideFileProgress() {
-            document.getElementById('file-progress-box').style.display = 'none';
+            const box = document.getElementById('file-progress-box');
+            document.getElementById('progress-status').textContent = status;
+            document.getElementById('progress-percent').textContent = percent + '%';
+            document.getElementById('progress-bar-fill').style.width = percent + '%';
+            box.style.display = 'block';
         }
 
         function showFileError(msg) {
             const errorAlert = document.getElementById('file-error');
-            const errorMsg = document.getElementById('file-error-msg');
-            errorMsg.textContent = msg;
+            document.getElementById('file-error-msg').textContent = msg;
             errorAlert.style.display = 'flex';
         }
 
         async function processFile(isEncrypt) {
             const password = document.getElementById('file-password').value;
             const resultPanel = document.getElementById('file-result-panel');
-            const successMsg = document.getElementById('file-success-msg');
             const errorAlert = document.getElementById('file-error');
+            const ratioBadge = document.getElementById('file-ratio-display');
+            const successMsg = document.getElementById('file-success-msg');
 
-            resultPanel.classList.remove('active');
+            resultPanel.style.display = 'none';
             errorAlert.style.display = 'none';
+            ratioBadge.style.display = 'none';
 
             if (!selectedFile) {
-                showFileError("Vui lòng kéo thả hoặc chọn một tập tin cần xử lý.");
+                showFileError("Vui lòng chọn hoặc kéo thả một tập tin.");
                 return;
             }
             if (!password) {
-                showFileError("Vui lòng nhập mật mã.");
+                showFileError("Vui lòng nhập mật mã bảo vệ tập tin.");
                 return;
             }
 
-            // Vô hiệu hoá tạm thời các nút để tránh nhấn nhiều lần
-            setButtonsDisabled(true);
-            showFileProgress("Đang đọc dữ liệu tập tin...", 10);
+            showFileProgress("Đang đọc dữ liệu tập tin...", 15);
 
             const reader = new FileReader();
 
             reader.onload = async function (e) {
                 try {
-                    const fileBytes = e.target.result;
-                    showFileProgress("Đang tính toán khoá bảo mật...", 30);
+                    const rawBuffer = e.target.result;
+                    const rawUint8 = new Uint8Array(rawBuffer);
 
                     if (isEncrypt) {
-                        // --- MÃ HOÁ TỆP TIN ---
-                        // Sinh ngẫu nhiên muối và IV
+                        // 1. Mã hoá tập tin
+                        showFileProgress("Đang nén tập tin bằng Gzip...", 30);
+                        const filenameBytes = new TextEncoder().encode(selectedFile.name);
+                        const filenameLen = filenameBytes.length;
+
+                        // Tạo gói nội dung: [Độ dài tên: 2B] + [Tên tập tin] + [Dữ liệu gốc]
+                        const payload = new Uint8Array(2 + filenameLen + rawUint8.length);
+                        payload[0] = (filenameLen >> 8) & 0xff;
+                        payload[1] = filenameLen & 0xff;
+                        payload.set(filenameBytes, 2);
+                        payload.set(rawUint8, 2 + filenameLen);
+
+                        // Nén Gzip
+                        const compressedPayload = await compressGzip(payload);
+
+                        showFileProgress("Đang tính toán khoá bảo mật PBKDF2...", 55);
                         const salt = window.crypto.getRandomValues(new Uint8Array(16));
                         const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
                         const key = await deriveKey(password, salt);
-                        showFileProgress("Đang mã hoá dữ liệu...", 60);
 
-                        // Mã hoá tên tập tin và lưu trữ định dạng để khôi phục
-                        const filenameBytes = new TextEncoder().encode(selectedFile.name);
-                        const filenameLen = filenameBytes.length; // Độ dài tên tập tin
-
-                        // Chuẩn bị payload nhị phân: [Độ dài tên tập tin: 2 bytes] + [Tên tập tin: N bytes] + [Dữ liệu tập tin gốc]
-                        const payload = new Uint8Array(2 + filenameLen + fileBytes.byteLength);
-                        payload[0] = (filenameLen >> 8) & 0xff;
-                        payload[1] = filenameLen & 0xff;
-                        payload.set(filenameBytes, 2);
-                        payload.set(new Uint8Array(fileBytes), 2 + filenameLen);
-
-                        // Mã hoá payload
-                        const ciphertext = await window.crypto.subtle.encrypt(
+                        showFileProgress("Đang mã hoá AES-GCM 256-bit...", 75);
+                        const ciphertextBuffer = await window.crypto.subtle.encrypt(
                             { name: "AES-GCM", iv: iv },
                             key,
-                            payload
+                            compressedPayload
                         );
 
-                        showFileProgress("Đang đóng gói dữ liệu đầu ra...", 85);
-                        // Đóng gói tập tin tải xuống: Salt (16b) + IV (12b) + Ciphertext
-                        const combinedFile = new Uint8Array(salt.length + iv.length + ciphertext.byteLength);
-                        combinedFile.set(salt, 0);
-                        combinedFile.set(iv, salt.length);
-                        combinedFile.set(new Uint8Array(ciphertext), salt.length + iv.length);
+                        // Ghép Salt (16b) + IV (12b) + Ciphertext
+                        const finalBuffer = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
+                        finalBuffer.set(salt, 0);
+                        finalBuffer.set(iv, salt.length);
+                        finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
 
-                        showFileProgress("Đang tạo liên kết tải xuống...", 95);
-                        // Kích hoạt tải xuống tập tin .enc
-                        downloadBlob(combinedFile, selectedFile.name + ".enc");
+                        showFileProgress("Đang chuẩn bị tập tin tải xuống...", 95);
 
-                        successMsg.textContent = `Tập tin "${selectedFile.name}" đã được mã hoá thành công dưới định dạng "${selectedFile.name}.enc" và tải xuống tự động.`;
-                        resultPanel.classList.add('active');
-                    } else {
-                        // --- GIẢI MÃ TỆP TIN ---
-                        const combinedBytes = new Uint8Array(fileBytes);
-                        if (combinedBytes.length < 28) {
-                            throw new Error("Kích thước tập tin quá nhỏ, không đúng cấu trúc mã hoá AES.");
+                        const blob = new Blob([finalBuffer], { type: "application/octet-stream" });
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = selectedFile.name + ".enc";
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(downloadUrl);
+
+                        // Báo chỉ số nén
+                        const origSize = selectedFile.size;
+                        const finalSize = finalBuffer.length;
+                        let ratioText = `Gốc: ${formatBytes(origSize)} | Đã mã hoá: ${formatBytes(finalSize)}`;
+                        if (origSize > 0) {
+                            const diff = origSize - finalSize;
+                            if (diff > 0) {
+                                const percent = ((diff / origSize) * 100).toFixed(1).replace('.', ',');
+                                ratioText += ` (Giảm ${percent}% dung lượng)`;
+                            } else {
+                                const percent = ((Math.abs(diff) / origSize) * 100).toFixed(1).replace('.', ',');
+                                ratioText += ` (+${percent}% dung lượng do mã hoá)`;
+                            }
                         }
 
-                        const salt = combinedBytes.slice(0, 16);
-                        const iv = combinedBytes.slice(16, 28);
-                        const ciphertext = combinedBytes.slice(28);
+                        ratioBadge.textContent = ratioText;
+                        ratioBadge.style.display = 'inline-block';
+                        successMsg.textContent = `Tập tin "${selectedFile.name}.enc" đã được mã hoá và tải xuống máy tính của bạn.`;
+                        document.getElementById('file-result-title').textContent = "✓ Mã hoá tập tin thành công";
 
+                    } else {
+                        // 2. Giải mã tập tin
+                        showFileProgress("Đang phân tích cấu trúc bản mã...", 30);
+                        if (rawUint8.length < 28) {
+                            throw new Error("Tập tin mã hoá bị hư hỏng hoặc không đúng định dạng.");
+                        }
+
+                        const salt = rawUint8.slice(0, 16);
+                        const iv = rawUint8.slice(16, 28);
+                        const ciphertext = rawUint8.slice(28);
+
+                        showFileProgress("Đang tính toán khoá giải mã PBKDF2...", 55);
                         const key = await deriveKey(password, salt);
-                        showFileProgress("Đang giải mã dữ liệu...", 60);
 
-                        let decryptedPayload;
+                        showFileProgress("Đang giải mã AES-GCM...", 75);
+                        let decryptedCompressed;
                         try {
-                            decryptedPayload = await window.crypto.subtle.decrypt(
+                            decryptedCompressed = await window.crypto.subtle.decrypt(
                                 { name: "AES-GCM", iv: iv },
                                 key,
                                 ciphertext
                             );
                         } catch (err) {
-                            throw new Error("Giải mã thất bại! Mật mã không chính xác hoặc tập tin đã bị hỏng.");
+                            throw new Error("Mật mã không đúng hoặc tập tin đã bị chỉnh sửa/hư hỏng.");
                         }
 
-                        showFileProgress("Đang phân tích định dạng gốc...", 85);
-                        const payloadBytes = new Uint8Array(decryptedPayload);
+                        showFileProgress("Đang giải nén dữ liệu...", 90);
+                        const decompressedPayload = await decompressGzip(new Uint8Array(decryptedCompressed));
 
-                        // Đọc độ dài tên tập tin (2 bytes đầu)
-                        const filenameLen = (payloadBytes[0] << 8) | payloadBytes[1];
-                        if (filenameLen > payloadBytes.length - 2) {
-                            throw new Error("Cấu trúc tập tin giải mã bị lỗi hoặc bị biến đổi.");
+                        // Tách tên tập tin gốc và dữ liệu
+                        if (decompressedPayload.length < 2) {
+                            throw new Error("Cấu trúc tập tin không hợp lệ sau khi giải mã.");
                         }
 
-                        // Lấy tên tập tin gốc và dữ liệu gốc
-                        const originalFilenameBytes = payloadBytes.slice(2, 2 + filenameLen);
-                        const originalFilename = new TextDecoder().decode(originalFilenameBytes);
-                        const originalFileContent = payloadBytes.slice(2 + filenameLen);
+                        const filenameLen = (decompressedPayload[0] << 8) | decompressedPayload[1];
+                        if (decompressedPayload.length < 2 + filenameLen) {
+                            throw new Error("Dữ liệu tên tập tin bị lỗi.");
+                        }
 
-                        showFileProgress("Đang khôi phục tập tin...", 95);
-                        // Kích hoạt tải xuống tập tin gốc
-                        downloadBlob(originalFileContent, originalFilename);
+                        const filenameBytes = decompressedPayload.slice(2, 2 + filenameLen);
+                        let originalFilename = new TextDecoder().decode(filenameBytes);
+                        const originalFileBytes = decompressedPayload.slice(2 + filenameLen);
 
-                        successMsg.textContent = `Tập tin "${originalFilename}" đã được giải mã thành công và tự động tải xuống thiết bị của bạn.`;
-                        resultPanel.classList.add('active');
+                        if (!originalFilename || originalFilename.trim() === '') {
+                            originalFilename = selectedFile.name.replace(/\.enc$/i, '') || "file_restored";
+                        }
+
+                        const blob = new Blob([originalFileBytes], { type: "application/octet-stream" });
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = downloadUrl;
+                        a.download = originalFilename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(downloadUrl);
+
+                        successMsg.textContent = `Tập tin gốc "${originalFilename}" đã được phục hồi và tải xuống thành công.`;
+                        document.getElementById('file-result-title').textContent = "✓ Giải mã tập tin thành công";
                     }
-                } catch (error) {
-                    showFileError(error.message);
-                } finally {
-                    hideFileProgress();
-                    setButtonsDisabled(false);
+
+                    showFileProgress("Hoàn tất!", 100);
+                    setTimeout(() => {
+                        document.getElementById('file-progress-box').style.display = 'none';
+                        resultPanel.style.display = 'block';
+                    }, 500);
+
+                } catch (err) {
+                    document.getElementById('file-progress-box').style.display = 'none';
+                    showFileError(err.message || "Xảy ra lỗi khi xử lý tập tin.");
                 }
             };
 
-            reader.onerror = function () {
-                showFileError("Lỗi trong quá trình đọc tập tin từ thiết bị.");
-                hideFileProgress();
-                setButtonsDisabled(false);
-            };
-
-            // Bắt đầu đọc tập tin dưới dạng nhị phân ArrayBuffer
             reader.readAsArrayBuffer(selectedFile);
         }
 
-        function setButtonsDisabled(disabled) {
-            document.getElementById('btn-file-encrypt').disabled = disabled;
-            document.getElementById('btn-file-decrypt').disabled = disabled;
-            if (disabled) {
-                document.getElementById('file-password').disabled = true;
-            } else {
-                document.getElementById('file-password').disabled = false;
+        // Tự động xoá toàn bộ dữ liệu vừa nhập khi rời khỏi tab hoặc mở ứng dụng khác
+        function autoClearAllData() {
+            // 1. Xoá dữ liệu ô nhập văn bản và mật mã
+            const textInput = document.getElementById('text-input');
+            const textPassword = document.getElementById('text-password');
+            const filePassword = document.getElementById('file-password');
+            
+            if (textInput) textInput.value = '';
+            if (textPassword) textPassword.value = '';
+            if (filePassword) filePassword.value = '';
+
+            // 2. Ẩn các huy hiệu phát hiện và thông báo
+            const autoBadge = document.getElementById('auto-detect-badge');
+            if (autoBadge) autoBadge.style.display = 'none';
+
+            // 3. Xoá thông tin tập tin đã chọn
+            clearSelectedFile();
+
+            // 4. Dừng đếm ngược tự động xoá Clipboard nếu đang chạy
+            if (clipboardTimer) {
+                clearInterval(clipboardTimer);
+                clipboardTimer = null;
             }
+
+            // 5. Ẩn các khung thông báo kết quả và lỗi
+            hideAlerts();
+
+            // 6. Xoá nội dung kết quả văn bản
+            const textOutput = document.getElementById('text-output');
+            if (textOutput) textOutput.textContent = '';
         }
 
-        function downloadBlob(dataBytes, filename) {
-            const blob = new Blob([dataBytes], { type: "application/octet-stream" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        // Lắng nghe sự kiện chuyển tab hoặc ẩn cửa sổ trình duyệt
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                autoClearAllData();
+            }
+        });
+
+        window.addEventListener('blur', function () {
+            autoClearAllData();
+        });
     </script>
 </body>
 
