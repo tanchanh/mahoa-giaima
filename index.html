@@ -304,6 +304,48 @@
             border-color: var(--btn-decrypt-hover);
         }
 
+        /* Password Strength Meter */
+        .strength-wrapper {
+            margin-top: 0.5rem;
+        }
+
+        .strength-bar-track {
+            height: 0.5rem;
+            width: 100%;
+            background-color: #21262d;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            border: 2px solid var(--card-border);
+        }
+
+        .strength-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 0.25rem;
+            transition: width 0.25s ease, background-color 0.25s ease;
+        }
+
+        .strength-label {
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: bold;
+        }
+
+        .strength-weak {
+            color: #f85149;
+        }
+
+        .strength-medium {
+            color: #e3b341;
+        }
+
+        .strength-strong {
+            color: #3fb950;
+        }
+
         /* Drag & Drop Zone */
         .drop-zone {
             border: 2px dashed var(--card-border);
@@ -536,13 +578,19 @@
             <div class="form-group">
                 <label for="text-password">Mật mã bảo vệ (Password):</label>
                 <div class="password-wrapper">
-                    <input type="password" id="text-password" placeholder="Nhập mật mã mã hoá / giải mã...">
+                    <input type="password" id="text-password" placeholder="Nhập mật mã mã hoá / giải mã..." oninput="updatePasswordStrength('text-password', 'text-password-strength')">
                     <button class="toggle-password" type="button" onclick="togglePassword('text-password', this)" title="Ẩn/Hiện mật mã">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                     </button>
+                </div>
+                <div id="text-password-strength" class="strength-wrapper" style="display: none;">
+                    <div class="strength-bar-track">
+                        <div class="strength-bar-fill"></div>
+                    </div>
+                    <div class="strength-label"></div>
                 </div>
             </div>
 
@@ -627,13 +675,19 @@
             <div class="form-group">
                 <label for="file-password">Mật mã bảo vệ (Password):</label>
                 <div class="password-wrapper">
-                    <input type="password" id="file-password" placeholder="Nhập mật mã bảo vệ tập tin...">
+                    <input type="password" id="file-password" placeholder="Nhập mật mã bảo vệ tập tin..." oninput="updatePasswordStrength('file-password', 'file-password-strength')">
                     <button class="toggle-password" type="button" onclick="togglePassword('file-password', this)" title="Ẩn/Hiện mật mã">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                     </button>
+                </div>
+                <div id="file-password-strength" class="strength-wrapper" style="display: none;">
+                    <div class="strength-bar-track">
+                        <div class="strength-bar-fill"></div>
+                    </div>
+                    <div class="strength-label"></div>
                 </div>
             </div>
 
@@ -728,6 +782,45 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 `;
+            }
+        }
+
+        // Kiềm tra và hiển thị độ mạnh của mật mã
+        function updatePasswordStrength(inputId, containerId) {
+            const input = document.getElementById(inputId);
+            const container = document.getElementById(containerId);
+            if (!input || !container) return;
+
+            const pwd = input.value;
+            if (!pwd) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            const fillEl = container.querySelector('.strength-bar-fill');
+            const labelEl = container.querySelector('.strength-label');
+
+            const len = pwd.length;
+            const hasLetter = /[a-zA-Z\p{L}]/u.test(pwd);
+            const hasDigit = /[0-9]/.test(pwd);
+
+            // Tiêu chuẩn Mật mã Mạnh: ít nhất 12 ký tự gồm cả chữ và số
+            if (len >= 12 && hasLetter && hasDigit) {
+                fillEl.style.width = '100%';
+                fillEl.style.backgroundColor = '#238636';
+                labelEl.className = 'strength-label strength-strong';
+                labelEl.innerHTML = '💪 Độ mạnh: Mạnh (Bảo mật cao, đủ 12+ ký tự gồm chữ & số)';
+            } else if ((len >= 8 && hasLetter && hasDigit) || (len >= 12 && (hasLetter || hasDigit))) {
+                fillEl.style.width = '65%';
+                fillEl.style.backgroundColor = '#e3b341';
+                labelEl.className = 'strength-label strength-medium';
+                labelEl.innerHTML = '⚠️ Độ mạnh: Trung bình (Cần ít nhất 12 ký tự gồm chữ & số để đạt Mạnh)';
+            } else {
+                fillEl.style.width = '30%';
+                fillEl.style.backgroundColor = '#da3633';
+                labelEl.className = 'strength-label strength-weak';
+                labelEl.innerHTML = '🔴 Độ mạnh: Yếu (Khuyên dùng từ 12 ký tự gồm chữ & số)';
             }
         }
 
@@ -974,6 +1067,7 @@
         function clearAllText() {
             document.getElementById('text-input').value = '';
             document.getElementById('text-password').value = '';
+            updatePasswordStrength('text-password', 'text-password-strength');
             document.getElementById('auto-detect-badge').style.display = 'none';
             hideAlerts();
         }
@@ -1064,6 +1158,8 @@
         function clearSelectedFile() {
             selectedFile = null;
             document.getElementById('file-input').value = '';
+            document.getElementById('file-password').value = '';
+            updatePasswordStrength('file-password', 'file-password-strength');
             document.getElementById('file-info').style.display = 'none';
             dropZone.style.display = 'flex';
             hideAlerts();
@@ -1265,6 +1361,9 @@
             if (textInput) textInput.value = '';
             if (textPassword) textPassword.value = '';
             if (filePassword) filePassword.value = '';
+
+            updatePasswordStrength('text-password', 'text-password-strength');
+            updatePasswordStrength('file-password', 'file-password-strength');
 
             // 2. Ẩn các huy hiệu phát hiện và thông báo
             const autoBadge = document.getElementById('auto-detect-badge');
