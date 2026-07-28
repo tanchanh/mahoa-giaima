@@ -175,6 +175,8 @@
             min-height: 7.5rem;
             resize: vertical;
             line-height: 1.4;
+            overflow-wrap: break-word;
+            word-break: normal;
         }
 
         textarea:focus,
@@ -861,8 +863,9 @@
             const val = document.getElementById('text-input').value.trim();
             const badge = document.getElementById('auto-detect-badge');
             
-            // Kiểu kiểm tra sơ bộ xem có phải chuỗi mã hoá Base64 hay không
-            const isBase64Pattern = val.length >= 28 && /^[A-Za-z0-9+/=]+$/.test(val) && !val.includes(' ');
+            // Kiểu kiểm tra sơ bộ xem có phải chuỗi mã hoá Base64 hay không (loại bỏ khoảng trắng/xuống dòng nếu có)
+            const cleanVal = val.replace(/\s+/g, '');
+            const isBase64Pattern = cleanVal.length >= 28 && /^[A-Za-z0-9+/=]+$/.test(cleanVal);
             
             if (isBase64Pattern) {
                 badge.style.display = 'inline-flex';
@@ -871,13 +874,13 @@
             }
         }
 
-        // Chuyển đổi ArrayBuffer <-> Base64
+        // Chuyển đổi ArrayBuffer <-> Base64 (dùng chunking 32KB để tối ưu hiệu năng trên thiết bị di động)
         function arrayBufferToBase64(buffer) {
-            let binary = '';
             const bytes = new Uint8Array(buffer);
-            const len = bytes.byteLength;
-            for (let i = 0; i < len; i++) {
-                binary += String.fromCharCode(bytes[i]);
+            let binary = '';
+            const chunkSize = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
             }
             return btoa(binary);
         }
@@ -948,8 +951,9 @@
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            const num = (bytes / Math.pow(k, i)).toFixed(2).replace('.', ',');
-            return num + ' ' + sizes[i];
+            const val = bytes / Math.pow(k, i);
+            const numStr = (Math.round(val * 100) / 100).toString().replace('.', ',');
+            return numStr + ' ' + sizes[i];
         }
 
         // ==========================================
