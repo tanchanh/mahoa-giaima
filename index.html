@@ -262,6 +262,7 @@
         }
 
         #btn-copy-text,
+        #btn-share-text,
         #btn-download-file {
             background-color: var(--btn-action-bg);
         }
@@ -579,6 +580,10 @@
                 <div id="auto-detect-badge" class="mode-badge" style="display: none;">
                     🔍 Phát hiện chuỗi mã hoá Base64 — Sẵn sàng giải mã
                 </div>
+                <div id="text-share-info" class="alert" style="display: none; margin-top: 0.5rem; border: 2px solid #388bfd; background-color: rgba(56, 139, 253, 0.15); color: #58a6ff; padding: 0.6rem 0.8rem; border-radius: 0.4rem; font-size: 0.95rem; align-items: center; gap: 0.5rem;">
+                    <span>ℹ️</span>
+                    <span id="text-share-info-msg"></span>
+                </div>
             </div>
 
             <div class="form-group">
@@ -630,12 +635,20 @@
                     <span id="text-result-title" class="result-title">
                         ✓ Xử lý thành công
                     </span>
-                    <button type="button" id="btn-copy-text" class="btn btn-secondary" onclick="copyTextResult('text-output', this)">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                        </svg>
-                        Sao chép kết quả
-                    </button>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button type="button" id="btn-copy-text" class="btn btn-secondary" onclick="copyTextResult('text-output', this)">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                            </svg>
+                            Sao chép kết quả
+                        </button>
+                        <button type="button" id="btn-share-text" class="btn btn-secondary" onclick="shareTextResult()" style="display: none;">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                            </svg>
+                            Chia sẻ
+                        </button>
+                    </div>
                 </div>
 
                 <div id="text-ratio-display" class="ratio-badge" style="display: none;"></div>
@@ -1023,6 +1036,9 @@
                     outputBox.textContent = base64Result;
                     resultPanel.style.display = 'block';
 
+                    const shareBtn = document.getElementById('btn-share-text');
+                    if (shareBtn) shareBtn.style.display = 'inline-flex';
+
                 } else {
                     // Giải mã văn bản (KHÔNG tự động sao chép để đảm bảo bảo mật)
                     let combinedBytes;
@@ -1060,6 +1076,9 @@
                     resultTitle.textContent = "✓ Giải mã & Giải nén thành công!";
                     outputBox.textContent = originalText;
                     resultPanel.style.display = 'block';
+
+                    const shareBtn = document.getElementById('btn-share-text');
+                    if (shareBtn) shareBtn.style.display = 'none';
                 }
             } catch (err) {
                 showTextError(err.message || "Đã xảy ra lỗi trong quá trình xử lý.");
@@ -1078,6 +1097,8 @@
             document.getElementById('text-password').value = '';
             updatePasswordStrength('text-password', 'text-password-strength');
             document.getElementById('auto-detect-badge').style.display = 'none';
+            const shareInfo = document.getElementById('text-share-info');
+            if (shareInfo) shareInfo.style.display = 'none';
             hideAlerts();
         }
 
@@ -1103,6 +1124,163 @@
                 alert("Không thể sao chép tự động. Vui lòng chọn thủ công toàn bộ kết quả.");
             }
         }
+
+        // Chia sẻ kết quả Base64 qua URL
+        function shareTextResult() {
+            const outputBox = document.getElementById('text-output');
+            if (!outputBox) return;
+            const base64Text = outputBox.textContent ? outputBox.textContent.trim() : '';
+            if (!base64Text) return;
+
+            // Kiểm tra giới hạn an toàn 1.900 ký tự (để không vượt quá giới hạn 2.000 ký tự của Zalo khi cộng thêm đường dẫn URL)
+            if (base64Text.length > 1900) {
+                alert("Chuỗi mã hoá có độ dài " + base64Text.length.toLocaleString('vi-VN') + " ký tự (vượt quá mức an toàn 1.900 ký tự).\n\nĐể tránh bị cắt xén liên kết khi gửi qua các ứng dụng tin nhắn như Zalo (giới hạn 2.000 ký tự), vui lòng nhấp nút \"Sao chép kết quả\" để dán gửi trực tiếp.");
+                return;
+            }
+
+            // Dùng query parameter ?data= để đảm bảo không bị các ứng dụng nhắn tin (như Zalo, Messenger) xoá bỏ như fragment hash #
+            const shareUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(base64Text);
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Dữ liệu mã hoá - D.T.Chánh',
+                    text: base64Text + '\n\nLiên kết tự động giải mã:',
+                    url: shareUrl
+                }).then(() => {
+                    showShareSuccessBtn();
+                }).catch((err) => {
+                    if (err.name !== 'AbortError') {
+                        copyShareUrlToClipboard(shareUrl);
+                    }
+                });
+            } else {
+                copyShareUrlToClipboard(shareUrl);
+            }
+        }
+
+        function copyShareUrlToClipboard(url) {
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    showShareSuccessBtn();
+                }).catch(() => {
+                    fallbackCopyUrl(url);
+                });
+            } else {
+                fallbackCopyUrl(url);
+            }
+        }
+
+        function fallbackCopyUrl(url) {
+            const textArea = document.createElement("textarea");
+            textArea.value = url;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showShareSuccessBtn();
+            } catch (err) {
+                alert("Không thể sao chép liên kết. Bạn có thể tự sao chép liên kết này:\n" + url);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showShareSuccessBtn() {
+            const btn = document.getElementById('btn-share-text');
+            if (!btn) return;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã sao chép link!`;
+            btn.style.borderColor = "#3fb950";
+            btn.style.color = "#3fb950";
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.borderColor = "";
+                btn.style.color = "";
+            }, 2000);
+        }
+
+        // Tự động kiểm tra liên kết chia sẻ khi mở ứng dụng
+        function checkUrlSharedData() {
+            let sharedData = '';
+
+            // 1. Thử lấy từ Query String (?data=... hoặc ?d=...)
+            try {
+                if (window.location.search) {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    sharedData = urlParams.get('data') || urlParams.get('d') || '';
+                }
+            } catch (e) {}
+
+            // 2. Thử lấy từ Hash (#data=... hoặc #d=...)
+            if (!sharedData && window.location.hash) {
+                try {
+                    const hashStr = window.location.hash.replace(/^#/, '');
+                    const hashParams = new URLSearchParams(hashStr);
+                    sharedData = hashParams.get('data') || hashParams.get('d') || '';
+                } catch (e) {}
+
+                if (!sharedData) {
+                    const hashMatch = window.location.hash.match(/[#&?](data|d)=([^&]+)/);
+                    if (hashMatch && hashMatch[2]) {
+                        try {
+                            sharedData = decodeURIComponent(hashMatch[2]);
+                        } catch (e) {
+                            sharedData = hashMatch[2];
+                        }
+                    }
+                }
+            }
+
+            // 3. Fallback: Tìm trực tiếp tham số data= trong window.location.href
+            if (!sharedData && window.location.href) {
+                const hrefMatch = window.location.href.match(/[?&#](data|d)=([^&]+)/);
+                if (hrefMatch && hrefMatch[2]) {
+                    try {
+                        sharedData = decodeURIComponent(hrefMatch[2]);
+                    } catch (e) {
+                        sharedData = hrefMatch[2];
+                    }
+                }
+            }
+
+            if (sharedData) {
+                sharedData = sharedData.trim();
+                switchTab('text');
+
+                const textInput = document.getElementById('text-input');
+                if (textInput) {
+                    textInput.value = sharedData;
+                    autoDetectFormat();
+                }
+
+                const shareInfoBox = document.getElementById('text-share-info');
+                const shareInfoMsg = document.getElementById('text-share-info-msg');
+                if (shareInfoBox && shareInfoMsg) {
+                    shareInfoMsg.textContent = "Đã tự động tải dữ liệu được chia sẻ từ liên kết. Vui lòng nhập mật mã bảo vệ và bấm \"Giải mã\".";
+                    shareInfoBox.style.display = 'flex';
+                }
+
+                setTimeout(() => {
+                    const textPassword = document.getElementById('text-password');
+                    if (textPassword) {
+                        textPassword.focus();
+                    }
+                    if (textInput) {
+                        textInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+            }
+        }
+
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            checkUrlSharedData();
+        } else {
+            document.addEventListener('DOMContentLoaded', checkUrlSharedData);
+        }
+        window.addEventListener('hashchange', checkUrlSharedData);
+        window.addEventListener('popstate', checkUrlSharedData);
 
         // ==========================================
         // XỬ LÝ MÃ HOÁ VÀ GIẢI MÃ TỆP TIN
@@ -1385,23 +1563,16 @@
             reader.readAsArrayBuffer(selectedFile);
         }
 
-        // Tự động xoá mật mã và nội dung văn bản khi chuyển tab hoặc rời khỏi cửa sổ
+        // Tự động xoá mật mã bảo vệ khi chuyển tab hoặc rời khỏi cửa sổ (chỉ xoá mật mã để bảo vệ, giữ nguyên văn bản)
         function clearSensitiveInputs() {
-            // 1. Xoá dữ liệu ô nhập văn bản và mật mã
-            const textInput = document.getElementById('text-input');
             const textPassword = document.getElementById('text-password');
             const filePassword = document.getElementById('file-password');
             
-            if (textInput) textInput.value = '';
             if (textPassword) textPassword.value = '';
             if (filePassword) filePassword.value = '';
 
             updatePasswordStrength('text-password', 'text-password-strength');
             updatePasswordStrength('file-password', 'file-password-strength');
-
-            // 2. Ẩn huy hiệu tự động phát hiện định dạng
-            const autoBadge = document.getElementById('auto-detect-badge');
-            if (autoBadge) autoBadge.style.display = 'none';
         }
 
         // Lắng nghe sự kiện chuyển tab hoặc ẩn cửa sổ trình duyệt
