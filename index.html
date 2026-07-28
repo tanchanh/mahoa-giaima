@@ -13,8 +13,9 @@
             --primary-color: #5000a0;
             --btn-encrypt-bg: #0000a0;
             --btn-encrypt-hover: #505050;
-            --btn-decrypt-bg: #3c00a0;
+            --btn-decrypt-bg: #5a2800;
             --btn-decrypt-hover: #505050;
+            --btn-action-bg: #004600;
             --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
             --gradient-btn: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
             --text-color: #f0f6fc;
@@ -260,6 +261,11 @@
             outline: none;
         }
 
+        #btn-copy-text,
+        #btn-download-file {
+            background-color: var(--btn-action-bg);
+        }
+
         .btn-secondary {
             background-color: #21262d;
             color: var(--text-color);
@@ -272,8 +278,8 @@
         }
 
         .btn-danger {
-            background-color: #21262d;
-            color: #ff8040;
+            background-color: #50003c;
+            color: #ffb400;
             border: 2px solid rgba(255, 128, 64, 0.4);
         }
 
@@ -624,7 +630,7 @@
                     <span id="text-result-title" class="result-title">
                         ✓ Xử lý thành công
                     </span>
-                    <button type="button" id="btn-copy-text" class="btn btn-secondary" onclick="copyResultWithTimer('text-output', this)">
+                    <button type="button" id="btn-copy-text" class="btn btn-secondary" onclick="copyTextResult('text-output', this)">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                         </svg>
@@ -634,9 +640,6 @@
 
                 <div id="text-ratio-display" class="ratio-badge" style="display: none;"></div>
                 <div id="text-output" class="result-code"></div>
-                <div id="copy-countdown-notice" style="font-size: 0.85rem; color: var(--text-muted); text-align: right; display: none;">
-                    ⏱ Bộ nhớ tạm (Clipboard) sẽ được xoá sau <span id="timer-seconds">45</span> giây để bảo mật.
-                </div>
             </div>
 
             <!-- Lỗi văn bản -->
@@ -706,6 +709,15 @@
                 </button>
             </div>
 
+            <div class="actions-secondary">
+                <button type="button" class="btn btn-danger" onclick="clearAllFile()">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Xoá sạch
+                </button>
+            </div>
+
             <!-- Progress bar -->
             <div id="file-progress-box" class="progress-box" style="display: none;">
                 <div class="progress-info">
@@ -721,8 +733,14 @@
             <div id="file-result-panel" class="result-box success" style="display: none;">
                 <div class="result-header">
                     <span id="file-result-title" class="result-title">
-                        ✓ Tải xuống tập tin hoàn tất
+                        ✓ Xử lý tập tin thành công
                     </span>
+                    <button type="button" id="btn-download-file" class="btn btn-secondary" onclick="downloadProcessedFile()">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Tải xuống
+                    </button>
                 </div>
                 <div id="file-ratio-display" class="ratio-badge" style="display: none;"></div>
                 <p id="file-success-msg" style="margin-top: 0.5rem; color: #e6edf3;">Tập tin đã được xử lý thành công.</p>
@@ -754,7 +772,7 @@
             document.getElementById(`tab-${tabName}`).classList.add('active');
             document.getElementById(`tab-${tabName}-btn`).classList.add('active');
 
-            hideAlerts();
+            clearSensitiveInputs();
         }
 
         function hideAlerts() {
@@ -934,19 +952,13 @@
             const ratioBadge = document.getElementById('text-ratio-display');
             const resultTitle = document.getElementById('text-result-title');
 
-            // Đặt lại trạng thái bộ đếm giờ sao chép và thông báo cũ
-            if (clipboardTimer) {
-                clearInterval(clipboardTimer);
-                clipboardTimer = null;
-            }
+            // Đặt lại trạng thái nút sao chép
             const copyBtn = document.getElementById('btn-copy-text');
             if (copyBtn) {
                 copyBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg> Sao chép kết quả`;
                 copyBtn.style.borderColor = "";
                 copyBtn.style.color = "";
             }
-            const copyNotice = document.getElementById('copy-countdown-notice');
-            if (copyNotice) copyNotice.style.display = 'none';
 
             resultPanel.style.display = 'none';
             errorAlert.style.display = 'none';
@@ -1011,9 +1023,6 @@
                     outputBox.textContent = base64Result;
                     resultPanel.style.display = 'block';
 
-                    // Tự động sao chép bản mã sau khi mã hoá thành công
-                    copyResultWithTimer('text-output', copyBtn);
-
                 } else {
                     // Giải mã văn bản (KHÔNG tự động sao chép để đảm bảo bảo mật)
                     let combinedBytes;
@@ -1072,40 +1081,23 @@
             hideAlerts();
         }
 
-        // Tự động xoá bộ nhớ tạm (Clipboard) sau 45s
-        let clipboardTimer = null;
-        async function copyResultWithTimer(elementId, btn) {
+        // Sao chép kết quả văn bản
+        async function copyTextResult(elementId, btn) {
             const textToCopy = document.getElementById(elementId).textContent;
             if (!textToCopy) return;
 
             try {
                 await navigator.clipboard.writeText(textToCopy);
-                const originalText = btn.innerHTML;
+                const originalHTML = btn.innerHTML;
                 btn.innerHTML = "✓ Đã sao chép!";
                 btn.style.borderColor = "#3fb950";
                 btn.style.color = "#3fb950";
 
-                const notice = document.getElementById('copy-countdown-notice');
-                const secondsSpan = document.getElementById('timer-seconds');
-                notice.style.display = 'block';
-
-                let remaining = 60;
-                secondsSpan.textContent = remaining;
-
-                if (clipboardTimer) clearInterval(clipboardTimer);
-
-                clipboardTimer = setInterval(() => {
-                    remaining--;
-                    secondsSpan.textContent = remaining;
-                    if (remaining <= 0) {
-                        clearInterval(clipboardTimer);
-                        navigator.clipboard.writeText(''); // Clear clipboard
-                        notice.style.display = 'none';
-                        btn.innerHTML = originalText;
-                        btn.style.borderColor = "";
-                        btn.style.color = "";
-                    }
-                }, 1000);
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.borderColor = "";
+                    btn.style.color = "";
+                }, 2000);
 
             } catch (err) {
                 alert("Không thể sao chép tự động. Vui lòng chọn thủ công toàn bộ kết quả.");
@@ -1117,6 +1109,8 @@
         // ==========================================
 
         let selectedFile = null;
+        let processedFileUrl = null;
+        let processedFileName = null;
         const dropZone = document.getElementById('drop-zone');
 
         ['dragenter', 'dragover'].forEach(name => {
@@ -1162,7 +1156,39 @@
             updatePasswordStrength('file-password', 'file-password-strength');
             document.getElementById('file-info').style.display = 'none';
             dropZone.style.display = 'flex';
+            if (processedFileUrl) {
+                URL.revokeObjectURL(processedFileUrl);
+                processedFileUrl = null;
+            }
+            processedFileName = null;
             hideAlerts();
+        }
+
+        function clearAllFile() {
+            clearSelectedFile();
+        }
+
+        function downloadProcessedFile() {
+            if (!processedFileUrl || !processedFileName) return;
+            const a = document.createElement('a');
+            a.href = processedFileUrl;
+            a.download = processedFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            const btn = document.getElementById('btn-download-file');
+            if (btn) {
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã tải xuống!`;
+                btn.style.borderColor = "#3fb950";
+                btn.style.color = "#3fb950";
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.style.borderColor = "";
+                    btn.style.color = "";
+                }, 2000);
+            }
         }
 
         function showFileProgress(status, percent) {
@@ -1243,17 +1269,21 @@
                         finalBuffer.set(iv, salt.length);
                         finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
 
-                        showFileProgress("Đang chuẩn bị tập tin tải xuống...", 95);
+                        showFileProgress("Đang chuẩn bị tập tin...", 95);
 
+                        if (processedFileUrl) {
+                            URL.revokeObjectURL(processedFileUrl);
+                        }
                         const blob = new Blob([finalBuffer], { type: "application/octet-stream" });
-                        const downloadUrl = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = downloadUrl;
-                        a.download = selectedFile.name + ".enc";
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(downloadUrl);
+                        processedFileUrl = URL.createObjectURL(blob);
+                        processedFileName = selectedFile.name + ".enc";
+
+                        const downloadBtn = document.getElementById('btn-download-file');
+                        if (downloadBtn) {
+                            downloadBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> Tải xuống`;
+                            downloadBtn.style.borderColor = "";
+                            downloadBtn.style.color = "";
+                        }
 
                         // Báo chỉ số nén
                         const origSize = selectedFile.size;
@@ -1272,7 +1302,7 @@
 
                         ratioBadge.textContent = ratioText;
                         ratioBadge.style.display = 'inline-block';
-                        successMsg.textContent = `Tập tin "${selectedFile.name}.enc" đã được mã hoá và tải xuống máy tính của bạn.`;
+                        successMsg.textContent = `Tập tin "${selectedFile.name}.enc" đã được mã hoá thành công. Nhấp nút "Tải xuống" bên trên để lưu về máy.`;
                         document.getElementById('file-result-title').textContent = "✓ Mã hoá tập tin thành công";
 
                     } else {
@@ -1322,17 +1352,21 @@
                             originalFilename = selectedFile.name.replace(/\.enc$/i, '') || "file_restored";
                         }
 
+                        if (processedFileUrl) {
+                            URL.revokeObjectURL(processedFileUrl);
+                        }
                         const blob = new Blob([originalFileBytes], { type: "application/octet-stream" });
-                        const downloadUrl = URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = downloadUrl;
-                        a.download = originalFilename;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(downloadUrl);
+                        processedFileUrl = URL.createObjectURL(blob);
+                        processedFileName = originalFilename;
 
-                        successMsg.textContent = `Tập tin gốc "${originalFilename}" đã được phục hồi và tải xuống thành công.`;
+                        const downloadBtn = document.getElementById('btn-download-file');
+                        if (downloadBtn) {
+                            downloadBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> Tải xuống`;
+                            downloadBtn.style.borderColor = "";
+                            downloadBtn.style.color = "";
+                        }
+
+                        successMsg.textContent = `Tập tin gốc "${originalFilename}" đã được phục hồi thành công. Nhấp nút "Tải xuống" bên trên để lưu về máy.`;
                         document.getElementById('file-result-title').textContent = "✓ Giải mã tập tin thành công";
                     }
 
@@ -1351,8 +1385,8 @@
             reader.readAsArrayBuffer(selectedFile);
         }
 
-        // Tự động xoá toàn bộ dữ liệu vừa nhập khi rời khỏi tab hoặc mở ứng dụng khác
-        function autoClearAllData() {
+        // Tự động xoá mật mã và nội dung văn bản khi chuyển tab hoặc rời khỏi cửa sổ
+        function clearSensitiveInputs() {
             // 1. Xoá dữ liệu ô nhập văn bản và mật mã
             const textInput = document.getElementById('text-input');
             const textPassword = document.getElementById('text-password');
@@ -1365,36 +1399,20 @@
             updatePasswordStrength('text-password', 'text-password-strength');
             updatePasswordStrength('file-password', 'file-password-strength');
 
-            // 2. Ẩn các huy hiệu phát hiện và thông báo
+            // 2. Ẩn huy hiệu tự động phát hiện định dạng
             const autoBadge = document.getElementById('auto-detect-badge');
             if (autoBadge) autoBadge.style.display = 'none';
-
-            // 3. Xoá thông tin tập tin đã chọn
-            clearSelectedFile();
-
-            // 4. Dừng đếm ngược tự động xoá Clipboard nếu đang chạy
-            if (clipboardTimer) {
-                clearInterval(clipboardTimer);
-                clipboardTimer = null;
-            }
-
-            // 5. Ẩn các khung thông báo kết quả và lỗi
-            hideAlerts();
-
-            // 6. Xoá nội dung kết quả văn bản
-            const textOutput = document.getElementById('text-output');
-            if (textOutput) textOutput.textContent = '';
         }
 
         // Lắng nghe sự kiện chuyển tab hoặc ẩn cửa sổ trình duyệt
         document.addEventListener('visibilitychange', function () {
             if (document.hidden) {
-                autoClearAllData();
+                clearSensitiveInputs();
             }
         });
 
         window.addEventListener('blur', function () {
-            autoClearAllData();
+            clearSensitiveInputs();
         });
     </script>
 </body>
