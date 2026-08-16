@@ -4,64 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mã Hoá & Giải Mã AES-256 (Có Nén) - D.T.Chánh</title>
+    <title>Mã Hoá & Giải Mã AES-256 (Có Nén) - Dương Tấn Chánh</title>
     <style>
-        :root {
-            --bg-color: #0d1117;
-            --card-bg: rgba(22, 27, 34, 0.85);
-            --card-border: #30363d;
-            --primary-color: #5000a0;
-            --btn-encrypt-bg: #0000a0;
-            --btn-encrypt-hover: #505050;
-            --btn-decrypt-bg: #5a2800;
-            --btn-decrypt-hover: #505050;
-            --btn-action-bg: #004600;
-            --gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            --gradient-btn: linear-gradient(135deg, #7c3aed 0%, #db2777 100%);
-            --text-color: #f0f6fc;
-            --text-muted: #8b949e;
-            --success-color: #238636;
-            --success-bg: rgba(35, 134, 54, 0.15);
-            --error-color: #da3633;
-            --error-bg: rgba(218, 54, 51, 0.15);
-            --info-bg: rgba(56, 139, 253, 0.15);
-            --info-border: rgba(56, 139, 253, 0.4);
-            --info-text: #58a6ff;
-        }
-
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #f0f6fc;
+            --border-color: #30363d;
+            --primary-color: #EE5905;
+            --color-decrypt: #3052DB;
+            --color-success: #7FDD0F;
+            --color-danger: #FA211A;
+            --color-warning: #d29922;
+            --card-background: #161b22;
+            --text-muted: #8b949e;
+            --border-radius: 0.5rem;
+            --padding-standard: 1rem;
+            --padding-small: 0.5rem;
+        }
+
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: normal;
             color: var(--text-color);
             background-color: var(--bg-color);
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
-            background-attachment: fixed;
             padding: 0.5rem;
             padding-bottom: 5rem;
             line-height: 1.5;
             display: flex;
             flex-direction: column;
-            align-items: center;
-        }
-
-        .main-container {
-            max-width: 48rem;
             width: 100%;
-            background-color: var(--card-bg);
-            border: 2px solid var(--card-border);
-            border-radius: 1rem;
-            padding: 1rem;
-            margin-top: 0.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            min-height: 100vh;
         }
 
         h1 {
@@ -70,16 +51,7 @@
             text-align: center;
             margin-top: 0.5rem;
             margin-bottom: 0.25rem;
-            color: #ffffff;
-        }
-
-        .author {
-            font-size: 1.2rem;
-            font-style: normal;
-            text-align: right;
-            color: #ffffff;
-            margin-bottom: 1rem;
-            font-weight: normal;
+            color: var(--text-color);
         }
 
         h2 {
@@ -91,6 +63,14 @@
         }
 
         h3 {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        h4 {
             font-size: 1.2rem;
             font-weight: bold;
             margin-top: 0.5rem;
@@ -98,153 +78,227 @@
             color: var(--text-color);
         }
 
-        /* Tabs System */
-        .tabs {
-            display: flex;
-            background: #161b22;
-            border: 2px solid var(--card-border);
-            border-radius: 0.5rem;
-            padding: 0.25rem;
+        .author-name {
+            font-size: 1.2rem;
+            font-style: normal;
+            font-weight: normal;
+            text-align: right;
+            color: var(--text-muted);
             margin-bottom: 1rem;
-            gap: 0.25rem;
         }
 
-        .tab-btn {
+        .application-panel {
+            width: 100%;
+            background-color: var(--card-background);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--padding-standard);
+            margin-top: 0.5rem;
+        }
+
+        /* Tabs Điều hướng */
+        .navigation-tabs {
+            display: flex;
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 0.3rem;
+            margin-bottom: 1rem;
+            gap: 0.3rem;
+        }
+
+        .tab-button {
             flex: 1;
             background: transparent;
-            border: none;
+            border: 2px solid transparent;
             color: var(--text-muted);
-            padding: 0.6rem 0.8rem;
-            border-radius: 0.38rem;
-            font-size: 1rem;
+            padding: 0.6rem 1rem;
+            border-radius: 0.4rem;
+            font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
             transition: all 0.2s ease;
         }
 
-        .tab-btn:hover {
+        .tab-button:hover {
             color: var(--text-color);
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .tab-btn.active {
+        .tab-button.is-active {
             color: #ffffff;
-            background: var(--gradient-btn);
+            background: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .tab-content {
             display: none;
         }
 
-        .tab-content.active {
+        .tab-content.is-active {
             display: block;
         }
 
-        /* Form Controls */
+        /* Biểu mẫu và Hộp nhập liệu */
         .form-group {
             margin-bottom: 1rem;
         }
 
-        label {
+        .form-group-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.4rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .form-label {
             display: block;
             margin-bottom: 0.4rem;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 1.1rem;
             color: var(--text-color);
         }
 
-        textarea,
-        input[type="text"],
-        input[type="password"] {
+        .form-label-inline {
+            margin-bottom: 0;
+        }
+
+        .btn-copy-password {
             font-family: inherit;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 0.25rem 0.6rem;
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: 0.4rem;
+            color: var(--text-color);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-copy-password:hover {
+            border-color: var(--primary-color);
+            color: #ffffff;
+        }
+
+        .btn-copy-password.is-copied {
+            border-color: var(--color-success);
+            color: var(--color-success);
+        }
+
+        .text-input {
+            font-family: inherit;
+            font-size: 1.2rem;
             width: 100%;
             padding: 0.6rem 0.8rem;
-            border: 2px solid var(--card-border);
+            border: 2px solid var(--border-color);
             border-radius: 0.4rem;
-            background-color: #0d1117;
+            background-color: var(--bg-color);
             color: var(--text-color);
-            transition: border-color 0.2s;
+            transition: border-color 0.2s ease;
         }
 
-        textarea {
-            min-height: 7.5rem;
+        .password-input {
+            font-family: ui-monospace, SFMono-Regular, "Cascadia Code", "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+            font-size: 1.2rem;
+            letter-spacing: 0.05rem;
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.4rem;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.2s ease;
+        }
+
+        .text-area-input {
+            min-height: 8rem;
             resize: vertical;
             line-height: 1.4;
             overflow-wrap: break-word;
             word-break: normal;
         }
 
-        textarea:focus,
-        input[type="text"]:focus,
-        input[type="password"]:focus {
+        .text-input:focus,
+        .password-input:focus {
             outline: none;
             border-color: var(--primary-color);
         }
 
-        /* Password Input Wrapper */
-        .password-wrapper {
+        .password-container {
             position: relative;
             display: flex;
             align-items: center;
         }
 
-        .password-wrapper input {
-            padding-right: 2.8rem;
+        .password-container input {
+            padding-right: 3rem;
         }
 
-        .toggle-password {
+        .password-toggle-button {
             position: absolute;
-            right: 0.4rem;
+            right: 0.5rem;
             background: transparent;
-            border: none;
+            border: 2px solid transparent;
             color: var(--text-muted);
             cursor: pointer;
             padding: 0.4rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 0.3rem;
         }
 
-        .toggle-password:hover {
+        .password-toggle-button:hover {
             color: var(--text-color);
         }
 
-        /* Mode indicator badge */
-        .mode-badge {
+        /* Huy hiệu trạng thái */
+        .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.25rem 0.6rem;
-            border: 2px solid var(--info-border);
-            background: var(--info-bg);
-            color: var(--info-text);
+            gap: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            border: 2px solid var(--border-color);
+            background: var(--bg-color);
+            color: var(--text-color);
             border-radius: 0.4rem;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: bold;
-            margin-top: 0.4rem;
+            margin-top: 0.5rem;
         }
 
-        /* Actions buttons */
-        .actions-grid {
+        .status-badge-detect {
+            border-color: var(--primary-color);
+            color: #ffffff;
+            background: rgba(238, 89, 5, 0.2);
+        }
+
+        /* Lưới các nút thao tác */
+        .action-button-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.6rem;
+            gap: 0.8rem;
             margin-top: 1rem;
             margin-bottom: 1rem;
         }
 
-        .actions-secondary {
+        .secondary-button-container {
             display: flex;
             justify-content: flex-end;
             margin-bottom: 1rem;
         }
 
-        button.btn {
+        .btn-base {
             font-family: inherit;
             font-size: 1.1rem;
             font-weight: bold;
@@ -254,89 +308,88 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
-            transition: all 0.2s;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
             border: 2px solid transparent;
-        }
-
-        button.btn:focus {
-            outline: none;
-        }
-
-        #btn-copy-text,
-        #btn-share-text,
-        #btn-download-file {
-            background-color: var(--btn-action-bg);
-        }
-
-        .btn-secondary {
-            background-color: #21262d;
-            color: var(--text-color);
-            border: 2px solid var(--card-border);
-        }
-
-        .btn-secondary:hover {
-            background-color: #30363d;
-            border-color: #8b949e;
-        }
-
-        .btn-danger {
-            background-color: #50003c;
-            color: #ffb400;
-            border: 2px solid rgba(255, 128, 64, 0.4);
-        }
-
-        .btn-danger:hover {
-            background-color: rgba(255, 128, 64, 0.15);
-            border-color: #ff8040;
+            color: #ffffff;
         }
 
         .btn-encrypt {
-            background-color: var(--btn-encrypt-bg);
-            color: #ffffff;
-            border: 2px solid var(--btn-encrypt-bg);
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
         }
 
         .btn-encrypt:hover {
-            background-color: var(--btn-encrypt-hover);
-            border-color: var(--btn-encrypt-hover);
+            opacity: 0.9;
         }
 
         .btn-decrypt {
-            background-color: var(--btn-decrypt-bg);
-            color: #ffffff;
-            border: 2px solid var(--btn-decrypt-bg);
+            background-color: var(--color-decrypt);
+            border-color: var(--color-decrypt);
         }
 
         .btn-decrypt:hover {
-            background-color: var(--btn-decrypt-hover);
-            border-color: var(--btn-decrypt-hover);
+            opacity: 0.9;
         }
 
-        /* Password Strength Meter */
-        .strength-wrapper {
-            margin-top: 0.5rem;
+        .btn-action-neutral {
+            background-color: var(--card-background);
+            color: var(--text-color);
+            border-color: var(--border-color);
         }
 
-        .strength-bar-track {
+        .btn-action-neutral:hover {
+            background-color: var(--border-color);
+        }
+
+        .btn-clear-danger {
+            background-color: transparent;
+            color: var(--color-danger);
+            border-color: var(--color-danger);
+        }
+
+        .btn-clear-danger:hover {
+            background-color: var(--color-danger);
+            color: #ffffff;
+        }
+
+        .btn-success {
+            background-color: #238636;
+            border-color: #238636;
+        }
+
+        .btn-success:hover {
+            opacity: 0.9;
+        }
+
+        /* Thước đo và Tiêu chí đánh giá mật mã */
+        .password-strength-box {
+            margin-top: 0.6rem;
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0.4rem;
+            background-color: var(--bg-color);
+        }
+
+        .strength-progress-track {
             height: 0.5rem;
             width: 100%;
-            background-color: #21262d;
+            background-color: var(--card-background);
             border-radius: 0.25rem;
             overflow: hidden;
-            border: 2px solid var(--card-border);
+            border: 2px solid var(--border-color);
         }
 
-        .strength-bar-fill {
+        .strength-progress-bar {
             height: 100%;
             width: 0%;
             border-radius: 0.25rem;
             transition: width 0.25s ease, background-color 0.25s ease;
         }
 
-        .strength-label {
-            font-size: 0.9rem;
-            margin-top: 0.3rem;
+        .strength-description {
+            font-size: 1rem;
+            margin-top: 0.4rem;
             display: flex;
             align-items: center;
             gap: 0.3rem;
@@ -344,65 +397,116 @@
         }
 
         .strength-weak {
-            color: #f85149;
+            color: var(--color-danger);
         }
 
         .strength-medium {
-            color: #e3b341;
+            color: var(--color-warning);
         }
 
         .strength-strong {
-            color: #3fb950;
+            color: var(--color-decrypt);
         }
 
-        /* Drag & Drop Zone */
-        .drop-zone {
-            border: 2px dashed var(--card-border);
-            border-radius: 0.5rem;
-            padding: 1.5rem 1rem;
+        .strength-very-strong {
+            color: var(--color-success);
+        }
+
+        .criteria-checklist {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.4rem 1rem;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .criteria-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .criteria-badge {
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .criteria-badge.is-valid {
+            color: var(--color-success);
+        }
+
+        .criteria-badge.is-invalid {
+            color: var(--text-muted);
+        }
+
+        /* Khu vực kéo thả và dán tập tin */
+        .drop-file-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--padding-standard);
             text-align: center;
             cursor: pointer;
-            background: #0d1117;
+            background: var(--bg-color);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
 
-        .drop-zone:hover,
-        .drop-zone.dragover {
+        .drop-file-zone:hover,
+        .drop-file-zone.is-drag-over {
             border-color: var(--primary-color);
-            background: rgba(139, 92, 246, 0.1);
+            background: rgba(238, 89, 5, 0.08);
         }
 
-        .drop-zone-icon {
+        .drop-file-icon {
             color: var(--primary-color);
+        }
+
+        .drop-zone-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .drop-zone-subtext {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            font-weight: normal;
         }
 
         .hidden-file-input {
             display: none;
         }
 
-        .file-info-box {
+        .file-selected-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #0d1117;
-            border: 2px solid var(--card-border);
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
             border-radius: 0.4rem;
             padding: 0.6rem 0.8rem;
             margin-top: 0.6rem;
         }
 
-        .file-details {
+        .file-selected-details {
             display: flex;
             align-items: center;
             gap: 0.6rem;
             overflow: hidden;
         }
 
-        .file-name-text {
+        .file-selected-name {
             font-weight: bold;
             color: var(--text-color);
             white-space: nowrap;
@@ -410,26 +514,26 @@
             text-overflow: ellipsis;
         }
 
-        .file-size-text {
-            font-size: 0.9rem;
+        .file-selected-size {
+            font-size: 0.95rem;
             color: var(--text-muted);
+            font-weight: normal;
         }
 
-        /* Result Panel & Info Box */
-        .result-box {
-            background-color: #0d1117;
-            border: 2px solid var(--card-border);
-            border-radius: 0.5rem;
-            padding: 1rem;
+        /* Khung hiển thị kết quả */
+        .result-container {
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--padding-standard);
             margin-top: 1rem;
         }
 
-        .result-box.success {
-            border-color: var(--success-color);
-            background-color: var(--success-bg);
+        .result-container.is-success {
+            border-color: var(--color-success);
         }
 
-        .result-header {
+        .result-header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -438,46 +542,57 @@
             gap: 0.5rem;
         }
 
-        .result-title {
+        .result-heading-text {
             display: flex;
             align-items: center;
             gap: 0.4rem;
             font-weight: bold;
-            color: #3fb950;
+            color: var(--color-success);
+            font-size: 1.2rem;
         }
 
-        .result-code {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            background-color: #161b22;
-            border: 2px solid var(--card-border);
+        .result-button-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .result-text-display {
+            font-family: ui-monospace, SFMono-Regular, "Cascadia Code", "Source Code Pro", Menlo, Monaco, Consolas, "Courier New", monospace;
+            background-color: var(--card-background);
+            border: 2px solid var(--border-color);
             border-radius: 0.4rem;
             padding: 0.8rem;
-            font-size: 0.95rem;
-            max-height: 12rem;
+            font-size: 1rem;
+            max-height: 14rem;
             overflow-y: auto;
             white-space: pre-wrap;
             overflow-wrap: break-word;
             word-break: normal;
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
-            color: #e6edf3;
+            color: var(--text-color);
         }
 
-        /* Ratio Indicator badge */
-        .ratio-badge {
+        .result-ratio-indicator {
             display: inline-block;
             padding: 0.3rem 0.6rem;
-            border: 2px solid var(--info-border);
-            background: var(--info-bg);
-            color: var(--info-text);
+            border: 2px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
             border-radius: 0.4rem;
             font-size: 0.95rem;
             font-weight: bold;
             margin-top: 0.4rem;
         }
 
-        /* Alert notifications */
-        .alert {
+        .file-success-message {
+            margin-top: 0.5rem;
+            color: var(--text-color);
+        }
+
+        /* Khung thông báo lỗi / tin nhắn */
+        .notification-alert {
             display: flex;
             align-items: flex-start;
             gap: 0.6rem;
@@ -485,66 +600,83 @@
             border-radius: 0.4rem;
             margin-top: 1rem;
             font-size: 1rem;
+            border: 2px solid transparent;
         }
 
-        .alert-error {
-            background-color: var(--error-bg);
-            border: 2px solid var(--error-color);
+        .alert-danger {
+            background-color: rgba(218, 54, 51, 0.15);
+            border-color: var(--color-danger);
             color: #f85149;
         }
 
-        /* Progress Bar */
-        .progress-box {
+        .alert-information {
+            background-color: rgba(56, 139, 253, 0.15);
+            border-color: #388bfd;
+            color: #58a6ff;
+            margin-top: 0.5rem;
+        }
+
+        /* Thanh tiến trình xử lý tập tin */
+        .progress-container {
             margin-top: 1rem;
-            background: #0d1117;
-            border: 2px solid var(--card-border);
+            background: var(--bg-color);
+            border: 2px solid var(--border-color);
             border-radius: 0.4rem;
             padding: 0.8rem;
         }
 
-        .progress-info {
+        .progress-header-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 0.4rem;
             color: var(--text-muted);
             font-weight: bold;
         }
 
-        .progress-bar-bg {
+        .progress-bar-track {
             height: 0.6rem;
-            background: #21262d;
+            background: var(--card-background);
             border-radius: 0.3rem;
             overflow: hidden;
-            border: 1px solid var(--card-border);
+            border: 2px solid var(--border-color);
         }
 
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: var(--gradient-accent);
+            background: var(--primary-color);
             transition: width 0.15s linear;
         }
 
-        footer {
+        /* Footer */
+        .page-footer {
             margin-top: 2rem;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-muted);
-            max-width: 44rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        /* Lớp ẩn phần tử */
+        .is-hidden {
+            display: none;
         }
 
         @media (max-width: 600px) {
             body {
-                padding: 0.4rem;
+                padding: 0.5rem;
                 padding-bottom: 5rem;
             }
 
-            .actions-grid {
+            .action-button-grid {
                 grid-template-columns: 1fr;
             }
 
-            .result-header {
+            .result-header-bar {
                 flex-direction: column;
                 align-items: flex-start;
             }
@@ -554,19 +686,19 @@
 
 <body>
 
-    <div class="main-container">
-        <h1>MÃ HOÁ & GIẢI MÃ AES-256</h1>
-        <div class="author">D.T.Chánh</div>
+    <h1>MÃ HOÁ & GIẢI MÃ AES-256</h1>
+    <div class="author-name">Dương Tấn Chánh</div>
 
-        <!-- Tabs Navigation -->
-        <div class="tabs">
-            <button id="tab-text-btn" class="tab-btn active" onclick="switchTab('text')">
+    <div class="application-panel">
+        <!-- Bộ chuyển đổi Tab -->
+        <div class="navigation-tabs">
+            <button id="tab-btn-text" class="tab-button is-active" type="button" onclick="switchTab('text')">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
                 </svg>
                 Văn Bản
             </button>
-            <button id="tab-file-btn" class="tab-btn" onclick="switchTab('file')">
+            <button id="tab-btn-file" class="tab-button" type="button" onclick="switchTab('file')">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -575,47 +707,83 @@
             </button>
         </div>
 
-        <!-- Tab 1: Xử lý Văn bản -->
-        <div id="tab-text" class="tab-content active">
+        <!-- ======================= TAB 1: VĂN BẢN ======================= -->
+        <div id="tab-content-text" class="tab-content is-active">
             <div class="form-group">
-                <label for="text-input">Dữ liệu văn bản đầu vào (Văn bản thường hoặc Chuỗi mã hoá Base64):</label>
-                <textarea id="text-input" placeholder="Nhập nội dung cần mã hoá hoặc dán bản mã Base64 vào đây..." oninput="autoDetectFormat()"></textarea>
-                <div id="auto-detect-badge" class="mode-badge" style="display: none;">
-                    🔍 Phát hiện chuỗi mã hoá Base64 — Sẵn sàng giải mã
+                <label class="form-label" for="input-text-data">Dữ liệu văn bản đầu vào (Văn bản thường hoặc Chuỗi mã hoá Base64):</label>
+                <textarea id="input-text-data" class="text-input text-area-input" placeholder="Nhập nội dung cần mã hoá hoặc dán bản mã Base64 vào đây..." oninput="detectInputFormat()"></textarea>
+                <div id="detect-badge" class="status-badge status-badge-detect is-hidden">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Phát hiện chuỗi mã hoá Base64 — Sẵn sàng giải mã
                 </div>
-                <div id="text-share-info" class="alert" style="display: none; margin-top: 0.5rem; border: 2px solid #388bfd; background-color: rgba(56, 139, 253, 0.15); color: #58a6ff; padding: 0.6rem 0.8rem; border-radius: 0.4rem; font-size: 0.95rem; align-items: center; gap: 0.5rem;">
-                    <span>ℹ️</span>
-                    <span id="text-share-info-msg"></span>
+                <div id="share-link-alert" class="notification-alert alert-information is-hidden">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span id="share-link-message"></span>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="text-password">Mật mã bảo vệ (Password):</label>
-                <div class="password-wrapper">
-                    <input type="password" id="text-password" placeholder="Nhập mật mã mã hoá / giải mã..." oninput="updatePasswordStrength('text-password', 'text-password-strength')">
-                    <button class="toggle-password" type="button" onclick="togglePassword('text-password', this)" title="Ẩn/Hiện mật mã">
+                <div class="form-group-header">
+                    <label class="form-label form-label-inline" for="password-text-field">Mật mã bảo vệ (Password):</label>
+                    <button type="button" class="btn-copy-password" onclick="copyPassword('password-text-field', this)" title="Sao chép mật mã">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        Chép mật mã
+                    </button>
+                </div>
+                <div class="password-container">
+                    <input type="password" id="password-text-field" class="password-input" placeholder="Nhập mật mã mã hoá / giải mã..." oninput="evaluatePasswordStrengthUI('password-text-field', 'password-text-strength')">
+                    <button class="password-toggle-button" type="button" onclick="togglePasswordVisibility('password-text-field', this)" title="Ẩn/Hiện mật mã">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                     </button>
                 </div>
-                <div id="text-password-strength" class="strength-wrapper" style="display: none;">
-                    <div class="strength-bar-track">
-                        <div class="strength-bar-fill"></div>
+                <!-- Bảng đánh giá chi tiết mật mã -->
+                <div id="password-text-strength" class="password-strength-box is-hidden">
+                    <div class="strength-progress-track">
+                        <div class="strength-progress-bar"></div>
                     </div>
-                    <div class="strength-label"></div>
+                    <div class="strength-description"></div>
+                    <div class="criteria-checklist">
+                        <span class="criteria-item">
+                            <span>Độ dài: <strong class="criteria-length-num">0</strong> ký tự</span>
+                            <span class="criteria-badge badge-length is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Chữ hoa</span>
+                            <span class="criteria-badge badge-uppercase is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Chữ thường</span>
+                            <span class="criteria-badge badge-lowercase is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Chữ số</span>
+                            <span class="criteria-badge badge-number is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Ký hiệu</span>
+                            <span class="criteria-badge badge-symbol is-invalid">✕</span>
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div class="actions-grid">
-                <button type="button" class="btn btn-encrypt" onclick="processText(true)">
+            <div class="action-button-grid">
+                <button type="button" class="btn-base btn-encrypt" onclick="executeTextProcess(true)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Mã hoá (có nén)
+                    Mã hoá
                 </button>
-                <button type="button" class="btn btn-decrypt" onclick="processText(false)">
+                <button type="button" class="btn-base btn-decrypt" onclick="executeTextProcess(false)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
@@ -623,8 +791,8 @@
                 </button>
             </div>
 
-            <div class="actions-secondary">
-                <button type="button" class="btn btn-danger" onclick="clearAllText()">
+            <div class="secondary-button-container">
+                <button type="button" class="btn-base btn-clear-danger" onclick="clearTextForm()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
@@ -633,19 +801,19 @@
             </div>
 
             <!-- Kết quả văn bản -->
-            <div id="text-result-panel" class="result-box success" style="display: none;">
-                <div class="result-header">
-                    <span id="text-result-title" class="result-title">
+            <div id="panel-text-result" class="result-container is-success is-hidden">
+                <div class="result-header-bar">
+                    <span id="heading-text-result" class="result-heading-text">
                         ✓ Xử lý thành công
                     </span>
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <button type="button" id="btn-copy-text" class="btn btn-secondary" onclick="copyTextResult('text-output', this)">
+                    <div class="result-button-group">
+                        <button type="button" id="btn-copy-result-text" class="btn-base btn-success" onclick="copyResultContent('display-text-output', this)">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                             </svg>
                             Sao chép kết quả
                         </button>
-                        <button type="button" id="btn-share-text" class="btn btn-secondary" onclick="shareTextResult()" style="display: none;">
+                        <button type="button" id="btn-share-result-text" class="btn-base btn-action-neutral is-hidden" onclick="shareEncryptedLink()">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                             </svg>
@@ -653,71 +821,106 @@
                         </button>
                     </div>
                 </div>
-
-                <div id="text-ratio-display" class="ratio-badge" style="display: none;"></div>
-                <div id="text-output" class="result-code"></div>
+                <div id="ratio-text-badge" class="result-ratio-indicator is-hidden"></div>
+                <div id="display-text-output" class="result-text-display"></div>
             </div>
 
-            <!-- Lỗi văn bản -->
-            <div id="text-error" class="alert alert-error" style="display: none;">
-                <span>⚠️</span>
-                <span id="text-error-msg">Đã xảy ra lỗi</span>
+            <!-- Thông báo lỗi văn bản -->
+            <div id="alert-text-error" class="notification-alert alert-danger is-hidden">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="message-text-error">Đã xảy ra lỗi</span>
             </div>
         </div>
 
-        <!-- Tab 2: Xử lý Tập tin -->
-        <div id="tab-file" class="tab-content">
+        <!-- ======================= TAB 2: TẬP TIN ======================= -->
+        <div id="tab-content-file" class="tab-content">
             <div class="form-group">
-                <label>Tập tin xử lý:</label>
-                <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-input').click()">
-                    <div class="drop-zone-icon">
-                        <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <label class="form-label">Tập tin xử lý (Bấm để chọn, Kéo thả hoặc Dán file đã copy):</label>
+                <div class="drop-file-zone" id="area-drop-file" onclick="triggerFileInputClick()">
+                    <div class="drop-file-icon">
+                        <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
                     </div>
-                    <p style="font-weight: bold;">Kéo và thả tập tin vào đây hoặc nhấp để chọn tập tin</p>
-                    <input type="file" id="file-input" class="hidden-file-input" onchange="handleFileSelect(this)">
+                    <p class="drop-zone-text">Bấm nút để chọn, kéo thả hoặc dán (Ctrl+V) tập tin vào đây</p>
+                    <p class="drop-zone-subtext">Hỗ trợ mọi định dạng tập tin trên máy tính và điện thoại</p>
+                    <input type="file" id="input-file-element" class="hidden-file-input" onchange="onFileInputChange(this)">
                 </div>
 
-                <div id="file-info" class="file-info-box" style="display: none;">
-                    <div class="file-details">
-                        <span style="font-size: 1.4rem;">📄</span>
+                <div id="box-selected-file-info" class="file-selected-card is-hidden">
+                    <div class="file-selected-details">
+                        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
                         <div>
-                            <div id="file-name-display" class="file-name-text">filename.txt</div>
-                            <div id="file-size-display" class="file-size-text">0 KB</div>
+                            <div id="label-selected-filename" class="file-selected-name">filename.txt</div>
+                            <div id="label-selected-filesize" class="file-selected-size">0 Byte</div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.9rem;" onclick="clearSelectedFile()">Bỏ chọn</button>
+                    <button type="button" class="btn-base btn-action-neutral" onclick="removeSelectedFile()">Bỏ chọn</button>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="file-password">Mật mã bảo vệ (Password):</label>
-                <div class="password-wrapper">
-                    <input type="password" id="file-password" placeholder="Nhập mật mã bảo vệ tập tin..." oninput="updatePasswordStrength('file-password', 'file-password-strength')">
-                    <button class="toggle-password" type="button" onclick="togglePassword('file-password', this)" title="Ẩn/Hiện mật mã">
+                <div class="form-group-header">
+                    <label class="form-label form-label-inline" for="password-file-field">Mật mã bảo vệ (Password):</label>
+                    <button type="button" class="btn-copy-password" onclick="copyPassword('password-file-field', this)" title="Sao chép mật mã">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg>
+                        Chép mật mã
+                    </button>
+                </div>
+                <div class="password-container">
+                    <input type="password" id="password-file-field" class="password-input" placeholder="Nhập mật mã bảo vệ tập tin..." oninput="evaluatePasswordStrengthUI('password-file-field', 'password-file-strength')">
+                    <button class="password-toggle-button" type="button" onclick="togglePasswordVisibility('password-file-field', this)" title="Ẩn/Hiện mật mã">
                         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                     </button>
                 </div>
-                <div id="file-password-strength" class="strength-wrapper" style="display: none;">
-                    <div class="strength-bar-track">
-                        <div class="strength-bar-fill"></div>
+                <!-- Bảng đánh giá chi tiết mật mã -->
+                <div id="password-file-strength" class="password-strength-box is-hidden">
+                    <div class="strength-progress-track">
+                        <div class="strength-progress-bar"></div>
                     </div>
-                    <div class="strength-label"></div>
+                    <div class="strength-description"></div>
+                    <div class="criteria-checklist">
+                        <span class="criteria-item">
+                            <span>Độ dài: <strong class="criteria-length-num">0</strong> ký tự</span>
+                            <span class="criteria-badge badge-length is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Chữ hoa</span>
+                            <span class="criteria-badge badge-uppercase is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Chữ thường</span>
+                            <span class="criteria-badge badge-lowercase is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Chữ số</span>
+                            <span class="criteria-badge badge-number is-invalid">✕</span>
+                        </span>
+                        <span class="criteria-item">
+                            <span>Ký hiệu</span>
+                            <span class="criteria-badge badge-symbol is-invalid">✕</span>
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div class="actions-grid">
-                <button type="button" id="btn-file-encrypt" class="btn btn-encrypt" onclick="processFile(true)">
+            <div class="action-button-grid">
+                <button type="button" class="btn-base btn-encrypt" onclick="executeFileProcess(true)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
-                    Mã hoá Tập tin (có nén)
+                    Mã hoá Tập tin
                 </button>
-                <button type="button" id="btn-file-decrypt" class="btn btn-decrypt" onclick="processFile(false)">
+                <button type="button" class="btn-base btn-decrypt" onclick="executeFileProcess(false)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
@@ -725,8 +928,8 @@
                 </button>
             </div>
 
-            <div class="actions-secondary">
-                <button type="button" class="btn btn-danger" onclick="clearAllFile()">
+            <div class="secondary-button-container">
+                <button type="button" class="btn-base btn-clear-danger" onclick="clearFileForm()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
@@ -734,83 +937,101 @@
                 </button>
             </div>
 
-            <!-- Progress bar -->
-            <div id="file-progress-box" class="progress-box" style="display: none;">
-                <div class="progress-info">
-                    <span id="progress-status">Đang xử lý...</span>
-                    <span id="progress-percent">0%</span>
+            <!-- Thanh tiến trình xử lý tập tin -->
+            <div id="panel-file-progress" class="progress-container is-hidden">
+                <div class="progress-header-info">
+                    <span id="label-progress-status">Đang xử lý...</span>
+                    <span id="label-progress-percent">0%</span>
                 </div>
-                <div class="progress-bar-bg">
-                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                <div class="progress-bar-track">
+                    <div id="bar-file-progress-fill" class="progress-bar-fill"></div>
                 </div>
             </div>
 
             <!-- Kết quả tập tin -->
-            <div id="file-result-panel" class="result-box success" style="display: none;">
-                <div class="result-header">
-                    <span id="file-result-title" class="result-title">
+            <div id="panel-file-result" class="result-container is-success is-hidden">
+                <div class="result-header-bar">
+                    <span id="heading-file-result" class="result-heading-text">
                         ✓ Xử lý tập tin thành công
                     </span>
-                    <button type="button" id="btn-download-file" class="btn btn-secondary" onclick="downloadProcessedFile()">
+                    <button type="button" id="btn-download-processed-file" class="btn-base btn-success" onclick="downloadResultFile()">
                         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
-                        Tải xuống
+                        Tải xuống tập tin
                     </button>
                 </div>
-                <div id="file-ratio-display" class="ratio-badge" style="display: none;"></div>
-                <p id="file-success-msg" style="margin-top: 0.5rem; color: #e6edf3;">Tập tin đã được xử lý thành công.</p>
+                <div id="ratio-file-badge" class="result-ratio-indicator is-hidden"></div>
+                <p id="label-file-success-message" class="file-success-message">Tập tin đã được xử lý an toàn và sẵn sàng tải về.</p>
             </div>
 
-            <!-- Lỗi tập tin -->
-            <div id="file-error" class="alert alert-error" style="display: none;">
-                <span>⚠️</span>
-                <span id="file-error-msg">Đã xảy ra lỗi</span>
+            <!-- Thông báo lỗi tập tin -->
+            <div id="alert-file-error" class="notification-alert alert-danger is-hidden">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span id="message-file-error">Đã xảy ra lỗi</span>
             </div>
         </div>
     </div>
 
-    <footer>
-        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; font-size: 0.95rem;">
-            <span>🛡️ AES-256-GCM Tiêu chuẩn quân sự</span>
-            <span>⚡ Nén Gzip Giảm kích thước</span>
-            <span>📡 Offline 100% Không dùng Server</span>
-            <span>⏱️ Tự động xoá Clipboard</span>
-        </div>
+    <footer class="page-footer">
+        <span>🛡️ Chuẩn mã hoá quân sự AES-256</span>
+        <span>⚡ Nén Gzip tối ưu dung lượng</span>
+        <span>📡 Chạy Offline 100% không qua máy chủ</span>
     </footer>
 
     <script>
-        // Switch tab interface
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        // Quản lý biến trạng thái tập tin
+        let activeChosenFile = null;
+        let objectUrlProcessedFile = null;
+        let nameProcessedFile = null;
 
-            document.getElementById(`tab-${tabName}`).classList.add('active');
-            document.getElementById(`tab-${tabName}-btn`).classList.add('active');
+        // Chuyển đổi tab hiển thị
+        function switchTab(targetTab) {
+            document.querySelectorAll('.tab-content').forEach(element => element.classList.remove('is-active'));
+            document.querySelectorAll('.tab-button').forEach(element => element.classList.remove('is-active'));
 
-            clearSensitiveInputs();
+            document.getElementById(`tab-content-${targetTab}`).classList.add('is-active');
+            document.getElementById(`tab-btn-${targetTab}`).classList.add('is-active');
+
+            // Xoá mật mã khi chuyển đổi qua lại giữa các tab để bảo mật
+            clearSensitivePasswords();
         }
 
-        function hideAlerts() {
-            document.getElementById('text-result-panel').style.display = 'none';
-            document.getElementById('text-error').style.display = 'none';
-            document.getElementById('file-result-panel').style.display = 'none';
-            document.getElementById('file-error').style.display = 'none';
-            document.getElementById('file-progress-box').style.display = 'none';
+        // Phương Án A: Chỉ tự động xoá mật mã khi người dùng ẩn hoặc rời khỏi trang
+        function clearSensitivePasswords() {
+            const fieldPasswordText = document.getElementById('password-text-field');
+            const fieldPasswordFile = document.getElementById('password-file-field');
+
+            if (fieldPasswordText) fieldPasswordText.value = '';
+            if (fieldPasswordFile) fieldPasswordFile.value = '';
+
+            evaluatePasswordStrengthUI('password-text-field', 'password-text-strength');
+            evaluatePasswordStrengthUI('password-file-field', 'password-file-strength');
         }
 
-        function togglePassword(inputId, btn) {
-            const input = document.getElementById(inputId);
-            if (input.type === "password") {
-                input.type = "text";
-                btn.innerHTML = `
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                clearSensitivePasswords();
+            }
+        });
+
+        // Ẩn/Hiện mật mã
+        function togglePasswordVisibility(inputId, toggleBtn) {
+            const inputField = document.getElementById(inputId);
+            if (!inputField) return;
+
+            if (inputField.type === 'password') {
+                inputField.type = 'text';
+                toggleBtn.innerHTML = `
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                     </svg>
                 `;
             } else {
-                input.type = "password";
-                btn.innerHTML = `
+                inputField.type = 'password';
+                toggleBtn.innerHTML = `
                     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -819,63 +1040,138 @@
             }
         }
 
-        // Kiềm tra và hiển thị độ mạnh của mật mã
-        function updatePasswordStrength(inputId, containerId) {
-            const input = document.getElementById(inputId);
-            const container = document.getElementById(containerId);
-            if (!input || !container) return;
+        // Sao chép mật mã vào bộ nhớ tạm
+        async function copyPassword(inputId, btn) {
+            const inputField = document.getElementById(inputId);
+            if (!inputField || !inputField.value) {
+                alert("Chưa có mật mã để sao chép. Vui lòng nhập mật mã trước.");
+                return;
+            }
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(inputField.value);
+                } else {
+                    fallbackCopyString(inputField.value);
+                }
+                const originalHTML = btn.innerHTML;
+                btn.innerHTML = `<svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã chép!`;
+                btn.classList.add('is-copied');
+                setTimeout(() => {
+                    btn.innerHTML = originalHTML;
+                    btn.classList.remove('is-copied');
+                }, 2000);
+            } catch (err) {
+                alert("Không thể sao chép mật mã tự động.");
+            }
+        }
 
-            const pwd = input.value;
-            if (!pwd) {
-                container.style.display = 'none';
+        // Đánh giá chi tiết & trực quan từng tiêu chí của mật mã
+        function evaluatePasswordStrengthUI(inputId, containerId) {
+            const inputField = document.getElementById(inputId);
+            const containerBox = document.getElementById(containerId);
+            if (!inputField || !containerBox) return;
+
+            const passwordText = inputField.value;
+            if (!passwordText) {
+                containerBox.classList.add('is-hidden');
                 return;
             }
 
-            container.style.display = 'block';
-            const fillEl = container.querySelector('.strength-bar-fill');
-            const labelEl = container.querySelector('.strength-label');
+            containerBox.classList.remove('is-hidden');
+            const fillElement = containerBox.querySelector('.strength-progress-bar');
+            const descriptionElement = containerBox.querySelector('.strength-description');
 
-            const len = pwd.length;
-            const hasLetter = /[a-zA-Z\p{L}]/u.test(pwd);
-            const hasDigit = /[0-9]/.test(pwd);
+            const passwordLength = passwordText.length;
+            const hasUppercase = /[A-Z]/.test(passwordText);
+            const hasLowercase = /[a-z]/.test(passwordText);
+            const hasNumbers = /[0-9]/.test(passwordText);
+            const hasSymbols = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(passwordText);
 
-            // Tiêu chuẩn Mật mã Mạnh: ít nhất 12 ký tự gồm cả chữ và số
-            if (len >= 12 && hasLetter && hasDigit) {
-                fillEl.style.width = '100%';
-                fillEl.style.backgroundColor = '#238636';
-                labelEl.className = 'strength-label strength-strong';
-                labelEl.innerHTML = '💪 Độ mạnh: Mạnh (Bảo mật cao, đủ 12+ ký tự gồm chữ & số)';
-            } else if ((len >= 8 && hasLetter && hasDigit) || (len >= 12 && (hasLetter || hasDigit))) {
-                fillEl.style.width = '65%';
-                fillEl.style.backgroundColor = '#e3b341';
-                labelEl.className = 'strength-label strength-medium';
-                labelEl.innerHTML = '⚠️ Độ mạnh: Trung bình (Cần ít nhất 12 ký tự gồm chữ & số để đạt Mạnh)';
-            } else {
-                fillEl.style.width = '30%';
-                fillEl.style.backgroundColor = '#da3633';
-                labelEl.className = 'strength-label strength-weak';
-                labelEl.innerHTML = '🔴 Độ mạnh: Yếu (Khuyên dùng từ 12 ký tự gồm chữ & số)';
+            // Cập nhật số lượng ký tự và các huy hiệu tiêu chí
+            const lengthNumEl = containerBox.querySelector('.criteria-length-num');
+            if (lengthNumEl) {
+                lengthNumEl.textContent = passwordLength.toLocaleString('vi-VN');
             }
+
+            setCriteriaBadgeState(containerBox.querySelector('.badge-length'), passwordLength >= 12);
+            setCriteriaBadgeState(containerBox.querySelector('.badge-uppercase'), hasUppercase);
+            setCriteriaBadgeState(containerBox.querySelector('.badge-lowercase'), hasLowercase);
+            setCriteriaBadgeState(containerBox.querySelector('.badge-number'), hasNumbers);
+            setCriteriaBadgeState(containerBox.querySelector('.badge-symbol'), hasSymbols);
+
+            let varietyCount = 0;
+            if (hasUppercase) varietyCount++;
+            if (hasLowercase) varietyCount++;
+            if (hasNumbers) varietyCount++;
+            if (hasSymbols) varietyCount++;
+
+            let strengthLabel = "Yếu";
+            let fillPercentage = 25;
+            let themeClass = "strength-description strength-weak";
+            let barColor = "var(--color-danger)";
+
+            if (passwordLength >= 20 || (passwordLength >= 16 && varietyCount >= 4)) {
+                strengthLabel = "Rất mạnh";
+                fillPercentage = 100;
+                themeClass = "strength-description strength-very-strong";
+                barColor = "var(--color-success)";
+            } else if ((passwordLength >= 14 && varietyCount >= 3) || (passwordLength >= 12 && varietyCount >= 4)) {
+                strengthLabel = "Mạnh";
+                fillPercentage = 75;
+                themeClass = "strength-description strength-strong";
+                barColor = "var(--color-decrypt)";
+            } else if (passwordLength >= 10 && varietyCount >= 2) {
+                strengthLabel = "Trung bình";
+                fillPercentage = 50;
+                themeClass = "strength-description strength-medium";
+                barColor = "var(--color-warning)";
+            } else {
+                strengthLabel = "Yếu";
+                fillPercentage = 25;
+                themeClass = "strength-description strength-weak";
+                barColor = "var(--color-danger)";
+            }
+
+            fillElement.style.width = fillPercentage + '%';
+            fillElement.style.backgroundColor = barColor;
+            descriptionElement.className = themeClass;
+            descriptionElement.textContent = `🛡️ Độ mạnh tổng quát: ${strengthLabel}`;
+        }
+
+        function setCriteriaBadgeState(badgeElement, isValid) {
+            if (!badgeElement) return;
+            badgeElement.textContent = isValid ? "✓" : "✕";
+            badgeElement.classList.toggle("is-valid", isValid);
+            badgeElement.classList.toggle("is-invalid", !isValid);
         }
 
         // Tự động nhận diện chuỗi Base64
-        function autoDetectFormat() {
-            const val = document.getElementById('text-input').value.trim();
-            const badge = document.getElementById('auto-detect-badge');
-            
-            // Kiểu kiểm tra sơ bộ xem có phải chuỗi mã hoá Base64 hay không (loại bỏ khoảng trắng/xuống dòng nếu có)
-            const cleanVal = val.replace(/\s+/g, '');
+        function detectInputFormat() {
+            const rawVal = document.getElementById('input-text-data').value.trim();
+            const badge = document.getElementById('detect-badge');
+            const cleanVal = rawVal.replace(/\s+/g, '');
             const isBase64Pattern = cleanVal.length >= 28 && /^[A-Za-z0-9+/=]+$/.test(cleanVal);
-            
+
             if (isBase64Pattern) {
-                badge.style.display = 'inline-flex';
+                badge.classList.remove('is-hidden');
             } else {
-                badge.style.display = 'none';
+                badge.classList.add('is-hidden');
             }
         }
 
-        // Chuyển đổi ArrayBuffer <-> Base64 (dùng chunking 32KB để tối ưu hiệu năng trên thiết bị di động)
-        function arrayBufferToBase64(buffer) {
+        // Định dạng dung lượng Byte theo tiêu chuẩn Việt Nam
+        function formatBytesToVietnamese(bytes) {
+            if (bytes === 0) return '0 Byte';
+            const k = 1024;
+            const units = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            const val = bytes / Math.pow(k, i);
+            const numStr = (Math.round(val * 100) / 100).toString().replace('.', ',');
+            return numStr + ' ' + units[i];
+        }
+
+        // Chuyển đổi ArrayBuffer <-> Base64 (xử lý khối 32KB chống tràn bộ nhớ)
+        function convertArrayBufferToBase64(buffer) {
             const bytes = new Uint8Array(buffer);
             let binary = '';
             const chunkSize = 0x8000;
@@ -885,7 +1181,7 @@
             return btoa(binary);
         }
 
-        function base64ToArrayBuffer(base64) {
+        function convertBase64ToArrayBuffer(base64) {
             const binaryString = atob(base64.trim().replace(/\s+/g, ''));
             const len = binaryString.length;
             const bytes = new Uint8Array(len);
@@ -895,34 +1191,33 @@
             return bytes.buffer;
         }
 
-        // Nén & Giải nén bằng CompressionStream / DecompressionStream (Gzip)
-        async function compressGzip(uint8Data) {
+        // Nén và giải nén Gzip
+        async function compressWithGzip(uint8ArrayData) {
             if (typeof CompressionStream === 'undefined') {
-                return uint8Data; // Fallback nếu trình duyệt quá cũ
+                return uint8ArrayData;
             }
-            const stream = new Blob([uint8Data]).stream().pipeThrough(new CompressionStream('gzip'));
+            const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new CompressionStream('gzip'));
             const response = new Response(stream);
             const buffer = await response.arrayBuffer();
             return new Uint8Array(buffer);
         }
 
-        async function decompressGzip(uint8Data) {
+        async function decompressWithGzip(uint8ArrayData) {
             if (typeof DecompressionStream === 'undefined') {
-                return uint8Data;
+                return uint8ArrayData;
             }
             try {
-                const stream = new Blob([uint8Data]).stream().pipeThrough(new DecompressionStream('gzip'));
+                const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new DecompressionStream('gzip'));
                 const response = new Response(stream);
                 const buffer = await response.arrayBuffer();
                 return new Uint8Array(buffer);
             } catch (err) {
-                // Nếu dữ liệu cũ không nén, trả về dữ liệu gốc
-                return uint8Data;
+                return uint8ArrayData;
             }
         }
 
-        // Dẫn xuất khoá mã hoá PBKDF2 (600.000 vòng lặp)
-        async function deriveKey(password, salt) {
+        // Dẫn xuất khoá bảo mật PBKDF2 (600.000 vòng lặp)
+        async function deriveKeyPBKDF2(password, salt) {
             const encoder = new TextEncoder();
             const baseKey = await window.crypto.subtle.importKey(
                 "raw",
@@ -945,123 +1240,95 @@
             );
         }
 
-        // Định dạng dung lượng Byte chuẩn tiếng Việt
-        function formatBytes(bytes) {
-            if (bytes === 0) return '0 Byte';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            const val = bytes / Math.pow(k, i);
-            const numStr = (Math.round(val * 100) / 100).toString().replace('.', ',');
-            return numStr + ' ' + sizes[i];
-        }
+        // ============================================================
+        // XỬ LÝ VĂN BẢN (MÃ HOÁ / GIẢI MÃ)
+        // ============================================================
+        async function executeTextProcess(isEncryptMode) {
+            const inputVal = document.getElementById('input-text-data').value;
+            const passwordVal = document.getElementById('password-text-field').value;
 
-        // ==========================================
-        // XỬ LÝ MÃ HOÁ VÀ GIẢI MÃ VĂN BẢN
-        // ==========================================
+            const resultPanel = document.getElementById('panel-text-result');
+            const outputBox = document.getElementById('display-text-output');
+            const errorAlert = document.getElementById('alert-text-error');
+            const ratioBadge = document.getElementById('ratio-text-badge');
+            const resultTitle = document.getElementById('heading-text-result');
+            const shareBtn = document.getElementById('btn-share-result-text');
 
-        async function processText(isEncrypt) {
-            const inputVal = document.getElementById('text-input').value;
-            const password = document.getElementById('text-password').value;
-
-            const resultPanel = document.getElementById('text-result-panel');
-            const outputBox = document.getElementById('text-output');
-            const errorAlert = document.getElementById('text-error');
-            const ratioBadge = document.getElementById('text-ratio-display');
-            const resultTitle = document.getElementById('text-result-title');
-
-            // Đặt lại trạng thái nút sao chép
-            const copyBtn = document.getElementById('btn-copy-text');
-            if (copyBtn) {
-                copyBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" /></svg> Sao chép kết quả`;
-                copyBtn.style.borderColor = "";
-                copyBtn.style.color = "";
-            }
-
-            resultPanel.style.display = 'none';
-            errorAlert.style.display = 'none';
-            ratioBadge.style.display = 'none';
+            resultPanel.classList.add('is-hidden');
+            errorAlert.classList.add('is-hidden');
+            ratioBadge.classList.add('is-hidden');
 
             if (!inputVal.trim()) {
-                showTextError("Vui lòng nhập văn bản đầu vào.");
+                showTextErrorMessage("Vui lòng nhập nội dung văn bản đầu vào.");
                 return;
             }
-            if (!password) {
-                showTextError("Vui lòng nhập mật mã bảo vệ.");
+            if (!passwordVal) {
+                showTextErrorMessage("Vui lòng nhập mật mã bảo vệ.");
                 return;
             }
 
             try {
-                if (isEncrypt) {
-                    // 1. Chuyển văn bản thành Uint8Array
+                if (isEncryptMode) {
                     const rawBytes = new TextEncoder().encode(inputVal);
                     const originalSize = rawBytes.length;
 
-                    // 2. Nén bằng Gzip
-                    const compressedBytes = await compressGzip(rawBytes);
+                    const compressedBytes = await compressWithGzip(rawBytes);
 
-                    // 3. Tạo Salt (16b) và IV (12b)
                     const salt = window.crypto.getRandomValues(new Uint8Array(16));
                     const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
-                    // 4. Mã hoá AES-GCM 256-bit với PBKDF2 (600.000 vòng)
-                    const key = await deriveKey(password, salt);
+                    const key = await deriveKeyPBKDF2(passwordVal, salt);
                     const ciphertextBuffer = await window.crypto.subtle.encrypt(
                         { name: "AES-GCM", iv: iv },
                         key,
                         compressedBytes
                     );
 
-                    // 5. Đóng gói: Salt (16b) + IV (12b) + Ciphertext
                     const combined = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
                     combined.set(salt, 0);
                     combined.set(iv, salt.length);
                     combined.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
 
-                    const base64Result = arrayBufferToBase64(combined.buffer);
-                    const finalSize = base64Result.length; // Độ dài chuỗi Base64
+                    const base64Result = convertArrayBufferToBase64(combined.buffer);
+                    const finalSize = base64Result.length;
 
-                    // Tính chỉ số nén/mã hoá
-                    let ratioText = `Kích thước gốc: ${formatBytes(originalSize)} | Bản mã Base64: ${formatBytes(finalSize)}`;
+                    let ratioText = `Kích thước gốc: ${formatBytesToVietnamese(originalSize)} | Bản mã Base64: ${formatBytesToVietnamese(finalSize)}`;
                     if (originalSize > 0) {
                         const diff = originalSize - finalSize;
                         if (diff > 0) {
                             const percent = ((diff / originalSize) * 100).toFixed(1).replace('.', ',');
-                            ratioText += ` (Tiết kiệm ${percent}% dung lượng)`;
+                            ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
                         } else {
                             const percent = ((Math.abs(diff) / originalSize) * 100).toFixed(1).replace('.', ',');
-                            ratioText += ` (+${percent}% do overhead mã hoá/Base64)`;
+                            ratioText += ` (+${percent}% do phần đệm mã hoá/Base64)`;
                         }
                     }
 
                     ratioBadge.textContent = ratioText;
-                    ratioBadge.style.display = 'inline-block';
+                    ratioBadge.classList.remove('is-hidden');
 
                     resultTitle.textContent = "✓ Mã hoá & Nén Gzip thành công!";
                     outputBox.textContent = base64Result;
-                    resultPanel.style.display = 'block';
-
-                    const shareBtn = document.getElementById('btn-share-text');
-                    if (shareBtn) shareBtn.style.display = 'inline-flex';
+                    resultPanel.classList.remove('is-hidden');
+                    if (shareBtn) shareBtn.classList.remove('is-hidden');
 
                 } else {
-                    // Giải mã văn bản (KHÔNG tự động sao chép để đảm bảo bảo mật)
                     let combinedBytes;
                     try {
-                        combinedBytes = new Uint8Array(base64ToArrayBuffer(inputVal));
+                        combinedBytes = new Uint8Array(convertBase64ToArrayBuffer(inputVal));
                     } catch (e) {
-                        throw new Error("Định dạng dữ liệu không hợp lệ (không phải chuỗi mã hoá Base64 chuẩn).");
+                        throw new Error("Định dạng dữ liệu không hợp lệ (không phải chuỗi Base64 chuẩn).");
                     }
 
                     if (combinedBytes.length < 28) {
-                        throw new Error("Kích thước bản mã quá ngắn hoặc đã bị hư hỏng.");
+                        throw new Error("Dữ liệu bản mã quá ngắn hoặc đã bị hư hỏng.");
                     }
 
                     const salt = combinedBytes.slice(0, 16);
                     const iv = combinedBytes.slice(16, 28);
                     const ciphertext = combinedBytes.slice(28);
 
-                    const key = await deriveKey(password, salt);
+                    const key = await deriveKeyPBKDF2(passwordVal, salt);
 
                     let decryptedCompressedBuffer;
                     try {
@@ -1071,146 +1338,127 @@
                             ciphertext
                         );
                     } catch (err) {
-                        throw new Error("Mật mã không đúng hoặc dữ liệu bản mã đã bị thay đổi.");
+                        throw new Error("Mật mã không đúng hoặc dữ liệu bản mã đã bị chỉnh sửa.");
                     }
 
-                    // Giải nén Gzip
-                    const decompressedBytes = await decompressGzip(new Uint8Array(decryptedCompressedBuffer));
+                    const decompressedBytes = await decompressWithGzip(new Uint8Array(decryptedCompressedBuffer));
                     const originalText = new TextDecoder().decode(decompressedBytes);
 
                     resultTitle.textContent = "✓ Giải mã & Giải nén thành công!";
                     outputBox.textContent = originalText;
-                    resultPanel.style.display = 'block';
-
-                    const shareBtn = document.getElementById('btn-share-text');
-                    if (shareBtn) shareBtn.style.display = 'none';
+                    resultPanel.classList.remove('is-hidden');
+                    if (shareBtn) shareBtn.classList.add('is-hidden');
                 }
             } catch (err) {
-                showTextError(err.message || "Đã xảy ra lỗi trong quá trình xử lý.");
+                showTextErrorMessage(err.message || "Đã xảy ra lỗi trong quá trình xử lý văn bản.");
             }
         }
 
-        function showTextError(msg) {
-            const errorAlert = document.getElementById('text-error');
-            const errorMsg = document.getElementById('text-error-msg');
-            errorMsg.textContent = msg;
-            errorAlert.style.display = 'flex';
+        function showTextErrorMessage(message) {
+            const errorAlert = document.getElementById('alert-text-error');
+            const errorMsg = document.getElementById('message-text-error');
+            errorMsg.textContent = message;
+            errorAlert.classList.remove('is-hidden');
         }
 
-        function clearAllText() {
-            document.getElementById('text-input').value = '';
-            document.getElementById('text-password').value = '';
-            updatePasswordStrength('text-password', 'text-password-strength');
-            document.getElementById('auto-detect-badge').style.display = 'none';
-            const shareInfo = document.getElementById('text-share-info');
-            if (shareInfo) shareInfo.style.display = 'none';
-            hideAlerts();
+        function clearTextForm() {
+            document.getElementById('input-text-data').value = '';
+            document.getElementById('password-text-field').value = '';
+            evaluatePasswordStrengthUI('password-text-field', 'password-text-strength');
+            document.getElementById('detect-badge').classList.add('is-hidden');
+            document.getElementById('share-link-alert').classList.add('is-hidden');
+            document.getElementById('panel-text-result').classList.add('is-hidden');
+            document.getElementById('alert-text-error').classList.add('is-hidden');
         }
 
-        // Sao chép kết quả văn bản
-        async function copyTextResult(elementId, btn) {
+        // Sao chép kết quả
+        async function copyResultContent(elementId, btn) {
             const textToCopy = document.getElementById(elementId).textContent;
             if (!textToCopy) return;
 
             try {
                 await navigator.clipboard.writeText(textToCopy);
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = "✓ Đã sao chép!";
-                btn.style.borderColor = "#3fb950";
-                btn.style.color = "#3fb950";
-
+                const originalText = btn.innerHTML;
+                btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã sao chép!`;
                 setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.style.borderColor = "";
-                    btn.style.color = "";
+                    btn.innerHTML = originalText;
                 }, 2000);
-
             } catch (err) {
-                alert("Không thể sao chép tự động. Vui lòng chọn thủ công toàn bộ kết quả.");
+                alert("Không thể sao chép tự động. Vui lòng chọn và sao chép thủ công.");
             }
         }
 
-        // Chia sẻ kết quả Base64 qua URL
-        function shareTextResult() {
-            const outputBox = document.getElementById('text-output');
+        // Chia sẻ liên kết mã hoá
+        function shareEncryptedLink() {
+            const outputBox = document.getElementById('display-text-output');
             if (!outputBox) return;
             const base64Text = outputBox.textContent ? outputBox.textContent.trim() : '';
             if (!base64Text) return;
 
-            // Kiểm tra giới hạn an toàn 1.900 ký tự (để không vượt quá giới hạn 2.000 ký tự của Zalo khi cộng thêm đường dẫn URL)
             if (base64Text.length > 1900) {
-                alert("Chuỗi mã hoá có độ dài " + base64Text.length.toLocaleString('vi-VN') + " ký tự (vượt quá mức an toàn 1.900 ký tự).\n\nĐể tránh bị cắt xén liên kết khi gửi qua các ứng dụng tin nhắn như Zalo (giới hạn 2.000 ký tự), vui lòng nhấp nút \"Sao chép kết quả\" để dán gửi trực tiếp.");
+                alert("Chuỗi mã hoá có độ dài " + base64Text.length.toLocaleString('vi-VN') + " ký tự (vượt quá mức an toàn 1.900 ký tự cho liên kết tin nhắn).\n\nVui lòng bấm nút 'Sao chép kết quả' để dán gửi trực tiếp.");
                 return;
             }
 
-            // Dùng query parameter ?data= để đảm bảo không bị các ứng dụng nhắn tin (như Zalo, Messenger) xoá bỏ như fragment hash #
             const shareUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(base64Text);
 
             if (navigator.share) {
                 navigator.share({
-                    title: 'Dữ liệu mã hoá - D.T.Chánh',
-                    text: base64Text + '\n\nLiên kết tự động giải mã:',
+                    title: 'Dữ liệu mã hoá - Dương Tấn Chánh',
+                    text: 'Dữ liệu mã hoá an toàn:\n' + base64Text + '\n\nLiên kết tự động giải mã:',
                     url: shareUrl
-                }).then(() => {
-                    showShareSuccessBtn();
                 }).catch((err) => {
                     if (err.name !== 'AbortError') {
-                        copyShareUrlToClipboard(shareUrl);
+                        copyShareLinkUrl(shareUrl);
                     }
                 });
             } else {
-                copyShareUrlToClipboard(shareUrl);
+                copyShareLinkUrl(shareUrl);
             }
         }
 
-        function copyShareUrlToClipboard(url) {
+        function copyShareLinkUrl(url) {
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(url).then(() => {
-                    showShareSuccessBtn();
+                    notifyShareCopied();
                 }).catch(() => {
-                    fallbackCopyUrl(url);
+                    fallbackCopyString(url);
                 });
             } else {
-                fallbackCopyUrl(url);
+                fallbackCopyString(url);
             }
         }
 
-        function fallbackCopyUrl(url) {
-            const textArea = document.createElement("textarea");
-            textArea.value = url;
-            textArea.style.position = "fixed";
-            textArea.style.opacity = "0";
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
+        function fallbackCopyString(url) {
+            const tempArea = document.createElement("textarea");
+            tempArea.value = url;
+            tempArea.style.position = "fixed";
+            tempArea.style.opacity = "0";
+            document.body.appendChild(tempArea);
+            tempArea.focus();
+            tempArea.select();
             try {
                 document.execCommand('copy');
-                showShareSuccessBtn();
+                notifyShareCopied();
             } catch (err) {
-                alert("Không thể sao chép liên kết. Bạn có thể tự sao chép liên kết này:\n" + url);
+                alert("Liên kết chia sẻ:\n" + url);
             }
-            document.body.removeChild(textArea);
+            document.body.removeChild(tempArea);
         }
 
-        function showShareSuccessBtn() {
-            const btn = document.getElementById('btn-share-text');
+        function notifyShareCopied() {
+            const btn = document.getElementById('btn-share-result-text');
             if (!btn) return;
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã sao chép link!`;
-            btn.style.borderColor = "#3fb950";
-            btn.style.color = "#3fb950";
+            btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã chép link!`;
             setTimeout(() => {
                 btn.innerHTML = originalHTML;
-                btn.style.borderColor = "";
-                btn.style.color = "";
             }, 2000);
         }
 
-        // Tự động kiểm tra liên kết chia sẻ khi mở ứng dụng
-        function checkUrlSharedData() {
+        // Tự động kiểm tra liên kết chia sẻ từ URL
+        function checkUrlSharedPayload() {
             let sharedData = '';
-
-            // 1. Thử lấy từ Query String (?data=... hoặc ?d=...)
             try {
                 if (window.location.search) {
                     const urlParams = new URLSearchParams(window.location.search);
@@ -1218,279 +1466,229 @@
                 }
             } catch (e) {}
 
-            // 2. Thử lấy từ Hash (#data=... hoặc #d=...)
             if (!sharedData && window.location.hash) {
                 try {
-                    const hashStr = window.location.hash.replace(/^#/, '');
-                    const hashParams = new URLSearchParams(hashStr);
+                    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
                     sharedData = hashParams.get('data') || hashParams.get('d') || '';
                 } catch (e) {}
-
-                if (!sharedData) {
-                    const hashMatch = window.location.hash.match(/[#&?](data|d)=([^&]+)/);
-                    if (hashMatch && hashMatch[2]) {
-                        try {
-                            sharedData = decodeURIComponent(hashMatch[2]);
-                        } catch (e) {
-                            sharedData = hashMatch[2];
-                        }
-                    }
-                }
-            }
-
-            // 3. Fallback: Tìm trực tiếp tham số data= trong window.location.href
-            if (!sharedData && window.location.href) {
-                const hrefMatch = window.location.href.match(/[?&#](data|d)=([^&]+)/);
-                if (hrefMatch && hrefMatch[2]) {
-                    try {
-                        sharedData = decodeURIComponent(hrefMatch[2]);
-                    } catch (e) {
-                        sharedData = hrefMatch[2];
-                    }
-                }
             }
 
             if (sharedData) {
                 sharedData = sharedData.trim();
                 switchTab('text');
 
-                const textInput = document.getElementById('text-input');
+                const textInput = document.getElementById('input-text-data');
                 if (textInput) {
                     textInput.value = sharedData;
-                    autoDetectFormat();
+                    detectInputFormat();
                 }
 
-                const shareInfoBox = document.getElementById('text-share-info');
-                const shareInfoMsg = document.getElementById('text-share-info-msg');
+                const shareInfoBox = document.getElementById('share-link-alert');
+                const shareInfoMsg = document.getElementById('share-link-message');
                 if (shareInfoBox && shareInfoMsg) {
-                    shareInfoMsg.textContent = "Đã tự động tải dữ liệu được chia sẻ từ liên kết. Vui lòng nhập mật mã bảo vệ và bấm \"Giải mã\".";
-                    shareInfoBox.style.display = 'flex';
+                    shareInfoMsg.textContent = "Đã tự động tải dữ liệu được chia sẻ từ liên kết. Vui lòng nhập mật mã bảo vệ và bấm 'Giải mã'.";
+                    shareInfoBox.classList.remove('is-hidden');
                 }
 
                 setTimeout(() => {
-                    const textPassword = document.getElementById('text-password');
-                    if (textPassword) {
-                        textPassword.focus();
-                    }
-                    if (textInput) {
-                        textInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }
+                    const pwdField = document.getElementById('password-text-field');
+                    if (pwdField) pwdField.focus();
                 }, 300);
             }
         }
 
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
-            checkUrlSharedData();
-        } else {
-            document.addEventListener('DOMContentLoaded', checkUrlSharedData);
+        document.addEventListener('DOMContentLoaded', checkUrlSharedPayload);
+        window.addEventListener('hashchange', checkUrlSharedPayload);
+        window.addEventListener('popstate', checkUrlSharedPayload);
+
+        // ============================================================
+        // XỬ LÝ TẬP TIN: BẤM NÚT, KÉO THẢ VÀ DÁN (PASTE) TẬP TIN
+        // ============================================================
+        const dropAreaElement = document.getElementById('area-drop-file');
+
+        function triggerFileInputClick() {
+            document.getElementById('input-file-element').click();
         }
-        window.addEventListener('hashchange', checkUrlSharedData);
-        window.addEventListener('popstate', checkUrlSharedData);
 
-        // ==========================================
-        // XỬ LÝ MÃ HOÁ VÀ GIẢI MÃ TỆP TIN
-        // ==========================================
-
-        let selectedFile = null;
-        let processedFileUrl = null;
-        let processedFileName = null;
-        const dropZone = document.getElementById('drop-zone');
-
-        ['dragenter', 'dragover'].forEach(name => {
-            dropZone.addEventListener(name, (e) => {
+        // Kéo thả tập tin
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropAreaElement.addEventListener(eventName, (e) => {
                 e.preventDefault();
-                dropZone.classList.add('dragover');
+                dropAreaElement.classList.add('is-drag-over');
             }, false);
         });
 
-        ['dragleave', 'drop'].forEach(name => {
-            dropZone.addEventListener(name, (e) => {
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropAreaElement.addEventListener(eventName, (e) => {
                 e.preventDefault();
-                dropZone.classList.remove('dragover');
+                dropAreaElement.classList.remove('is-drag-over');
             }, false);
         });
 
-        dropZone.addEventListener('drop', (e) => {
+        dropAreaElement.addEventListener('drop', (e) => {
             const dt = e.dataTransfer;
-            if (dt.files.length > 0) {
-                setFile(dt.files[0]);
+            if (dt.files && dt.files.length > 0) {
+                loadSelectedFile(dt.files[0]);
             }
         });
 
-        function handleFileSelect(input) {
-            if (input.files.length > 0) {
-                setFile(input.files[0]);
+        // Bấm nút chọn tập tin
+        function onFileInputChange(inputElement) {
+            if (inputElement.files && inputElement.files.length > 0) {
+                loadSelectedFile(inputElement.files[0]);
             }
         }
 
-        function setFile(file) {
-            selectedFile = file;
-            document.getElementById('file-name-display').textContent = file.name;
-            document.getElementById('file-size-display').textContent = formatBytes(file.size);
-            document.getElementById('file-info').style.display = 'flex';
-            dropZone.style.display = 'none';
-            hideAlerts();
-        }
-
-        function clearSelectedFile() {
-            selectedFile = null;
-            document.getElementById('file-input').value = '';
-            document.getElementById('file-password').value = '';
-            updatePasswordStrength('file-password', 'file-password-strength');
-            document.getElementById('file-info').style.display = 'none';
-            dropZone.style.display = 'flex';
-            if (processedFileUrl) {
-                URL.revokeObjectURL(processedFileUrl);
-                processedFileUrl = null;
+        // Dán tập tin đã sao chép từ Clipboard (Ctrl+V)
+        window.addEventListener('paste', function (e) {
+            if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
+                const pastedFile = e.clipboardData.files[0];
+                switchTab('file');
+                loadSelectedFile(pastedFile);
+                e.preventDefault();
             }
-            processedFileName = null;
-            hideAlerts();
+        });
+
+        function loadSelectedFile(file) {
+            activeChosenFile = file;
+            document.getElementById('label-selected-filename').textContent = file.name;
+            document.getElementById('label-selected-filesize').textContent = formatBytesToVietnamese(file.size);
+            document.getElementById('box-selected-file-info').classList.remove('is-hidden');
+            dropAreaElement.classList.add('is-hidden');
+
+            document.getElementById('panel-file-result').classList.add('is-hidden');
+            document.getElementById('alert-file-error').classList.add('is-hidden');
+            document.getElementById('panel-file-progress').classList.add('is-hidden');
         }
 
-        function clearAllFile() {
-            clearSelectedFile();
-        }
+        function removeSelectedFile() {
+            activeChosenFile = null;
+            document.getElementById('input-file-element').value = '';
+            document.getElementById('box-selected-file-info').classList.add('is-hidden');
+            dropAreaElement.classList.remove('is-hidden');
 
-        function downloadProcessedFile() {
-            if (!processedFileUrl || !processedFileName) return;
-            const a = document.createElement('a');
-            a.href = processedFileUrl;
-            a.download = processedFileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-
-            const btn = document.getElementById('btn-download-file');
-            if (btn) {
-                const originalHTML = btn.innerHTML;
-                btn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã tải xuống!`;
-                btn.style.borderColor = "#3fb950";
-                btn.style.color = "#3fb950";
-                setTimeout(() => {
-                    btn.innerHTML = originalHTML;
-                    btn.style.borderColor = "";
-                    btn.style.color = "";
-                }, 2000);
+            if (objectUrlProcessedFile) {
+                URL.revokeObjectURL(objectUrlProcessedFile);
+                objectUrlProcessedFile = null;
             }
+            nameProcessedFile = null;
+
+            document.getElementById('panel-file-result').classList.add('is-hidden');
+            document.getElementById('alert-file-error').classList.add('is-hidden');
+            document.getElementById('panel-file-progress').classList.add('is-hidden');
         }
 
-        function showFileProgress(status, percent) {
-            const box = document.getElementById('file-progress-box');
-            document.getElementById('progress-status').textContent = status;
-            document.getElementById('progress-percent').textContent = percent + '%';
-            document.getElementById('progress-bar-fill').style.width = percent + '%';
-            box.style.display = 'block';
+        function clearFileForm() {
+            removeSelectedFile();
+            document.getElementById('password-file-field').value = '';
+            evaluatePasswordStrengthUI('password-file-field', 'password-file-strength');
         }
 
-        function showFileError(msg) {
-            const errorAlert = document.getElementById('file-error');
-            document.getElementById('file-error-msg').textContent = msg;
-            errorAlert.style.display = 'flex';
+        function updateFileProgress(statusText, percentage) {
+            const progressBox = document.getElementById('panel-file-progress');
+            document.getElementById('label-progress-status').textContent = statusText;
+            document.getElementById('label-progress-percent').textContent = percentage + '%';
+            document.getElementById('bar-file-progress-fill').style.width = percentage + '%';
+            progressBox.classList.remove('is-hidden');
         }
 
-        async function processFile(isEncrypt) {
-            const password = document.getElementById('file-password').value;
-            const resultPanel = document.getElementById('file-result-panel');
-            const errorAlert = document.getElementById('file-error');
-            const ratioBadge = document.getElementById('file-ratio-display');
-            const successMsg = document.getElementById('file-success-msg');
+        function showFileErrorMessage(message) {
+            const errorAlert = document.getElementById('alert-file-error');
+            document.getElementById('message-file-error').textContent = message;
+            errorAlert.classList.remove('is-hidden');
+        }
 
-            resultPanel.style.display = 'none';
-            errorAlert.style.display = 'none';
-            ratioBadge.style.display = 'none';
+        async function executeFileProcess(isEncryptMode) {
+            const passwordVal = document.getElementById('password-file-field').value;
+            const resultPanel = document.getElementById('panel-file-result');
+            const errorAlert = document.getElementById('alert-file-error');
+            const ratioBadge = document.getElementById('ratio-file-badge');
+            const successMsg = document.getElementById('label-file-success-message');
 
-            if (!selectedFile) {
-                showFileError("Vui lòng chọn hoặc kéo thả một tập tin.");
+            resultPanel.classList.add('is-hidden');
+            errorAlert.classList.add('is-hidden');
+            ratioBadge.classList.add('is-hidden');
+
+            if (!activeChosenFile) {
+                showFileErrorMessage("Vui lòng chọn, kéo thả hoặc dán một tập tin để xử lý.");
                 return;
             }
-            if (!password) {
-                showFileError("Vui lòng nhập mật mã bảo vệ tập tin.");
+            if (!passwordVal) {
+                showFileErrorMessage("Vui lòng nhập mật mã bảo vệ tập tin.");
                 return;
             }
 
-            showFileProgress("Đang đọc dữ liệu tập tin...", 15);
+            updateFileProgress("Đang đọc dữ liệu tập tin...", 15);
 
-            const reader = new FileReader();
+            const fileReader = new FileReader();
 
-            reader.onload = async function (e) {
+            fileReader.onload = async function (e) {
                 try {
                     const rawBuffer = e.target.result;
                     const rawUint8 = new Uint8Array(rawBuffer);
 
-                    if (isEncrypt) {
-                        // 1. Mã hoá tập tin
-                        showFileProgress("Đang nén tập tin bằng Gzip...", 30);
-                        const filenameBytes = new TextEncoder().encode(selectedFile.name);
+                    if (isEncryptMode) {
+                        updateFileProgress("Đang nén tập tin bằng Gzip...", 35);
+                        const filenameBytes = new TextEncoder().encode(activeChosenFile.name);
                         const filenameLen = filenameBytes.length;
 
-                        // Tạo gói nội dung: [Độ dài tên: 2B] + [Tên tập tin] + [Dữ liệu gốc]
+                        // Cấu trúc gói: [Độ dài tên: 2B] + [Tên tập tin] + [Dữ liệu gốc]
                         const payload = new Uint8Array(2 + filenameLen + rawUint8.length);
                         payload[0] = (filenameLen >> 8) & 0xff;
                         payload[1] = filenameLen & 0xff;
                         payload.set(filenameBytes, 2);
                         payload.set(rawUint8, 2 + filenameLen);
 
-                        // Nén Gzip
-                        const compressedPayload = await compressGzip(payload);
+                        const compressedPayload = await compressWithGzip(payload);
 
-                        showFileProgress("Đang tính toán khoá bảo mật PBKDF2...", 55);
+                        updateFileProgress("Đang tạo khoá mã hoá PBKDF2...", 60);
                         const salt = window.crypto.getRandomValues(new Uint8Array(16));
                         const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
-                        const key = await deriveKey(password, salt);
+                        const key = await deriveKeyPBKDF2(passwordVal, salt);
 
-                        showFileProgress("Đang mã hoá AES-GCM 256-bit...", 75);
+                        updateFileProgress("Đang mã hoá AES-GCM 256-bit...", 80);
                         const ciphertextBuffer = await window.crypto.subtle.encrypt(
                             { name: "AES-GCM", iv: iv },
                             key,
                             compressedPayload
                         );
 
-                        // Ghép Salt (16b) + IV (12b) + Ciphertext
                         const finalBuffer = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
                         finalBuffer.set(salt, 0);
                         finalBuffer.set(iv, salt.length);
                         finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
 
-                        showFileProgress("Đang chuẩn bị tập tin...", 95);
+                        updateFileProgress("Đang chuẩn bị tập tin...", 95);
 
-                        if (processedFileUrl) {
-                            URL.revokeObjectURL(processedFileUrl);
+                        if (objectUrlProcessedFile) {
+                            URL.revokeObjectURL(objectUrlProcessedFile);
                         }
                         const blob = new Blob([finalBuffer], { type: "application/octet-stream" });
-                        processedFileUrl = URL.createObjectURL(blob);
-                        processedFileName = selectedFile.name + ".enc";
+                        objectUrlProcessedFile = URL.createObjectURL(blob);
+                        nameProcessedFile = activeChosenFile.name + ".enc";
 
-                        const downloadBtn = document.getElementById('btn-download-file');
-                        if (downloadBtn) {
-                            downloadBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> Tải xuống`;
-                            downloadBtn.style.borderColor = "";
-                            downloadBtn.style.color = "";
-                        }
-
-                        // Báo chỉ số nén
-                        const origSize = selectedFile.size;
-                        const finalSize = finalBuffer.length;
-                        let ratioText = `Gốc: ${formatBytes(origSize)} | Đã mã hoá: ${formatBytes(finalSize)}`;
-                        if (origSize > 0) {
-                            const diff = origSize - finalSize;
+                        const originalSize = activeChosenFile.size;
+                        const encryptedSize = finalBuffer.length;
+                        let ratioText = `Dung lượng gốc: ${formatBytesToVietnamese(originalSize)} | Đã mã hoá: ${formatBytesToVietnamese(encryptedSize)}`;
+                        if (originalSize > 0) {
+                            const diff = originalSize - encryptedSize;
                             if (diff > 0) {
-                                const percent = ((diff / origSize) * 100).toFixed(1).replace('.', ',');
-                                ratioText += ` (Giảm ${percent}% dung lượng)`;
+                                const percent = ((diff / originalSize) * 100).toFixed(1).replace('.', ',');
+                                ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
                             } else {
-                                const percent = ((Math.abs(diff) / origSize) * 100).toFixed(1).replace('.', ',');
-                                ratioText += ` (+${percent}% dung lượng do mã hoá)`;
+                                const percent = ((Math.abs(diff) / originalSize) * 100).toFixed(1).replace('.', ',');
+                                ratioText += ` (+${percent}% dung lượng do phần đệm mã hoá)`;
                             }
                         }
 
                         ratioBadge.textContent = ratioText;
-                        ratioBadge.style.display = 'inline-block';
-                        successMsg.textContent = `Tập tin "${selectedFile.name}.enc" đã được mã hoá thành công. Nhấp nút "Tải xuống" bên trên để lưu về máy.`;
-                        document.getElementById('file-result-title').textContent = "✓ Mã hoá tập tin thành công";
+                        ratioBadge.classList.remove('is-hidden');
+                        successMsg.textContent = `Tập tin "${activeChosenFile.name}.enc" đã được mã hoá thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
+                        document.getElementById('heading-file-result').textContent = "✓ Mã hoá tập tin thành công";
 
                     } else {
-                        // 2. Giải mã tập tin
-                        showFileProgress("Đang phân tích cấu trúc bản mã...", 30);
+                        updateFileProgress("Đang phân tích cấu trúc tập tin...", 30);
                         if (rawUint8.length < 28) {
                             throw new Error("Tập tin mã hoá bị hư hỏng hoặc không đúng định dạng.");
                         }
@@ -1499,10 +1697,10 @@
                         const iv = rawUint8.slice(16, 28);
                         const ciphertext = rawUint8.slice(28);
 
-                        showFileProgress("Đang tính toán khoá giải mã PBKDF2...", 55);
-                        const key = await deriveKey(password, salt);
+                        updateFileProgress("Đang giải mã khoá PBKDF2...", 55);
+                        const key = await deriveKeyPBKDF2(passwordVal, salt);
 
-                        showFileProgress("Đang giải mã AES-GCM...", 75);
+                        updateFileProgress("Đang giải mã AES-GCM...", 75);
                         let decryptedCompressed;
                         try {
                             decryptedCompressed = await window.crypto.subtle.decrypt(
@@ -1511,13 +1709,12 @@
                                 ciphertext
                             );
                         } catch (err) {
-                            throw new Error("Mật mã không đúng hoặc tập tin đã bị chỉnh sửa/hư hỏng.");
+                            throw new Error("Mật mã không đúng hoặc tập tin đã bị thay đổi/hư hỏng.");
                         }
 
-                        showFileProgress("Đang giải nén dữ liệu...", 90);
-                        const decompressedPayload = await decompressGzip(new Uint8Array(decryptedCompressed));
+                        updateFileProgress("Đang giải nén tập tin...", 90);
+                        const decompressedPayload = await decompressWithGzip(new Uint8Array(decryptedCompressed));
 
-                        // Tách tên tập tin gốc và dữ liệu
                         if (decompressedPayload.length < 2) {
                             throw new Error("Cấu trúc tập tin không hợp lệ sau khi giải mã.");
                         }
@@ -1532,64 +1729,55 @@
                         const originalFileBytes = decompressedPayload.slice(2 + filenameLen);
 
                         if (!originalFilename || originalFilename.trim() === '') {
-                            originalFilename = selectedFile.name.replace(/\.enc$/i, '') || "file_restored";
+                            originalFilename = activeChosenFile.name.replace(/\.enc$/i, '') || "file_da_giai_ma";
                         }
 
-                        if (processedFileUrl) {
-                            URL.revokeObjectURL(processedFileUrl);
+                        if (objectUrlProcessedFile) {
+                            URL.revokeObjectURL(objectUrlProcessedFile);
                         }
                         const blob = new Blob([originalFileBytes], { type: "application/octet-stream" });
-                        processedFileUrl = URL.createObjectURL(blob);
-                        processedFileName = originalFilename;
+                        objectUrlProcessedFile = URL.createObjectURL(blob);
+                        nameProcessedFile = originalFilename;
 
-                        const downloadBtn = document.getElementById('btn-download-file');
-                        if (downloadBtn) {
-                            downloadBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg> Tải xuống`;
-                            downloadBtn.style.borderColor = "";
-                            downloadBtn.style.color = "";
-                        }
-
-                        successMsg.textContent = `Tập tin gốc "${originalFilename}" đã được phục hồi thành công. Nhấp nút "Tải xuống" bên trên để lưu về máy.`;
-                        document.getElementById('file-result-title').textContent = "✓ Giải mã tập tin thành công";
+                        successMsg.textContent = `Tập tin gốc "${originalFilename}" đã được phục hồi thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
+                        document.getElementById('heading-file-result').textContent = "✓ Giải mã tập tin thành công";
                     }
 
-                    showFileProgress("Hoàn tất!", 100);
+                    updateFileProgress("Hoàn tất!", 100);
                     setTimeout(() => {
-                        document.getElementById('file-progress-box').style.display = 'none';
-                        resultPanel.style.display = 'block';
-                    }, 500);
+                        document.getElementById('panel-file-progress').classList.add('is-hidden');
+                        resultPanel.classList.remove('is-hidden');
+                    }, 400);
 
                 } catch (err) {
-                    document.getElementById('file-progress-box').style.display = 'none';
-                    showFileError(err.message || "Xảy ra lỗi khi xử lý tập tin.");
+                    document.getElementById('panel-file-progress').classList.add('is-hidden');
+                    showFileErrorMessage(err.message || "Xảy ra lỗi trong quá trình xử lý tập tin.");
                 }
             };
 
-            reader.readAsArrayBuffer(selectedFile);
+            fileReader.readAsArrayBuffer(activeChosenFile);
         }
 
-        // Tự động xoá mật mã bảo vệ khi chuyển tab hoặc rời khỏi cửa sổ (chỉ xoá mật mã để bảo vệ, giữ nguyên văn bản)
-        function clearSensitiveInputs() {
-            const textPassword = document.getElementById('text-password');
-            const filePassword = document.getElementById('file-password');
-            
-            if (textPassword) textPassword.value = '';
-            if (filePassword) filePassword.value = '';
+        // Tải xuống tập tin đã xử lý
+        function downloadResultFile() {
+            if (!objectUrlProcessedFile || !nameProcessedFile) return;
 
-            updatePasswordStrength('text-password', 'text-password-strength');
-            updatePasswordStrength('file-password', 'file-password-strength');
-        }
+            const downloadLink = document.createElement('a');
+            downloadLink.href = objectUrlProcessedFile;
+            downloadLink.download = nameProcessedFile;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
 
-        // Lắng nghe sự kiện chuyển tab hoặc ẩn cửa sổ trình duyệt
-        document.addEventListener('visibilitychange', function () {
-            if (document.hidden) {
-                clearSensitiveInputs();
+            const downloadBtn = document.getElementById('btn-download-processed-file');
+            if (downloadBtn) {
+                const originalText = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = `<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg> Đã tải xuống!`;
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalText;
+                }, 2000);
             }
-        });
-
-        window.addEventListener('blur', function () {
-            clearSensitiveInputs();
-        });
+        }
     </script>
 </body>
 
