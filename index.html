@@ -18,13 +18,14 @@
             --bg-color: #000000;
             --text-color: #FFFFFF;
             --border-color: #262626;
-            --primary-color: #0077AA;
-            --color-decrypt: #5A31FF;
+            --primary-color: #0066B6;
+            --color-decrypt: #4020D0;
             --color-success: #7FDD0F;
+            --color-action: #009911;
+            --color-warning: #EE6000;
             --color-danger: #FF2040;
-            --color-warning: #FF7000;
             --card-background: #1A1A1A;
-            --text-muted: #A5A5A5;
+            --text-muted: #CCCCCC;
             --border-radius: 0.5rem;
             --padding-standard: 1rem;
             --padding-small: 0.5rem;
@@ -130,7 +131,7 @@
         }
 
         .tab-button.is-active {
-            color: #ffffff;
+            color: #FFFFFF;
             background: var(--primary-color);
             border-color: var(--primary-color);
         }
@@ -187,7 +188,7 @@
 
         .btn-copy-password:hover {
             border-color: var(--primary-color);
-            color: #ffffff;
+            color: #FFFFFF;
         }
 
         .btn-copy-password.is-copied {
@@ -279,8 +280,8 @@
 
         .status-badge-detect {
             border-color: var(--primary-color);
-            color: #ffffff;
-            background: rgba(0, 119, 170, 0.2);
+            color: var(--primary-color);
+            background: rgba(0, 102, 182, 0.15);
         }
 
         /* Lưới các nút thao tác */
@@ -311,7 +312,7 @@
             gap: 0.5rem;
             transition: all 0.2s ease;
             border: 2px solid transparent;
-            color: #ffffff;
+            color: #FFFFFF;
         }
 
         .btn-encrypt {
@@ -350,12 +351,12 @@
 
         .btn-clear-danger:hover {
             background-color: var(--color-danger);
-            color: #ffffff;
+            color: #FFFFFF;
         }
 
         .btn-success {
-            background-color: #238636;
-            border-color: #238636;
+            background-color: var(--color-action);
+            border-color: var(--color-action);
         }
 
         .btn-success:hover {
@@ -466,7 +467,7 @@
         .drop-file-zone:hover,
         .drop-file-zone.is-drag-over {
             border-color: var(--primary-color);
-            background: rgba(0, 119, 170, 0.1);
+            background: rgba(0, 102, 182, 0.1);
         }
 
         .drop-file-icon {
@@ -571,7 +572,7 @@
             word-break: normal;
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
-            color: var(--text-color);
+            color: var(--text-muted);
         }
 
         .result-ratio-indicator {
@@ -579,7 +580,7 @@
             padding: 0.3rem 0.6rem;
             border: 2px solid var(--border-color);
             background: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
+            color: var(--text-muted);
             border-radius: 0.4rem;
             font-size: 0.95rem;
             font-weight: bold;
@@ -606,13 +607,13 @@
         .alert-danger {
             background-color: rgba(255, 32, 64, 0.15);
             border-color: var(--color-danger);
-            color: #ff4d66;
+            color: #FF2040;
         }
 
         .alert-information {
-            background-color: rgba(0, 119, 170, 0.15);
-            border-color: #0077AA;
-            color: #58a6ff;
+            background-color: rgba(0, 102, 182, 0.15);
+            border-color: var(--primary-color);
+            color: #FFFFFF;
             margin-top: 0.5rem;
         }
 
@@ -976,7 +977,7 @@
     </div>
 
     <footer class="page-footer">
-        <span>🛡️ Chuẩn mã hoá quân sự AES-256</span>
+        <span>🛡️ Chuẩn mã hoá AES-256</span>
         <span>⚡ Nén Gzip tối ưu dung lượng</span>
         <span>📡 Chạy Offline 100% không qua máy chủ</span>
     </footer>
