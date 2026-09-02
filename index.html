@@ -18,8 +18,8 @@
             --bg-color: #000000;
             --text-color: #FFFFFF;
             --border-color: #262626;
-            --primary-color: #0077CC;
-            --color-decrypt: #550BFF;
+            --primary-color: #0077AA;
+            --color-decrypt: #5A31FF;
             --color-success: #7FDD0F;
             --color-danger: #FF2040;
             --color-warning: #FF7000;
@@ -815,7 +815,7 @@
                         </button>
                         <button type="button" id="btn-share-result-text" class="btn-base btn-action-neutral is-hidden" onclick="shareEncryptedLink()">
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.368 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                             </svg>
                             Chia sẻ
                         </button>
@@ -1069,7 +1069,7 @@
             }
         }
 
-        // Đánh giá chi tiết & trực quan từng tiêu chí của mật mã
+        // Đánh giá chi tiết theo giải thuật cải tiến (chống chuỗi lặp đơn điệu dài)
         function evaluatePasswordStrengthUI(inputId, containerId) {
             const inputField = document.getElementById(inputId);
             const containerBox = document.getElementById(containerId);
@@ -1114,7 +1114,8 @@
             let themeClass = "strength-description strength-weak";
             let barColor = "var(--color-danger)";
 
-            if (passwordLength >= 20 || (passwordLength >= 16 && varietyCount >= 4)) {
+            // Giải thuật đánh giá cải tiến
+            if ((passwordLength >= 20 && varietyCount >= 2) || (passwordLength >= 16 && varietyCount >= 4)) {
                 strengthLabel = "Rất mạnh";
                 fillPercentage = 100;
                 themeClass = "strength-description strength-very-strong";
@@ -1588,12 +1589,14 @@
             evaluatePasswordStrengthUI('password-file-field', 'password-file-strength');
         }
 
-        function updateFileProgress(statusText, percentage) {
+        async function updateFileProgress(statusText, percentage) {
             const progressBox = document.getElementById('panel-file-progress');
             document.getElementById('label-progress-status').textContent = statusText;
             document.getElementById('label-progress-percent').textContent = percentage + '%';
             document.getElementById('bar-file-progress-fill').style.width = percentage + '%';
             progressBox.classList.remove('is-hidden');
+            // Nhường CPU 10ms để trình duyệt vẽ lại giao diện thanh tiến trình mượt mà
+            await new Promise(resolve => setTimeout(resolve, 10));
         }
 
         function showFileErrorMessage(message) {
@@ -1622,7 +1625,7 @@
                 return;
             }
 
-            updateFileProgress("Đang đọc dữ liệu tập tin...", 15);
+            await updateFileProgress("Đang đọc dữ liệu tập tin...", 15);
 
             const fileReader = new FileReader();
 
@@ -1632,7 +1635,7 @@
                     const rawUint8 = new Uint8Array(rawBuffer);
 
                     if (isEncryptMode) {
-                        updateFileProgress("Đang nén tập tin bằng Gzip...", 35);
+                        await updateFileProgress("Đang nén tập tin bằng Gzip...", 35);
                         const filenameBytes = new TextEncoder().encode(activeChosenFile.name);
                         const filenameLen = filenameBytes.length;
 
@@ -1645,13 +1648,13 @@
 
                         const compressedPayload = await compressWithGzip(payload);
 
-                        updateFileProgress("Đang tạo khoá mã hoá PBKDF2...", 60);
+                        await updateFileProgress("Đang tạo khoá mã hoá PBKDF2...", 60);
                         const salt = window.crypto.getRandomValues(new Uint8Array(16));
                         const iv = window.crypto.getRandomValues(new Uint8Array(12));
 
                         const key = await deriveKeyPBKDF2(passwordVal, salt);
 
-                        updateFileProgress("Đang mã hoá AES-GCM 256-bit...", 80);
+                        await updateFileProgress("Đang mã hoá AES-GCM 256-bit...", 80);
                         const ciphertextBuffer = await window.crypto.subtle.encrypt(
                             { name: "AES-GCM", iv: iv },
                             key,
@@ -1663,7 +1666,7 @@
                         finalBuffer.set(iv, salt.length);
                         finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
 
-                        updateFileProgress("Đang chuẩn bị tập tin...", 95);
+                        await updateFileProgress("Đang chuẩn bị tập tin...", 95);
 
                         if (objectUrlProcessedFile) {
                             URL.revokeObjectURL(objectUrlProcessedFile);
@@ -1692,7 +1695,7 @@
                         document.getElementById('heading-file-result').textContent = "✓ Mã hoá tập tin thành công";
 
                     } else {
-                        updateFileProgress("Đang phân tích cấu trúc tập tin...", 30);
+                        await updateFileProgress("Đang phân tích cấu trúc tập tin...", 30);
                         if (rawUint8.length < 28) {
                             throw new Error("Tập tin mã hoá bị hư hỏng hoặc không đúng định dạng.");
                         }
@@ -1701,10 +1704,10 @@
                         const iv = rawUint8.slice(16, 28);
                         const ciphertext = rawUint8.slice(28);
 
-                        updateFileProgress("Đang giải mã khoá PBKDF2...", 55);
+                        await updateFileProgress("Đang giải mã khoá PBKDF2...", 55);
                         const key = await deriveKeyPBKDF2(passwordVal, salt);
 
-                        updateFileProgress("Đang giải mã AES-GCM...", 75);
+                        await updateFileProgress("Đang giải mã AES-GCM...", 75);
                         let decryptedCompressed;
                         try {
                             decryptedCompressed = await window.crypto.subtle.decrypt(
@@ -1716,7 +1719,7 @@
                             throw new Error("Mật mã không đúng hoặc tập tin đã bị thay đổi/hư hỏng.");
                         }
 
-                        updateFileProgress("Đang giải nén tập tin...", 90);
+                        await updateFileProgress("Đang giải nén tập tin...", 90);
                         const decompressedPayload = await decompressWithGzip(new Uint8Array(decryptedCompressed));
 
                         if (decompressedPayload.length < 2) {
@@ -1747,7 +1750,7 @@
                         document.getElementById('heading-file-result').textContent = "✓ Giải mã tập tin thành công";
                     }
 
-                    updateFileProgress("Hoàn tất!", 100);
+                    await updateFileProgress("Hoàn tất!", 100);
                     setTimeout(() => {
                         document.getElementById('panel-file-progress').classList.add('is-hidden');
                         resultPanel.classList.remove('is-hidden');
