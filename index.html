@@ -46,6 +46,10 @@
             min-height: 100vh;
         }
 
+        body.is-processing {
+            cursor: wait;
+        }
+
         h1 {
             font-size: 1.6rem;
             font-weight: bold;
@@ -125,7 +129,12 @@
             transition: all 0.2s ease;
         }
 
-        .tab-button:hover {
+        .tab-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .tab-button:hover:not(:disabled) {
             color: var(--text-color);
             background: rgba(255, 255, 255, 0.05);
         }
@@ -315,12 +324,17 @@
             color: #FFFFFF;
         }
 
+        .btn-base:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-encrypt {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
         }
 
-        .btn-encrypt:hover {
+        .btn-encrypt:hover:not(:disabled) {
             opacity: 0.9;
         }
 
@@ -329,7 +343,7 @@
             border-color: var(--color-decrypt);
         }
 
-        .btn-decrypt:hover {
+        .btn-decrypt:hover:not(:disabled) {
             opacity: 0.9;
         }
 
@@ -339,7 +353,7 @@
             border-color: var(--border-color);
         }
 
-        .btn-action-neutral:hover {
+        .btn-action-neutral:hover:not(:disabled) {
             background-color: var(--border-color);
         }
 
@@ -349,7 +363,7 @@
             border-color: var(--color-danger);
         }
 
-        .btn-clear-danger:hover {
+        .btn-clear-danger:hover:not(:disabled) {
             background-color: var(--color-danger);
             color: #FFFFFF;
         }
@@ -359,7 +373,7 @@
             border-color: var(--color-action);
         }
 
-        .btn-success:hover {
+        .btn-success:hover:not(:disabled) {
             opacity: 0.9;
         }
 
@@ -449,7 +463,7 @@
             color: var(--text-muted);
         }
 
-        /* Khu vực kéo thả và dán tập tin */
+        /* Khu vực kéo thả và dán tập tin - Triệt tiêu lỗi nhấp nháy màn hình */
         .drop-file-zone {
             border: 2px dashed var(--border-color);
             border-radius: var(--border-radius);
@@ -461,13 +475,18 @@
             flex-direction: column;
             align-items: center;
             gap: 0.5rem;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        /* Vô hiệu hóa bắt sự kiện chuột trên thẻ con để chống nhấp nháy viền */
+        .drop-file-zone * {
+            pointer-events: none;
         }
 
         .drop-file-zone:hover,
         .drop-file-zone.is-drag-over {
             border-color: var(--primary-color);
-            background: rgba(0, 102, 182, 0.1);
+            background-color: rgba(0, 102, 182, 0.1);
         }
 
         .drop-file-icon {
@@ -650,6 +669,15 @@
             transition: width 0.15s linear;
         }
 
+        /* Vùng nhớ tạm sao chép ngầm - Không dùng style inline */
+        .clipboard-hidden-area {
+            position: fixed;
+            left: -9999rem;
+            top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
         /* Footer */
         .page-footer {
             margin-top: 2rem;
@@ -778,13 +806,13 @@
             </div>
 
             <div class="action-button-grid">
-                <button type="button" class="btn-base btn-encrypt" onclick="executeTextProcess(true)">
+                <button type="button" id="btn-text-encrypt" class="btn-base btn-encrypt" onclick="executeTextProcess(true)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     Mã hoá
                 </button>
-                <button type="button" class="btn-base btn-decrypt" onclick="executeTextProcess(false)">
+                <button type="button" id="btn-text-decrypt" class="btn-base btn-decrypt" onclick="executeTextProcess(false)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
@@ -793,7 +821,7 @@
             </div>
 
             <div class="secondary-button-container">
-                <button type="button" class="btn-base btn-clear-danger" onclick="clearTextForm()">
+                <button type="button" id="btn-text-clear" class="btn-base btn-clear-danger" onclick="clearTextForm()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
@@ -860,7 +888,7 @@
                             <div id="label-selected-filesize" class="file-selected-size">0 Byte</div>
                         </div>
                     </div>
-                    <button type="button" class="btn-base btn-action-neutral" onclick="removeSelectedFile()">Bỏ chọn</button>
+                    <button type="button" id="btn-file-deselect" class="btn-base btn-action-neutral" onclick="removeSelectedFile()">Bỏ chọn</button>
                 </div>
             </div>
 
@@ -915,13 +943,13 @@
             </div>
 
             <div class="action-button-grid">
-                <button type="button" class="btn-base btn-encrypt" onclick="executeFileProcess(true)">
+                <button type="button" id="btn-file-encrypt" class="btn-base btn-encrypt" onclick="executeFileProcess(true)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     Mã hoá Tập tin
                 </button>
-                <button type="button" class="btn-base btn-decrypt" onclick="executeFileProcess(false)">
+                <button type="button" id="btn-file-decrypt" class="btn-base btn-decrypt" onclick="executeFileProcess(false)">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                     </svg>
@@ -930,7 +958,7 @@
             </div>
 
             <div class="secondary-button-container">
-                <button type="button" class="btn-base btn-clear-danger" onclick="clearFileForm()">
+                <button type="button" id="btn-file-clear" class="btn-base btn-clear-danger" onclick="clearFileForm()">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
@@ -982,13 +1010,318 @@
         <span>📡 Chạy Offline 100% không qua máy chủ</span>
     </footer>
 
+    <!-- ============================================================ -->
+    <!-- MÃ NGUỒN WEB WORKER ĐA LUỒNG CPU (CHẠY NGẦM HOÀN TOÀN) -->
+    <!-- ============================================================ -->
+    <script id="worker-script" type="javascript/worker">
+        function convertArrayBufferToBase64(buffer) {
+            const bytes = new Uint8Array(buffer);
+            let binary = '';
+            const chunkSize = 0x8000;
+            for (let i = 0; i < bytes.length; i += chunkSize) {
+                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+            }
+            return btoa(binary);
+        }
+
+        function convertBase64ToArrayBuffer(base64) {
+            const binaryString = atob(base64.trim().replace(/\s+/g, ''));
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        async function compressWithGzip(uint8ArrayData) {
+            if (typeof CompressionStream === 'undefined') return uint8ArrayData;
+            const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new CompressionStream('gzip'));
+            const response = new Response(stream);
+            const buffer = await response.arrayBuffer();
+            return new Uint8Array(buffer);
+        }
+
+        async function decompressWithGzip(uint8ArrayData) {
+            if (typeof DecompressionStream === 'undefined') return uint8ArrayData;
+            try {
+                const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new DecompressionStream('gzip'));
+                const response = new Response(stream);
+                const buffer = await response.arrayBuffer();
+                return new Uint8Array(buffer);
+            } catch (err) {
+                return uint8ArrayData;
+            }
+        }
+
+        async function deriveKeyPBKDF2(password, salt) {
+            const encoder = new TextEncoder();
+            const baseKey = await self.crypto.subtle.importKey(
+                "raw",
+                encoder.encode(password),
+                "PBKDF2",
+                false,
+                ["deriveKey"]
+            );
+            return await self.crypto.subtle.deriveKey(
+                {
+                    name: "PBKDF2",
+                    salt: salt,
+                    iterations: 600000,
+                    hash: "SHA-256"
+                },
+                baseKey,
+                { name: "AES-GCM", length: 256 },
+                false,
+                ["encrypt", "decrypt"]
+            );
+        }
+
+        self.onmessage = async function (e) {
+            const { taskId, action, text, password, file, filename } = e.data;
+
+            try {
+                if (action === 'encryptText') {
+                    const rawBytes = new TextEncoder().encode(text);
+                    const originalSize = rawBytes.length;
+                    const compressedBytes = await compressWithGzip(rawBytes);
+
+                    const salt = self.crypto.getRandomValues(new Uint8Array(16));
+                    const iv = self.crypto.getRandomValues(new Uint8Array(12));
+
+                    const key = await deriveKeyPBKDF2(password, salt);
+                    const ciphertextBuffer = await self.crypto.subtle.encrypt(
+                        { name: "AES-GCM", iv: iv },
+                        key,
+                        compressedBytes
+                    );
+
+                    const combined = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
+                    combined.set(salt, 0);
+                    combined.set(iv, salt.length);
+                    combined.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
+
+                    const base64Result = convertArrayBufferToBase64(combined.buffer);
+                    self.postMessage({
+                        taskId,
+                        type: 'success',
+                        action,
+                        result: base64Result,
+                        originalSize,
+                        finalSize: base64Result.length
+                    });
+
+                } else if (action === 'decryptText') {
+                    let combinedBytes;
+                    try {
+                        combinedBytes = new Uint8Array(convertBase64ToArrayBuffer(text));
+                    } catch (err) {
+                        throw new Error("Định dạng dữ liệu không hợp lệ (không phải chuỗi Base64 chuẩn).");
+                    }
+
+                    // Tối ưu hoá: Bản mã chuẩn AES-GCM + PBKDF2 bắt buộc phải từ 44 bytes trở lên
+                    if (combinedBytes.length < 44) {
+                        throw new Error("Dữ liệu bản mã quá ngắn hoặc đã bị hư hỏng.");
+                    }
+
+                    const salt = combinedBytes.slice(0, 16);
+                    const iv = combinedBytes.slice(16, 28);
+                    const ciphertext = combinedBytes.slice(28);
+
+                    const key = await deriveKeyPBKDF2(password, salt);
+                    let decryptedCompressedBuffer;
+                    try {
+                        decryptedCompressedBuffer = await self.crypto.subtle.decrypt(
+                            { name: "AES-GCM", iv: iv },
+                            key,
+                            ciphertext
+                        );
+                    } catch (err) {
+                        throw new Error("Mật mã không đúng hoặc dữ liệu bản mã đã bị chỉnh sửa.");
+                    }
+
+                    const decompressedBytes = await decompressWithGzip(new Uint8Array(decryptedCompressedBuffer));
+                    const originalText = new TextDecoder().decode(decompressedBytes);
+
+                    self.postMessage({
+                        taskId,
+                        type: 'success',
+                        action,
+                        result: originalText
+                    });
+
+                } else if (action === 'encryptFile') {
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang đọc dữ liệu tập tin trong nền...', percent: 25 });
+                    
+                    // Tối ưu hoá tuyệt đối: Worker tự đọc đĩa trong nền (Dual-strategy Read), Luồng chính 0MB RAM
+                    let rawBuffer;
+                    try {
+                        if (typeof file.arrayBuffer === 'function') {
+                            rawBuffer = await file.arrayBuffer();
+                        } else {
+                            const syncReader = new FileReaderSync();
+                            rawBuffer = syncReader.readAsArrayBuffer(file);
+                        }
+                    } catch (readError) {
+                        throw new Error("Không thể đọc tập tin (tập tin có thể bị khoá bởi ứng dụng khác hoặc bị di chuyển).");
+                    }
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang nén tập tin bằng Gzip...', percent: 45 });
+                    const rawUint8 = new Uint8Array(rawBuffer);
+                    const filenameBytes = new TextEncoder().encode(filename);
+                    const filenameLen = filenameBytes.length;
+
+                    const payload = new Uint8Array(2 + filenameLen + rawUint8.length);
+                    payload[0] = (filenameLen >> 8) & 0xff;
+                    payload[1] = filenameLen & 0xff;
+                    payload.set(filenameBytes, 2);
+                    payload.set(rawUint8, 2 + filenameLen);
+
+                    const compressedPayload = await compressWithGzip(payload);
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang tạo khoá mã hoá PBKDF2...', percent: 65 });
+                    const salt = self.crypto.getRandomValues(new Uint8Array(16));
+                    const iv = self.crypto.getRandomValues(new Uint8Array(12));
+
+                    const key = await deriveKeyPBKDF2(password, salt);
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang mã hoá AES-GCM 256-bit...', percent: 85 });
+                    const ciphertextBuffer = await self.crypto.subtle.encrypt(
+                        { name: "AES-GCM", iv: iv },
+                        key,
+                        compressedPayload
+                    );
+
+                    const finalBuffer = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
+                    finalBuffer.set(salt, 0);
+                    finalBuffer.set(iv, salt.length);
+                    finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang chuẩn bị tập tin...', percent: 95 });
+
+                    // Chuyển quyền sở hữu mảng nhị phân kết quả về luồng chính (Zero-copy)
+                    self.postMessage({
+                        taskId,
+                        type: 'success',
+                        action,
+                        finalBuffer: finalBuffer.buffer,
+                        originalSize: rawUint8.length,
+                        finalSize: finalBuffer.length,
+                        outputFilename: filename + '.enc'
+                    }, [finalBuffer.buffer]);
+
+                } else if (action === 'decryptFile') {
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang đọc dữ liệu tập tin trong nền...', percent: 25 });
+                    
+                    let rawBuffer;
+                    try {
+                        if (typeof file.arrayBuffer === 'function') {
+                            rawBuffer = await file.arrayBuffer();
+                        } else {
+                            const syncReader = new FileReaderSync();
+                            rawBuffer = syncReader.readAsArrayBuffer(file);
+                        }
+                    } catch (readError) {
+                        throw new Error("Không thể đọc tập tin (tập tin có thể bị khoá bởi ứng dụng khác hoặc bị di chuyển).");
+                    }
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang phân tích cấu trúc bản mã...', percent: 40 });
+                    const rawUint8 = new Uint8Array(rawBuffer);
+                    if (rawUint8.length < 44) {
+                        throw new Error("Tập tin mã hoá bị hư hỏng hoặc không đúng định dạng.");
+                    }
+
+                    const salt = rawUint8.slice(0, 16);
+                    const iv = rawUint8.slice(16, 28);
+                    const ciphertext = rawUint8.slice(28);
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải mã khoá PBKDF2...', percent: 60 });
+                    const key = await deriveKeyPBKDF2(password, salt);
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải mã AES-GCM...', percent: 80 });
+                    let decryptedCompressed;
+                    try {
+                        decryptedCompressed = await self.crypto.subtle.decrypt(
+                            { name: "AES-GCM", iv: iv },
+                            key,
+                            ciphertext
+                        );
+                    } catch (err) {
+                        throw new Error("Mật mã không đúng hoặc tập tin đã bị thay đổi/hư hỏng.");
+                    }
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải nén tập tin...', percent: 92 });
+                    const decompressedPayload = await decompressWithGzip(new Uint8Array(decryptedCompressed));
+
+                    if (decompressedPayload.length < 2) {
+                        throw new Error("Cấu trúc tập tin không hợp lệ sau khi giải mã.");
+                    }
+
+                    const filenameLen = (decompressedPayload[0] << 8) | decompressedPayload[1];
+                    if (decompressedPayload.length < 2 + filenameLen) {
+                        throw new Error("Dữ liệu tên tập tin bị lỗi.");
+                    }
+
+                    const filenameBytes = decompressedPayload.slice(2, 2 + filenameLen);
+                    let originalFilename = new TextDecoder().decode(filenameBytes);
+                    const originalFileBytes = decompressedPayload.slice(2 + filenameLen);
+
+                    if (!originalFilename || originalFilename.trim() === '') {
+                        originalFilename = filename.replace(/\.enc$/i, '') || "file_da_giai_ma";
+                    }
+
+                    self.postMessage({
+                        taskId,
+                        type: 'success',
+                        action,
+                        finalBuffer: originalFileBytes.buffer,
+                        outputFilename: originalFilename
+                    }, [originalFileBytes.buffer]);
+                }
+            } catch (error) {
+                self.postMessage({
+                    taskId,
+                    type: 'error',
+                    action,
+                    message: error.message || "Xảy ra lỗi trong luồng tính toán ngầm."
+                });
+            }
+        };
+    </script>
+
+    <!-- ============================================================ -->
+    <!-- MÃ NGUỒN LUỒNG GIAO DIỆN (MAIN UI THREAD) -->
+    <!-- ============================================================ -->
     <script>
-        // Quản lý biến trạng thái tập tin
         let activeChosenFile = null;
         let objectUrlProcessedFile = null;
         let nameProcessedFile = null;
 
-        // Chặn trình duyệt tự chuyển hướng mở file khi kéo thả trượt ra ngoài vùng
+        // Khởi tạo Inline Web Worker và thiết lập bộ bảo vệ chống sập luồng
+        let cryptoWorker = null;
+        try {
+            const workerBlob = new Blob([document.getElementById('worker-script').textContent], { type: 'application/javascript' });
+            const workerBlobUrl = URL.createObjectURL(workerBlob);
+            cryptoWorker = new Worker(workerBlobUrl);
+            URL.revokeObjectURL(workerBlobUrl);
+
+            cryptoWorker.onerror = function (err) {
+                console.error("Lỗi Worker cấp hệ thống:", err);
+                setInteractionState(false, 'text');
+                setInteractionState(false, 'file');
+                document.getElementById('panel-file-progress').classList.add('is-hidden');
+                const errorMessage = "Sự cố luồng tính toán: " + (err.message || "Hệ thống bận hoặc hết bộ nhớ RAM.");
+                if (document.getElementById('tab-content-text').classList.contains('is-active')) {
+                    showTextErrorMessage(errorMessage);
+                } else {
+                    showFileErrorMessage(errorMessage);
+                }
+            };
+        } catch (err) {
+            console.error("Lỗi khởi tạo Web Worker:", err);
+        }
+
+        // Chặn trình duyệt tự ý mở file khi kéo thả ngoài khung
         window.addEventListener('dragover', (e) => e.preventDefault(), false);
         window.addEventListener('drop', (e) => e.preventDefault(), false);
 
@@ -1000,7 +1333,6 @@
             document.getElementById(`tab-content-${targetTab}`).classList.add('is-active');
             document.getElementById(`tab-btn-${targetTab}`).classList.add('is-active');
 
-            // Xoá mật mã khi chuyển đổi qua lại giữa các tab để bảo mật
             clearSensitivePasswords();
         }
 
@@ -1045,7 +1377,7 @@
             }
         }
 
-        // Sao chép mật mã vào bộ nhớ tạm
+        // Sao chép mật mã
         async function copyPassword(inputId, btn) {
             const inputField = document.getElementById(inputId);
             if (!inputField || !inputField.value) {
@@ -1092,7 +1424,6 @@
             const hasNumbers = /[0-9]/.test(passwordText);
             const hasSymbols = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]/.test(passwordText);
 
-            // Cập nhật số lượng ký tự và các huy hiệu tiêu chí
             const lengthNumEl = containerBox.querySelector('.criteria-length-num');
             if (lengthNumEl) {
                 lengthNumEl.textContent = passwordLength.toLocaleString('vi-VN');
@@ -1115,7 +1446,7 @@
             let themeClass = "strength-description strength-weak";
             let barColor = "var(--color-danger)";
 
-            // Giải thuật đánh giá cải tiến từ file đính kèm mới nhất
+            // Thang điểm tăng tiến liên tục, ngăn chặn chuỗi lặp đơn điệu
             if ((passwordLength >= 20 && varietyCount >= 2) || (passwordLength >= 16 && varietyCount >= 4)) {
                 strengthLabel = "Rất mạnh";
                 fillPercentage = 100;
@@ -1156,7 +1487,7 @@
             const rawVal = document.getElementById('input-text-data').value.trim();
             const badge = document.getElementById('detect-badge');
             const cleanVal = rawVal.replace(/\s+/g, '');
-            const isBase64Pattern = cleanVal.length >= 28 && /^[A-Za-z0-9+/=]+$/.test(cleanVal);
+            const isBase64Pattern = cleanVal.length >= 44 && cleanVal.length % 4 === 0 && /^[A-Za-z0-9+/=]+$/.test(cleanVal);
 
             if (isBase64Pattern) {
                 badge.classList.remove('is-hidden');
@@ -1165,7 +1496,7 @@
             }
         }
 
-        // Định dạng dung lượng Byte theo tiêu chuẩn Việt Nam
+        // Định dạng dung lượng Byte chuẩn tiếng Việt
         function formatBytesToVietnamese(bytes) {
             if (bytes === 0) return '0 Byte';
             const k = 1024;
@@ -1176,80 +1507,30 @@
             return numStr + ' ' + units[i];
         }
 
-        // Chuyển đổi ArrayBuffer <-> Base64 (xử lý khối 32KB chống tràn bộ nhớ)
-        function convertArrayBufferToBase64(buffer) {
-            const bytes = new Uint8Array(buffer);
-            let binary = '';
-            const chunkSize = 0x8000;
-            for (let i = 0; i < bytes.length; i += chunkSize) {
-                binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
-            }
-            return btoa(binary);
-        }
+        // Khoá / Mở khoá tương tác khi Worker bận (Bảo vệ triệt để chống spam và đổi Tab gây lỗi)
+        function setInteractionState(isBusy, context) {
+            document.body.classList.toggle('is-processing', isBusy);
+            
+            document.getElementById('tab-btn-text').disabled = isBusy;
+            document.getElementById('tab-btn-file').disabled = isBusy;
 
-        function convertBase64ToArrayBuffer(base64) {
-            const binaryString = atob(base64.trim().replace(/\s+/g, ''));
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
+            if (context === 'text') {
+                document.getElementById('btn-text-encrypt').disabled = isBusy;
+                document.getElementById('btn-text-decrypt').disabled = isBusy;
+                document.getElementById('btn-text-clear').disabled = isBusy;
+            } else if (context === 'file') {
+                document.getElementById('btn-file-encrypt').disabled = isBusy;
+                document.getElementById('btn-file-decrypt').disabled = isBusy;
+                document.getElementById('btn-file-clear').disabled = isBusy;
+                const deselectBtn = document.getElementById('btn-file-deselect');
+                if (deselectBtn) deselectBtn.disabled = isBusy;
             }
-            return bytes.buffer;
-        }
-
-        // Nén và giải nén Gzip
-        async function compressWithGzip(uint8ArrayData) {
-            if (typeof CompressionStream === 'undefined') {
-                return uint8ArrayData;
-            }
-            const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new CompressionStream('gzip'));
-            const response = new Response(stream);
-            const buffer = await response.arrayBuffer();
-            return new Uint8Array(buffer);
-        }
-
-        async function decompressWithGzip(uint8ArrayData) {
-            if (typeof DecompressionStream === 'undefined') {
-                return uint8ArrayData;
-            }
-            try {
-                const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new DecompressionStream('gzip'));
-                const response = new Response(stream);
-                const buffer = await response.arrayBuffer();
-                return new Uint8Array(buffer);
-            } catch (err) {
-                return uint8ArrayData;
-            }
-        }
-
-        // Dẫn xuất khoá bảo mật PBKDF2 (600.000 vòng lặp)
-        async function deriveKeyPBKDF2(password, salt) {
-            const encoder = new TextEncoder();
-            const baseKey = await window.crypto.subtle.importKey(
-                "raw",
-                encoder.encode(password),
-                "PBKDF2",
-                false,
-                ["deriveKey"]
-            );
-            return await window.crypto.subtle.deriveKey(
-                {
-                    name: "PBKDF2",
-                    salt: salt,
-                    iterations: 600000,
-                    hash: "SHA-256"
-                },
-                baseKey,
-                { name: "AES-GCM", length: 256 },
-                false,
-                ["encrypt", "decrypt"]
-            );
         }
 
         // ============================================================
-        // XỬ LÝ VĂN BẢN (MÃ HOÁ / GIẢI MÃ)
+        // XỬ LÝ VĂN BẢN VỚI WEB WORKER
         // ============================================================
-        async function executeTextProcess(isEncryptMode) {
+        function executeTextProcess(isEncryptMode) {
             const inputVal = document.getElementById('input-text-data').value;
             const passwordVal = document.getElementById('password-text-field').value;
 
@@ -1273,91 +1554,53 @@
                 return;
             }
 
-            try {
-                if (isEncryptMode) {
-                    const rawBytes = new TextEncoder().encode(inputVal);
-                    const originalSize = rawBytes.length;
+            setInteractionState(true, 'text');
 
-                    const compressedBytes = await compressWithGzip(rawBytes);
+            const taskId = 'text_' + Date.now();
+            const action = isEncryptMode ? 'encryptText' : 'decryptText';
 
-                    const salt = window.crypto.getRandomValues(new Uint8Array(16));
-                    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+            const onWorkerResponse = function (e) {
+                if (e.data.taskId !== taskId) return;
+                cryptoWorker.removeEventListener('message', onWorkerResponse);
+                setInteractionState(false, 'text');
 
-                    const key = await deriveKeyPBKDF2(passwordVal, salt);
-                    const ciphertextBuffer = await window.crypto.subtle.encrypt(
-                        { name: "AES-GCM", iv: iv },
-                        key,
-                        compressedBytes
-                    );
-
-                    const combined = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
-                    combined.set(salt, 0);
-                    combined.set(iv, salt.length);
-                    combined.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
-
-                    const base64Result = convertArrayBufferToBase64(combined.buffer);
-                    const finalSize = base64Result.length;
-
-                    let ratioText = `Kích thước gốc: ${formatBytesToVietnamese(originalSize)} | Bản mã Base64: ${formatBytesToVietnamese(finalSize)}`;
-                    if (originalSize > 0) {
-                        const diff = originalSize - finalSize;
-                        if (diff > 0) {
-                            const percent = ((diff / originalSize) * 100).toFixed(1).replace('.', ',');
-                            ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
-                        } else {
-                            const percent = ((Math.abs(diff) / originalSize) * 100).toFixed(1).replace('.', ',');
-                            ratioText += ` (+${percent}% do phần đệm mã hoá/Base64)`;
+                if (e.data.type === 'error') {
+                    showTextErrorMessage(e.data.message);
+                } else if (e.data.type === 'success') {
+                    if (action === 'encryptText') {
+                        let ratioText = `Kích thước gốc: ${formatBytesToVietnamese(e.data.originalSize)} | Bản mã Base64: ${formatBytesToVietnamese(e.data.finalSize)}`;
+                        if (e.data.originalSize > 0) {
+                            const diff = e.data.originalSize - e.data.finalSize;
+                            if (diff > 0) {
+                                const percent = ((diff / e.data.originalSize) * 100).toFixed(1).replace('.', ',');
+                                ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
+                            } else {
+                                const percent = ((Math.abs(diff) / e.data.originalSize) * 100).toFixed(1).replace('.', ',');
+                                ratioText += ` (+${percent}% do phần đệm mã hoá/Base64)`;
+                            }
                         }
+                        ratioBadge.textContent = ratioText;
+                        ratioBadge.classList.remove('is-hidden');
+                        resultTitle.textContent = "✓ Mã hoá & Nén Gzip thành công!";
+                        outputBox.textContent = e.data.result;
+                        resultPanel.classList.remove('is-hidden');
+                        if (shareBtn) shareBtn.classList.remove('is-hidden');
+                    } else {
+                        resultTitle.textContent = "✓ Giải mã & Giải nén thành công!";
+                        outputBox.textContent = e.data.result;
+                        resultPanel.classList.remove('is-hidden');
+                        if (shareBtn) shareBtn.classList.add('is-hidden');
                     }
-
-                    ratioBadge.textContent = ratioText;
-                    ratioBadge.classList.remove('is-hidden');
-
-                    resultTitle.textContent = "✓ Mã hoá & Nén Gzip thành công!";
-                    outputBox.textContent = base64Result;
-                    resultPanel.classList.remove('is-hidden');
-                    if (shareBtn) shareBtn.classList.remove('is-hidden');
-
-                } else {
-                    let combinedBytes;
-                    try {
-                        combinedBytes = new Uint8Array(convertBase64ToArrayBuffer(inputVal));
-                    } catch (e) {
-                        throw new Error("Định dạng dữ liệu không hợp lệ (không phải chuỗi Base64 chuẩn).");
-                    }
-
-                    if (combinedBytes.length < 28) {
-                        throw new Error("Dữ liệu bản mã quá ngắn hoặc đã bị hư hỏng.");
-                    }
-
-                    const salt = combinedBytes.slice(0, 16);
-                    const iv = combinedBytes.slice(16, 28);
-                    const ciphertext = combinedBytes.slice(28);
-
-                    const key = await deriveKeyPBKDF2(passwordVal, salt);
-
-                    let decryptedCompressedBuffer;
-                    try {
-                        decryptedCompressedBuffer = await window.crypto.subtle.decrypt(
-                            { name: "AES-GCM", iv: iv },
-                            key,
-                            ciphertext
-                        );
-                    } catch (err) {
-                        throw new Error("Mật mã không đúng hoặc dữ liệu bản mã đã bị chỉnh sửa.");
-                    }
-
-                    const decompressedBytes = await decompressWithGzip(new Uint8Array(decryptedCompressedBuffer));
-                    const originalText = new TextDecoder().decode(decompressedBytes);
-
-                    resultTitle.textContent = "✓ Giải mã & Giải nén thành công!";
-                    outputBox.textContent = originalText;
-                    resultPanel.classList.remove('is-hidden');
-                    if (shareBtn) shareBtn.classList.add('is-hidden');
                 }
-            } catch (err) {
-                showTextErrorMessage(err.message || "Đã xảy ra lỗi trong quá trình xử lý văn bản.");
-            }
+            };
+
+            cryptoWorker.addEventListener('message', onWorkerResponse);
+            cryptoWorker.postMessage({
+                taskId,
+                action,
+                text: inputVal,
+                password: passwordVal
+            });
         }
 
         function showTextErrorMessage(message) {
@@ -1377,7 +1620,6 @@
             document.getElementById('alert-text-error').classList.add('is-hidden');
         }
 
-        // Sao chép kết quả
         async function copyResultContent(elementId, btn) {
             const textToCopy = document.getElementById(elementId).textContent;
             if (!textToCopy) return;
@@ -1394,7 +1636,6 @@
             }
         }
 
-        // Chia sẻ liên kết mã hoá
         function shareEncryptedLink() {
             const outputBox = document.getElementById('display-text-output');
             if (!outputBox) return;
@@ -1406,7 +1647,8 @@
                 return;
             }
 
-            const shareUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(base64Text);
+            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            const shareUrl = baseUrl + '?data=' + encodeURIComponent(base64Text);
 
             if (navigator.share) {
                 navigator.share({
@@ -1438,8 +1680,7 @@
         function fallbackCopyString(url) {
             const tempArea = document.createElement("textarea");
             tempArea.value = url;
-            tempArea.style.position = "fixed";
-            tempArea.style.opacity = "0";
+            tempArea.className = "clipboard-hidden-area";
             document.body.appendChild(tempArea);
             tempArea.focus();
             tempArea.select();
@@ -1462,7 +1703,6 @@
             }, 2000);
         }
 
-        // Tự động kiểm tra liên kết chia sẻ từ URL
         function checkUrlSharedPayload() {
             let sharedData = '';
             try {
@@ -1508,7 +1748,7 @@
         window.addEventListener('popstate', checkUrlSharedPayload);
 
         // ============================================================
-        // XỬ LÝ TẬP TIN: BẤM NÚT, KÉO THẢ VÀ DÁN (PASTE) TẬP TIN
+        // XỬ LÝ TẬP TIN VỚI WEB WORKER & DIRECT FILE TRANSFER (0MS)
         // ============================================================
         const dropAreaElement = document.getElementById('area-drop-file');
 
@@ -1516,7 +1756,6 @@
             document.getElementById('input-file-element').click();
         }
 
-        // Kéo thả tập tin
         ['dragenter', 'dragover'].forEach(eventName => {
             dropAreaElement.addEventListener(eventName, (e) => {
                 e.preventDefault();
@@ -1538,14 +1777,12 @@
             }
         });
 
-        // Bấm nút chọn tập tin
         function onFileInputChange(inputElement) {
             if (inputElement.files && inputElement.files.length > 0) {
                 loadSelectedFile(inputElement.files[0]);
             }
         }
 
-        // Dán tập tin đã sao chép từ Clipboard (Ctrl+V)
         window.addEventListener('paste', function (e) {
             if (e.clipboardData && e.clipboardData.files && e.clipboardData.files.length > 0) {
                 const pastedFile = e.clipboardData.files[0];
@@ -1590,14 +1827,12 @@
             evaluatePasswordStrengthUI('password-file-field', 'password-file-strength');
         }
 
-        async function updateFileProgress(statusText, percentage) {
+        function updateFileProgress(statusText, percentage) {
             const progressBox = document.getElementById('panel-file-progress');
             document.getElementById('label-progress-status').textContent = statusText;
             document.getElementById('label-progress-percent').textContent = percentage + '%';
             document.getElementById('bar-file-progress-fill').style.width = percentage + '%';
             progressBox.classList.remove('is-hidden');
-            // Nhường CPU 10ms để trình duyệt vẽ lại giao diện thanh tiến trình mượt mà
-            await new Promise(resolve => setTimeout(resolve, 10));
         }
 
         function showFileErrorMessage(message) {
@@ -1606,7 +1841,7 @@
             errorAlert.classList.remove('is-hidden');
         }
 
-        async function executeFileProcess(isEncryptMode) {
+        function executeFileProcess(isEncryptMode) {
             const passwordVal = document.getElementById('password-file-field').value;
             const resultPanel = document.getElementById('panel-file-result');
             const errorAlert = document.getElementById('alert-file-error');
@@ -1626,147 +1861,75 @@
                 return;
             }
 
-            await updateFileProgress("Đang đọc dữ liệu tập tin...", 15);
+            setInteractionState(true, 'file');
+            updateFileProgress("Đang kết nối luồng xử lý ngầm...", 15);
 
-            const fileReader = new FileReader();
+            const taskId = 'file_' + Date.now();
+            const action = isEncryptMode ? 'encryptFile' : 'decryptFile';
 
-            fileReader.onload = async function (e) {
-                try {
-                    const rawBuffer = e.target.result;
-                    const rawUint8 = new Uint8Array(rawBuffer);
+            const onWorkerFileResponse = function (evt) {
+                if (evt.data.taskId !== taskId) return;
 
-                    if (isEncryptMode) {
-                        await updateFileProgress("Đang nén tập tin bằng Gzip...", 35);
-                        const filenameBytes = new TextEncoder().encode(activeChosenFile.name);
-                        const filenameLen = filenameBytes.length;
+                if (evt.data.type === 'progress') {
+                    updateFileProgress(evt.data.status, evt.data.percent);
+                } else if (evt.data.type === 'error') {
+                    cryptoWorker.removeEventListener('message', onWorkerFileResponse);
+                    setInteractionState(false, 'file');
+                    document.getElementById('panel-file-progress').classList.add('is-hidden');
+                    showFileErrorMessage(evt.data.message);
+                } else if (evt.data.type === 'success') {
+                    cryptoWorker.removeEventListener('message', onWorkerFileResponse);
+                    setInteractionState(false, 'file');
+                    updateFileProgress("Hoàn tất!", 100);
 
-                        // Cấu trúc gói: [Độ dài tên: 2B] + [Tên tập tin] + [Dữ liệu gốc]
-                        const payload = new Uint8Array(2 + filenameLen + rawUint8.length);
-                        payload[0] = (filenameLen >> 8) & 0xff;
-                        payload[1] = filenameLen & 0xff;
-                        payload.set(filenameBytes, 2);
-                        payload.set(rawUint8, 2 + filenameLen);
-
-                        const compressedPayload = await compressWithGzip(payload);
-
-                        await updateFileProgress("Đang tạo khoá mã hoá PBKDF2...", 60);
-                        const salt = window.crypto.getRandomValues(new Uint8Array(16));
-                        const iv = window.crypto.getRandomValues(new Uint8Array(12));
-
-                        const key = await deriveKeyPBKDF2(passwordVal, salt);
-
-                        await updateFileProgress("Đang mã hoá AES-GCM 256-bit...", 80);
-                        const ciphertextBuffer = await window.crypto.subtle.encrypt(
-                            { name: "AES-GCM", iv: iv },
-                            key,
-                            compressedPayload
-                        );
-
-                        const finalBuffer = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
-                        finalBuffer.set(salt, 0);
-                        finalBuffer.set(iv, salt.length);
-                        finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
-
-                        await updateFileProgress("Đang chuẩn bị tập tin...", 95);
-
-                        if (objectUrlProcessedFile) {
-                            URL.revokeObjectURL(objectUrlProcessedFile);
-                        }
-                        const blob = new Blob([finalBuffer], { type: "application/octet-stream" });
-                        objectUrlProcessedFile = URL.createObjectURL(blob);
-                        nameProcessedFile = activeChosenFile.name + ".enc";
-
-                        const originalSize = activeChosenFile.size;
-                        const encryptedSize = finalBuffer.length;
-                        let ratioText = `Dung lượng gốc: ${formatBytesToVietnamese(originalSize)} | Đã mã hoá: ${formatBytesToVietnamese(encryptedSize)}`;
-                        if (originalSize > 0) {
-                            const diff = originalSize - encryptedSize;
-                            if (diff > 0) {
-                                const percent = ((diff / originalSize) * 100).toFixed(1).replace('.', ',');
-                                ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
-                            } else {
-                                const percent = ((Math.abs(diff) / originalSize) * 100).toFixed(1).replace('.', ',');
-                                ratioText += ` (+${percent}% do phần đệm mã hoá)`;
-                            }
-                        }
-
-                        ratioBadge.textContent = ratioText;
-                        ratioBadge.classList.remove('is-hidden');
-                        successMsg.textContent = `Tập tin "${activeChosenFile.name}.enc" đã được mã hoá thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
-                        document.getElementById('heading-file-result').textContent = "✓ Mã hoá tập tin thành công";
-
-                    } else {
-                        await updateFileProgress("Đang phân tích cấu trúc tập tin...", 30);
-                        if (rawUint8.length < 28) {
-                            throw new Error("Tập tin mã hoá bị hư hỏng hoặc không đúng định dạng.");
-                        }
-
-                        const salt = rawUint8.slice(0, 16);
-                        const iv = rawUint8.slice(16, 28);
-                        const ciphertext = rawUint8.slice(28);
-
-                        await updateFileProgress("Đang giải mã khoá PBKDF2...", 55);
-                        const key = await deriveKeyPBKDF2(passwordVal, salt);
-
-                        await updateFileProgress("Đang giải mã AES-GCM...", 75);
-                        let decryptedCompressed;
-                        try {
-                            decryptedCompressed = await window.crypto.subtle.decrypt(
-                                { name: "AES-GCM", iv: iv },
-                                key,
-                                ciphertext
-                            );
-                        } catch (err) {
-                            throw new Error("Mật mã không đúng hoặc tập tin đã bị thay đổi/hư hỏng.");
-                        }
-
-                        await updateFileProgress("Đang giải nén tập tin...", 90);
-                        const decompressedPayload = await decompressWithGzip(new Uint8Array(decryptedCompressed));
-
-                        if (decompressedPayload.length < 2) {
-                            throw new Error("Cấu trúc tập tin không hợp lệ sau khi giải mã.");
-                        }
-
-                        const filenameLen = (decompressedPayload[0] << 8) | decompressedPayload[1];
-                        if (decompressedPayload.length < 2 + filenameLen) {
-                            throw new Error("Dữ liệu tên tập tin bị lỗi.");
-                        }
-
-                        const filenameBytes = decompressedPayload.slice(2, 2 + filenameLen);
-                        let originalFilename = new TextDecoder().decode(filenameBytes);
-                        const originalFileBytes = decompressedPayload.slice(2 + filenameLen);
-
-                        if (!originalFilename || originalFilename.trim() === '') {
-                            originalFilename = activeChosenFile.name.replace(/\.enc$/i, '') || "file_da_giai_ma";
-                        }
-
-                        if (objectUrlProcessedFile) {
-                            URL.revokeObjectURL(objectUrlProcessedFile);
-                        }
-                        const blob = new Blob([originalFileBytes], { type: "application/octet-stream" });
-                        objectUrlProcessedFile = URL.createObjectURL(blob);
-                        nameProcessedFile = originalFilename;
-
-                        successMsg.textContent = `Tập tin gốc "${originalFilename}" đã được phục hồi thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
-                        document.getElementById('heading-file-result').textContent = "✓ Giải mã tập tin thành công";
-                    }
-
-                    await updateFileProgress("Hoàn tất!", 100);
                     setTimeout(() => {
                         document.getElementById('panel-file-progress').classList.add('is-hidden');
-                        resultPanel.classList.remove('is-hidden');
-                    }, 400);
 
-                } catch (err) {
-                    document.getElementById('panel-file-progress').classList.add('is-hidden');
-                    showFileErrorMessage(err.message || "Xảy ra lỗi trong quá trình xử lý tập tin.");
+                        if (objectUrlProcessedFile) {
+                            URL.revokeObjectURL(objectUrlProcessedFile);
+                        }
+                        const blob = new Blob([evt.data.finalBuffer], { type: "application/octet-stream" });
+                        objectUrlProcessedFile = URL.createObjectURL(blob);
+                        nameProcessedFile = evt.data.outputFilename;
+
+                        if (action === 'encryptFile') {
+                            let ratioText = `Dung lượng gốc: ${formatBytesToVietnamese(evt.data.originalSize)} | Đã mã hoá: ${formatBytesToVietnamese(evt.data.finalSize)}`;
+                            if (evt.data.originalSize > 0) {
+                                const diff = evt.data.originalSize - evt.data.finalSize;
+                                if (diff > 0) {
+                                    const percent = ((diff / evt.data.originalSize) * 100).toFixed(1).replace('.', ',');
+                                    ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
+                                } else {
+                                    const percent = ((Math.abs(diff) / evt.data.originalSize) * 100).toFixed(1).replace('.', ',');
+                                    ratioText += ` (+${percent}% dung lượng do phần đệm mã hoá)`;
+                                }
+                            }
+                            ratioBadge.textContent = ratioText;
+                            ratioBadge.classList.remove('is-hidden');
+                            successMsg.textContent = `Tập tin "${evt.data.outputFilename}" đã được mã hoá thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
+                            document.getElementById('heading-file-result').textContent = "✓ Mã hoá tập tin thành công";
+                        } else {
+                            successMsg.textContent = `Tập tin gốc "${evt.data.outputFilename}" đã được phục hồi thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
+                            document.getElementById('heading-file-result').textContent = "✓ Giải mã tập tin thành công";
+                        }
+
+                        resultPanel.classList.remove('is-hidden');
+                    }, 350);
                 }
             };
 
-            fileReader.readAsArrayBuffer(activeChosenFile);
+            cryptoWorker.addEventListener('message', onWorkerFileResponse);
+
+            // Tối ưu hoá tối đa: Bắn trực tiếp con trỏ File Handle sang Worker trong 0ms (Luồng chính 0MB RAM)
+            cryptoWorker.postMessage({
+                taskId,
+                action,
+                file: activeChosenFile,
+                filename: activeChosenFile.name,
+                password: passwordVal
+            });
         }
 
-        // Tải xuống tập tin đã xử lý
         function downloadResultFile() {
             if (!objectUrlProcessedFile || !nameProcessedFile) return;
 
