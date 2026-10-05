@@ -1,76 +1,80 @@
-# Phần Mềm Mã Hoá & Giải Mã Bảo Mật (AES-256)
+# 🛡️ Công Cụ Mã Hoá & Bảo Vệ Dữ Liệu An Toàn (AES-256)
 
+Chào mừng bạn đến với công cụ mã hoá dữ liệu cá nhân của **Dương Tấn Chánh**. 
+
+Đây là một trang web đơn giản nhưng cực kỳ mạnh mẽ, giúp bạn **"khoá"** các đoạn văn bản nhạy cảm hoặc tập tin quan trọng bằng một mật khẩu do bạn tự đặt. Chỉ những ai có mật khẩu chính xác mới có thể mở và xem được nội dung bên trong.
+
+---
+
+## 🌟 Điểm nổi bật (Tại sao bạn nên dùng?)
+
+* **Bảo mật tuyệt đối (Chuẩn quân đội):** Sử dụng thuật toán mã hoá AES-256 tiên tiến nhất hiện nay.
+* **Riêng tư 100% (Không sợ lộ dữ liệu):** Toàn bộ quá trình mã hoá và giải mã diễn ra **ngay trên máy tính / điện thoại của bạn**. Dữ liệu **KHÔNG BAO GIỜ** gửi lên bất kỳ máy chủ (server) hay mạng Internet nào. Thậm chí bạn có thể ngắt mạng (tắt Wi-Fi/4G) mà trang web vẫn chạy bình thường.
+* **Tự động nén gọn dữ liệu:** Giúp giảm dung lượng tập tin và văn bản trước khi mã hoá, giúp việc gửi qua Zalo, Messenger, Gmail nhanh hơn.
+* **Không làm đơ máy:** Sử dụng công nghệ xử lý ngầm đa luồng mượt mà.
+
+---
+
+## 📖 Hướng Dẫn Sử Dụng Chi Tiết
+
+### 1. Dành cho Văn Bản (Tin nhắn, Ghi chú, Tài khoản/Mật khẩu)
+
+#### 🔒 Cách Mã Hoá (Khoá tin nhắn):
+1. Chọn thẻ **"Văn Bản"**.
+2. Nhập hoặc dán nội dung bạn muốn bảo vệ vào ô trống lớn phía trên.
+3. Nhập mật khẩu bạn muốn đặt vào ô **"Mật mã bảo vệ"** *(Hãy chú ý thang đo màu sắc để biết mật khẩu của bạn đã đủ mạnh chưa)*.
+4. Bấm nút **"Mã hoá"** màu xanh dương.
+5. Kết quả thu được là một chuỗi ký tự lạ mắt (bản mã):
+   * Bấm **"Sao chép kết quả"** để gửi đoạn mã này cho người khác.
+   * Hoặc bấm **"Chia sẻ"** để lấy đường link gửi nhanh qua Zalo, SMS, Messenger...
+
+#### 🔓 Cách Giải Mã (Mở tin nhắn):
+1. Dán chuỗi ký tự lạ (bản mã) vào ô trống. *(Nếu bạn bấm vào link chia sẻ, ô này sẽ tự điền sẵn)*.
+2. Nhập đúng mật khẩu đã dùng lúc mã hoá vào ô **"Mật mã bảo vệ"**.
+3. Bấm nút **"Giải mã"** màu tím.
+4. Nội dung gốc ban đầu sẽ xuất hiện ngay bên dưới.
+
+---
+
+### 2. Dành cho Tập Tin (Hình ảnh, Video, Tài liệu Word, Excel, PDF...)
+
+#### 🔒 Cách Mã Hoá (Khoá tập tin):
+1. Chọn thẻ **"Tập Tin"**.
+2. Nhấp vào khung nét đứt để chọn file từ máy, hoặc **kéo thả file** trực tiếp vào khung *(hỗ trợ cả dán file bằng phím `Ctrl + V`)*.
+3. Đặt mật khẩu bảo vệ vào ô **"Mật mã bảo vệ"**.
+4. Bấm nút **"Mã hoá Tập tin"**.
+5. Đợi thanh tiến trình chạy đến 100%, bấm nút **"Tải xuống tập tin"** để lưu file đã khoá về máy (file sẽ có đuôi dạng `.enc`, ví dụ: `hinh_anh.jpg.enc`).
+
+#### 🔓 Cách Giải Mã (Mở lại tập tin gốc):
+1. Chọn/Kéo thả file có đuôi `.enc` đã mã hoá vào khung.
+2. Nhập chính xác mật khẩu bảo vệ.
+3. Bấm nút **"Giải mã Tập tin"**.
+4. Bấm **"Tải xuống tập tin"** để nhận lại file gốc ban đầu với đầy đủ tên gọi và chất lượng như lúc chưa khoá.
+
+---
+
+## ⚠️ Lưu Ý CỰC KỲ QUAN TRỌNG
+
+> 🔴 **1. Không có tính năng "Quên mật khẩu":**
+> Do cơ chế bảo mật tuyệt đối không lưu dữ liệu, **nếu bạn quên mật khẩu, KHÔNG MỘT AI (kể cả tác giả) có thể giúp bạn lấy lại dữ liệu.** Hãy ghi nhớ thật kỹ hoặc lưu mật khẩu ở nơi an toàn!
+>
+> 🔴 **2. Giới hạn dung lượng tập tin khuyên dùng:**
+> Vì chương trình chạy trực tiếp bằng bộ nhớ RAM của trình duyệt web, để máy hoạt động trơn tru nhất và không bị văng trình duyệt, **bạn nên xử lý các tập tin có dung lượng dưới 200MB - 300MB**.
+>
+> 🔴 **3. Tự động bảo mật khi rời màn hình:**
+> Khi bạn chuyển qua ứng dụng khác hoặc ẩn trình duyệt, mật khẩu đang gõ trên màn hình sẽ **tự động xoá** để tránh người bên cạnh nhìn lén.
+
+---
+
+## ❓ Câu Hỏi Thường Gặp (FAQ)
+
+* **Hỏi: Người tạo ra trang web này có đọc được file hay tin nhắn của tôi không?**  
+  *Đáp:* **Hoàn toàn không!** Trang web này hoạt động 100% độc lập trên trình duyệt của máy bạn (Client-Side). Không có bất kỳ gói tin nào được gửi ra ngoài Internet.
+* **Hỏi: Tôi gửi file đã mã hoá qua Gmail/Zalo thì người khác có xem được không?**  
+  *Đáp:* Không. Kể cả tin tặc hay người nhận tải được file về, nếu không có mật khẩu của bạn thì file đó chỉ là một đống dữ liệu vô nghĩa không thể đọc được.
+* **Hỏi: Tôi có cần cài thêm phần mềm nào không?**  
+  *Đáp:* Không cần. Chỉ cần một trình duyệt web hiện đại (Google Chrome, Cốc Cốc, Safari, Edge, Firefox trên điện thoại hoặc máy tính) là sử dụng được ngay.
+
+---
 **Tác giả:** Dương Tấn Chánh  
-**Hình thức:** Ứng dụng Web đơn trang (Hoạt động 100% Offline trên trình duyệt)
-
----
-
-## 💡 Giới Thiệu
-Ứng dụng giúp bạn **bảo vệ an toàn nội dung tin nhắn, tài liệu và tập tin (file)** bằng mật mã cá nhân trước khi gửi qua Zalo, Messenger, Email hay lưu trữ riêng tư.
-
-Mọi thao tác mã hoá và giải mã đều được xử lý trực tiếp trên thiết bị của bạn (máy tính hoặc điện thoại) thông qua Web Crypto API tiêu chuẩn. Dữ liệu của bạn **không bao giờ bị gửi lên mạng hay bất kỳ máy chủ nào**, đảm bảo riêng tư và an toàn tuyệt đối.
-
----
-
-## ⭐ Các Tính Năng Nổi Bật
-
-### 🛡️ Bảo Mật An Toàn & Chuẩn Thuật Toán
-* **Mã hoá AES-GCM 256-bit:** Chuẩn mã hoá bảo mật cao với khoá PBKDF2 (600.000 vòng lặp) và muối ngẫu nhiên (Salt/IV).
-* **Hoạt động 100% Offline:** Không cần kết nối Internet, dữ liệu thuộc quyền kiểm soát hoàn toàn của bạn.
-
-### 🔗 Chia Sẻ Liên Kết Nhanh Cho Tin Nhắn (Zalo, Messenger...)
-* **Tạo link chia sẻ 1-chạm:** Mã hoá xong có thể bấm "Chia sẻ" để gửi ngay liên kết chứa sẵn dữ liệu mã hoá.
-* **Kiểm soát độ dài an toàn (< 1.900 ký tự):** Đảm bảo liên kết không bị ứng dụng nhắn tin (như Zalo có giới hạn 2.000 ký tự) cắt xén làm hỏng dữ liệu.
-* **Tự động điền dữ liệu khi mở link:** Người nhận chỉ cần nhấp vào liên kết, ứng dụng tự động tải dữ liệu vào ô nhập và tập trung con trỏ vào ô Mật mã để giải mã ngay.
-
-### ⚡ Nén Gọn Dung Lượng Tự Động
-* **Tự động nén dữ liệu:** Sử dụng thuật toán CompressionStream (Deflate/Gzip) giúp thu gọn kích thước văn bản và file trước khi mã hoá.
-* **Báo tỷ lệ nén:** Hiển thị rõ số % dung lượng đã nén gọn sau khi mã hoá.
-
-### ⏱️ Tự Động Bảo Vệ Tránh Lộ Mật Mã & Dữ Liệu
-* **Nút Sao chép & Chia sẻ tiện lợi:** Nhấp nút "Sao chép kết quả" hoặc "Chia sẻ" để gửi nhanh bản mã qua Zalo, Messenger.
-* **Tự động xoá mật mã khi rời ứng dụng:** Khi chuyển tab hoặc ẩn trình duyệt, mật mã bảo vệ sẽ tự động được xoá để chống nhìn lén.
-* **Tự động nhận diện bản mã:** Khi dán chuỗi Base64 vào ô nhập, hệ thống tự động phát hiện và sẵn sàng giải mã.
-
-### 📁 Mã Hoá & Khôi Phục Tập Tin (File) Đầy Đủ
-* **Hỗ trợ mọi định dạng:** Hình ảnh, tài liệu Word, Excel, PDF, video, tệp nén...
-* **Giữ nguyên tên tệp gốc:** Khi giải mã, tập tin được khôi phục chính xác tên và định dạng ban đầu.
-
----
-
-## 📖 Hướng Dẫn Sử Dụng
-
-### 1. Xử Lý Văn Bản / Tin Nhắn
-* **Mã Hoá Văn Bản:**
-  1. Mở tab **"Xử lý Văn bản"**.
-  2. Nhập hoặc dán nội dung cần bảo vệ vào ô nhập liệu.
-  3. Nhập mật mã bảo vệ do bạn tự đặt.
-  4. Bấm **"Mã hoá (có nén)"**.
-  5. Bản mã hiển thị bên dưới, bạn bấm **"Sao chép kết quả"** hoặc bấm **"Chia sẻ"** để gửi link trực tiếp qua Zalo/Messenger.
-
-* **Giải Mã Văn Bản:**
-  1. Nhấp vào liên kết chia sẻ nhận được (hoặc dán đoạn mã vào ô nhập).
-  2. Nhập đúng mật mã người gửi cung cấp.
-  3. Bấm **"Giải mã & Giải nén"** để xem nội dung ban đầu.
-
----
-
-### 2. Xử Lý Tập Tin (File)
-* **Mã Hoá File:**
-  1. Mở tab **"Xử lý Tập tin"**.
-  2. Kéo thả hoặc bấm chọn tập tin cần bảo vệ.
-  3. Nhập mật mã bảo vệ.
-  4. Bấm **"Mã hoá Tập tin (có nén)"**. Tệp có đuôi `.enc` sẽ tự động tải về máy.
-
-* **Giải Mã File:**
-  1. Chọn tệp `.enc` cần mở.
-  2. Nhập đúng mật mã.
-  3. Bấm **"Giải mã & Khôi phục Tập tin"** để tải về tập tin gốc ban đầu.
-
----
-
-## 📌 Tóm Tắt Ưu Điểm
-* 🛡️ **Bảo mật AES-256:** An toàn tuyệt đối, mã hoá & giải mã ngay trên thiết bị.
-* 🔗 **Chia sẻ thông minh:** Tự động điền dữ liệu qua URL, tương thích hoàn hảo với Zalo, Messenger.
-* ⚡ **Nén dữ liệu:** Giúp tiết kiệm dung lượng khi truyền gửi.
-* 📡 **Offline 100%:** Không tải dữ liệu lên máy chủ, đảm bảo riêng tư tuyệt đối.
+*Bảo mật — Riêng tư — Đơn giản — Tiện lợi*
