@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mã Hoá & Giải Mã AES-256 (Có Nén) - Dương Tấn Chánh</title>
+    <title>Mã Hoá & Giải Mã AES-256 - Dương Tấn Chánh</title>
     <style>
         *,
         *::before,
@@ -463,7 +463,7 @@
             color: var(--text-muted);
         }
 
-        /* Khu vực kéo thả và dán tập tin - Triệt tiêu lỗi nhấp nháy màn hình */
+        /* Khu vực kéo thả và dán tập tin */
         .drop-file-zone {
             border: 2px dashed var(--border-color);
             border-radius: var(--border-radius);
@@ -478,7 +478,6 @@
             transition: border-color 0.2s ease, background-color 0.2s ease;
         }
 
-        /* Vô hiệu hóa bắt sự kiện chuột trên thẻ con để chống nhấp nháy viền */
         .drop-file-zone * {
             pointer-events: none;
         }
@@ -594,18 +593,6 @@
             color: var(--text-muted);
         }
 
-        .result-ratio-indicator {
-            display: inline-block;
-            padding: 0.3rem 0.6rem;
-            border: 2px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            border-radius: 0.4rem;
-            font-size: 0.95rem;
-            font-weight: bold;
-            margin-top: 0.4rem;
-        }
-
         .file-success-message {
             margin-top: 0.5rem;
             color: var(--text-color);
@@ -669,7 +656,6 @@
             transition: width 0.15s linear;
         }
 
-        /* Vùng nhớ tạm sao chép ngầm - Không dùng style inline */
         .clipboard-hidden-area {
             position: fixed;
             left: -9999rem;
@@ -690,7 +676,6 @@
             flex-wrap: wrap;
         }
 
-        /* Lớp ẩn phần tử */
         .is-hidden {
             display: none;
         }
@@ -745,7 +730,7 @@
                     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    Phát hiện chuỗi mã hoá Base64 — Sẵn sàng giải mã
+                    Phát hiện chuỗi mã hoá DTC_ENC_01 — Sẵn sàng giải mã
                 </div>
                 <div id="share-link-alert" class="notification-alert alert-information is-hidden">
                     <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -846,11 +831,10 @@
                             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.368 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                             </svg>
-                            Chia sẻ
+                            Chia sẻ (Hash)
                         </button>
                     </div>
                 </div>
-                <div id="ratio-text-badge" class="result-ratio-indicator is-hidden"></div>
                 <div id="display-text-output" class="result-text-display"></div>
             </div>
 
@@ -874,7 +858,7 @@
                         </svg>
                     </div>
                     <p class="drop-zone-text">Bấm nút để chọn, kéo thả hoặc dán (Ctrl+V) tập tin vào đây</p>
-                    <p class="drop-zone-subtext">Hỗ trợ mọi định dạng tập tin trên máy tính và điện thoại</p>
+                    <p class="drop-zone-subtext">Mã hoá trực tiếp siêu tốc — Định dạng DTC_ENC_01 — Giới hạn 300MB</p>
                     <input type="file" id="input-file-element" class="hidden-file-input" onchange="onFileInputChange(this)">
                 </div>
 
@@ -990,7 +974,6 @@
                         Tải xuống tập tin
                     </button>
                 </div>
-                <div id="ratio-file-badge" class="result-ratio-indicator is-hidden"></div>
                 <p id="label-file-success-message" class="file-success-message">Tập tin đã được xử lý an toàn và sẵn sàng tải về.</p>
             </div>
 
@@ -1006,14 +989,17 @@
 
     <footer class="page-footer">
         <span>🛡️ Chuẩn mã hoá AES-256</span>
-        <span>⚡ Nén Gzip tối ưu dung lượng</span>
         <span>📡 Chạy Offline 100% không qua máy chủ</span>
     </footer>
 
     <!-- ============================================================ -->
-    <!-- MÃ NGUỒN WEB WORKER ĐA LUỒNG CPU (CHẠY NGẦM HOÀN TOÀN) -->
+    <!-- MÃ NGUỒN WEB WORKER ĐA LUỒNG CPU (OFFSET DTC_ENC_01 ĐÃ SỬA CHUẨN) -->
     <!-- ============================================================ -->
     <script id="worker-script" type="javascript/worker">
+        // Magic Header 10 bytes: 'DTC_ENC_01'
+        const MAGIC_HEADER = new Uint8Array([0x44, 0x54, 0x43, 0x5F, 0x45, 0x4E, 0x43, 0x5F, 0x30, 0x31]);
+        const MAGIC_LEN = 10;
+
         function convertArrayBufferToBase64(buffer) {
             const bytes = new Uint8Array(buffer);
             let binary = '';
@@ -1032,26 +1018,6 @@
                 bytes[i] = binaryString.charCodeAt(i);
             }
             return bytes.buffer;
-        }
-
-        async function compressWithGzip(uint8ArrayData) {
-            if (typeof CompressionStream === 'undefined') return uint8ArrayData;
-            const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new CompressionStream('gzip'));
-            const response = new Response(stream);
-            const buffer = await response.arrayBuffer();
-            return new Uint8Array(buffer);
-        }
-
-        async function decompressWithGzip(uint8ArrayData) {
-            if (typeof DecompressionStream === 'undefined') return uint8ArrayData;
-            try {
-                const stream = new Blob([uint8ArrayData]).stream().pipeThrough(new DecompressionStream('gzip'));
-                const response = new Response(stream);
-                const buffer = await response.arrayBuffer();
-                return new Uint8Array(buffer);
-            } catch (err) {
-                return uint8ArrayData;
-            }
         }
 
         async function deriveKeyPBKDF2(password, salt) {
@@ -1083,9 +1049,6 @@
             try {
                 if (action === 'encryptText') {
                     const rawBytes = new TextEncoder().encode(text);
-                    const originalSize = rawBytes.length;
-                    const compressedBytes = await compressWithGzip(rawBytes);
-
                     const salt = self.crypto.getRandomValues(new Uint8Array(16));
                     const iv = self.crypto.getRandomValues(new Uint8Array(12));
 
@@ -1093,22 +1056,22 @@
                     const ciphertextBuffer = await self.crypto.subtle.encrypt(
                         { name: "AES-GCM", iv: iv },
                         key,
-                        compressedBytes
+                        rawBytes
                     );
 
-                    const combined = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
-                    combined.set(salt, 0);
-                    combined.set(iv, salt.length);
-                    combined.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
+                    // Cấu trúc gói Văn bản: [DTC_ENC_01 (10B)] + [Salt (16B)] + [IV (12B)] + [Ciphertext + Tag]
+                    const combined = new Uint8Array(MAGIC_LEN + 16 + 12 + ciphertextBuffer.byteLength);
+                    combined.set(MAGIC_HEADER, 0);
+                    combined.set(salt, 10);
+                    combined.set(iv, 26);
+                    combined.set(new Uint8Array(ciphertextBuffer), 38);
 
                     const base64Result = convertArrayBufferToBase64(combined.buffer);
                     self.postMessage({
                         taskId,
                         type: 'success',
                         action,
-                        result: base64Result,
-                        originalSize,
-                        finalSize: base64Result.length
+                        result: base64Result
                     });
 
                 } else if (action === 'decryptText') {
@@ -1119,19 +1082,31 @@
                         throw new Error("Định dạng dữ liệu không hợp lệ (không phải chuỗi Base64 chuẩn).");
                     }
 
-                    // Tối ưu hoá: Bản mã chuẩn AES-GCM + PBKDF2 bắt buộc phải từ 44 bytes trở lên
-                    if (combinedBytes.length < 44) {
+                    // Tối thiểu: Magic 10B + Salt 16B + IV 12B + Tag 16B = 54 bytes
+                    if (combinedBytes.length < 54) {
                         throw new Error("Dữ liệu bản mã quá ngắn hoặc đã bị hư hỏng.");
                     }
 
-                    const salt = combinedBytes.slice(0, 16);
-                    const iv = combinedBytes.slice(16, 28);
-                    const ciphertext = combinedBytes.slice(28);
+                    // Nhận diện tức thì Magic Header 'DTC_ENC_01'
+                    let isMagicValid = true;
+                    for (let i = 0; i < MAGIC_LEN; i++) {
+                        if (combinedBytes[i] !== MAGIC_HEADER[i]) {
+                            isMagicValid = false;
+                            break;
+                        }
+                    }
+                    if (!isMagicValid) {
+                        throw new Error("Dữ liệu văn bản không đúng định dạng chuẩn của phần mềm (thiếu mã nhận diện DTC_ENC_01).");
+                    }
+
+                    const salt = combinedBytes.slice(10, 26);
+                    const iv = combinedBytes.slice(26, 38);
+                    const ciphertext = combinedBytes.slice(38);
 
                     const key = await deriveKeyPBKDF2(password, salt);
-                    let decryptedCompressedBuffer;
+                    let decryptedBuffer;
                     try {
-                        decryptedCompressedBuffer = await self.crypto.subtle.decrypt(
+                        decryptedBuffer = await self.crypto.subtle.decrypt(
                             { name: "AES-GCM", iv: iv },
                             key,
                             ciphertext
@@ -1140,9 +1115,7 @@
                         throw new Error("Mật mã không đúng hoặc dữ liệu bản mã đã bị chỉnh sửa.");
                     }
 
-                    const decompressedBytes = await decompressWithGzip(new Uint8Array(decryptedCompressedBuffer));
-                    const originalText = new TextDecoder().decode(decompressedBytes);
-
+                    const originalText = new TextDecoder().decode(decryptedBuffer);
                     self.postMessage({
                         taskId,
                         type: 'success',
@@ -1151,9 +1124,8 @@
                     });
 
                 } else if (action === 'encryptFile') {
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang đọc dữ liệu tập tin trong nền...', percent: 25 });
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang đọc dữ liệu tập tin...', percent: 20 });
                     
-                    // Tối ưu hoá tuyệt đối: Worker tự đọc đĩa trong nền (Dual-strategy Read), Luồng chính 0MB RAM
                     let rawBuffer;
                     try {
                         if (typeof file.arrayBuffer === 'function') {
@@ -1166,52 +1138,51 @@
                         throw new Error("Không thể đọc tập tin (tập tin có thể bị khoá bởi ứng dụng khác hoặc bị di chuyển).");
                     }
 
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang nén tập tin bằng Gzip...', percent: 45 });
-                    const rawUint8 = new Uint8Array(rawBuffer);
-                    const filenameBytes = new TextEncoder().encode(filename);
-                    const filenameLen = filenameBytes.length;
-
-                    const payload = new Uint8Array(2 + filenameLen + rawUint8.length);
-                    payload[0] = (filenameLen >> 8) & 0xff;
-                    payload[1] = filenameLen & 0xff;
-                    payload.set(filenameBytes, 2);
-                    payload.set(rawUint8, 2 + filenameLen);
-
-                    const compressedPayload = await compressWithGzip(payload);
-
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang tạo khoá mã hoá PBKDF2...', percent: 65 });
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang tạo khoá mã hoá PBKDF2...', percent: 50 });
                     const salt = self.crypto.getRandomValues(new Uint8Array(16));
                     const iv = self.crypto.getRandomValues(new Uint8Array(12));
 
                     const key = await deriveKeyPBKDF2(password, salt);
 
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang mã hoá AES-GCM 256-bit...', percent: 85 });
-                    const ciphertextBuffer = await self.crypto.subtle.encrypt(
-                        { name: "AES-GCM", iv: iv },
-                        key,
-                        compressedPayload
-                    );
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang mã hoá trực tiếp AES-GCM (Không nén)...', percent: 75 });
+                    
+                    const filenameBytes = new TextEncoder().encode(filename);
+                    const filenameLen = filenameBytes.length;
 
-                    const finalBuffer = new Uint8Array(salt.length + iv.length + ciphertextBuffer.byteLength);
-                    finalBuffer.set(salt, 0);
-                    finalBuffer.set(iv, salt.length);
-                    finalBuffer.set(new Uint8Array(ciphertextBuffer), salt.length + iv.length);
+                    // Header nhị phân: [DTC_ENC_01 (10B)] + [Salt (16B)] + [IV (12B)] + [NameLen (2B)] + [Filename]
+                    // Tổng kích thước cố định phần đầu: 10 + 16 + 12 + 2 = 40 bytes
+                    const header = new Uint8Array(40 + filenameLen);
+                    header.set(MAGIC_HEADER, 0);
+                    header.set(salt, 10);
+                    header.set(iv, 26);
+                    header[38] = (filenameLen >> 8) & 0xff;
+                    header[39] = filenameLen & 0xff;
+                    header.set(filenameBytes, 40);
+
+                    // AAD: Xác thực toàn vẹn Header mà không tốn RAM nối mảng dữ liệu
+                    const ciphertextBuffer = await self.crypto.subtle.encrypt(
+                        { name: "AES-GCM", iv: iv, additionalData: header },
+                        key,
+                        rawBuffer
+                    );
 
                     self.postMessage({ taskId, type: 'progress', status: 'Đang chuẩn bị tập tin...', percent: 95 });
 
-                    // Chuyển quyền sở hữu mảng nhị phân kết quả về luồng chính (Zero-copy)
+                    // Đóng gói mảng xuất
+                    const finalBuffer = new Uint8Array(header.length + ciphertextBuffer.byteLength);
+                    finalBuffer.set(header, 0);
+                    finalBuffer.set(new Uint8Array(ciphertextBuffer), header.length);
+
                     self.postMessage({
                         taskId,
                         type: 'success',
                         action,
                         finalBuffer: finalBuffer.buffer,
-                        originalSize: rawUint8.length,
-                        finalSize: finalBuffer.length,
                         outputFilename: filename + '.enc'
                     }, [finalBuffer.buffer]);
 
                 } else if (action === 'decryptFile') {
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang đọc dữ liệu tập tin trong nền...', percent: 25 });
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang đọc dữ liệu tập tin...', percent: 20 });
                     
                     let rawBuffer;
                     try {
@@ -1225,24 +1196,52 @@
                         throw new Error("Không thể đọc tập tin (tập tin có thể bị khoá bởi ứng dụng khác hoặc bị di chuyển).");
                     }
 
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang phân tích cấu trúc bản mã...', percent: 40 });
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang kiểm tra định dạng DTC_ENC_01...', percent: 40 });
                     const rawUint8 = new Uint8Array(rawBuffer);
-                    if (rawUint8.length < 44) {
+
+                    // Tối thiểu: Header 40B + Tag 16B = 56 bytes
+                    if (rawUint8.length < 56) {
                         throw new Error("Tập tin mã hoá bị hư hỏng hoặc không đúng định dạng.");
                     }
 
-                    const salt = rawUint8.slice(0, 16);
-                    const iv = rawUint8.slice(16, 28);
-                    const ciphertext = rawUint8.slice(28);
+                    let isMagicValid = true;
+                    for (let i = 0; i < MAGIC_LEN; i++) {
+                        if (rawUint8[i] !== MAGIC_HEADER[i]) {
+                            isMagicValid = false;
+                            break;
+                        }
+                    }
+                    if (!isMagicValid) {
+                        throw new Error("Tập tin không phải định dạng chuẩn của phần mềm (thiếu mã nhận diện DTC_ENC_01).");
+                    }
 
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải mã khoá PBKDF2...', percent: 60 });
+                    // SỬA CHUẨN OFFSET KHỚP 100% VỚI HEADER 10 BYTES
+                    const salt = rawUint8.slice(10, 26);
+                    const iv = rawUint8.slice(26, 38);
+                    const filenameLen = (rawUint8[38] << 8) | rawUint8[39];
+                    const headerLen = 40 + filenameLen;
+
+                    if (rawUint8.length < headerLen + 16) {
+                        throw new Error("Cấu trúc tiêu đề tập tin bị lỗi hoặc dữ liệu bị thiếu.");
+                    }
+
+                    const filenameBytes = rawUint8.slice(40, headerLen);
+                    let originalFilename = new TextDecoder().decode(filenameBytes);
+                    if (!originalFilename || originalFilename.trim() === '') {
+                        originalFilename = filename.replace(/\.enc$/i, '') || "file_da_giai_ma";
+                    }
+
+                    const header = rawUint8.slice(0, headerLen);
+                    const ciphertext = rawUint8.slice(headerLen);
+
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải mã khoá PBKDF2...', percent: 65 });
                     const key = await deriveKeyPBKDF2(password, salt);
 
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải mã AES-GCM...', percent: 80 });
-                    let decryptedCompressed;
+                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải mã dữ liệu AES-GCM...', percent: 85 });
+                    let decryptedBuffer;
                     try {
-                        decryptedCompressed = await self.crypto.subtle.decrypt(
-                            { name: "AES-GCM", iv: iv },
+                        decryptedBuffer = await self.crypto.subtle.decrypt(
+                            { name: "AES-GCM", iv: iv, additionalData: header },
                             key,
                             ciphertext
                         );
@@ -1250,33 +1249,13 @@
                         throw new Error("Mật mã không đúng hoặc tập tin đã bị thay đổi/hư hỏng.");
                     }
 
-                    self.postMessage({ taskId, type: 'progress', status: 'Đang giải nén tập tin...', percent: 92 });
-                    const decompressedPayload = await decompressWithGzip(new Uint8Array(decryptedCompressed));
-
-                    if (decompressedPayload.length < 2) {
-                        throw new Error("Cấu trúc tập tin không hợp lệ sau khi giải mã.");
-                    }
-
-                    const filenameLen = (decompressedPayload[0] << 8) | decompressedPayload[1];
-                    if (decompressedPayload.length < 2 + filenameLen) {
-                        throw new Error("Dữ liệu tên tập tin bị lỗi.");
-                    }
-
-                    const filenameBytes = decompressedPayload.slice(2, 2 + filenameLen);
-                    let originalFilename = new TextDecoder().decode(filenameBytes);
-                    const originalFileBytes = decompressedPayload.slice(2 + filenameLen);
-
-                    if (!originalFilename || originalFilename.trim() === '') {
-                        originalFilename = filename.replace(/\.enc$/i, '') || "file_da_giai_ma";
-                    }
-
                     self.postMessage({
                         taskId,
                         type: 'success',
                         action,
-                        finalBuffer: originalFileBytes.buffer,
+                        finalBuffer: decryptedBuffer,
                         outputFilename: originalFilename
-                    }, [originalFileBytes.buffer]);
+                    }, [decryptedBuffer]);
                 }
             } catch (error) {
                 self.postMessage({
@@ -1297,7 +1276,7 @@
         let objectUrlProcessedFile = null;
         let nameProcessedFile = null;
 
-        // Khởi tạo Inline Web Worker và thiết lập bộ bảo vệ chống sập luồng
+        // Khởi tạo Inline Web Worker và bắt lỗi cấp hệ thống
         let cryptoWorker = null;
         try {
             const workerBlob = new Blob([document.getElementById('worker-script').textContent], { type: 'application/javascript' });
@@ -1321,22 +1300,19 @@
             console.error("Lỗi khởi tạo Web Worker:", err);
         }
 
-        // Chặn trình duyệt tự ý mở file khi kéo thả ngoài khung
         window.addEventListener('dragover', (e) => e.preventDefault(), false);
         window.addEventListener('drop', (e) => e.preventDefault(), false);
 
-        // Chuyển đổi tab hiển thị
+        // Chuyển đổi tab hiển thị (Không xoá mật khẩu để đảm bảo trải nghiệm người dùng)
         function switchTab(targetTab) {
             document.querySelectorAll('.tab-content').forEach(element => element.classList.remove('is-active'));
             document.querySelectorAll('.tab-button').forEach(element => element.classList.remove('is-active'));
 
             document.getElementById(`tab-content-${targetTab}`).classList.add('is-active');
             document.getElementById(`tab-btn-${targetTab}`).classList.add('is-active');
-
-            clearSensitivePasswords();
         }
 
-        // Phương Án A: Chỉ tự động xoá mật mã khi người dùng ẩn hoặc rời khỏi trang
+        // Phương Án A: Chỉ tự động xoá mật mã khi người dùng ẩn hoặc rời khỏi trang web
         function clearSensitivePasswords() {
             const fieldPasswordText = document.getElementById('password-text-field');
             const fieldPasswordFile = document.getElementById('password-file-field');
@@ -1402,7 +1378,7 @@
             }
         }
 
-        // Đánh giá chi tiết theo giải thuật tăng tiến liên tục mới
+        // Bộ lọc đánh giá mật mã thông minh: Chống từ điển, chuỗi liên tiếp và biến thể Leetspeak
         function evaluatePasswordStrengthUI(inputId, containerId) {
             const inputField = document.getElementById(inputId);
             const containerBox = document.getElementById(containerId);
@@ -1441,13 +1417,36 @@
             if (hasNumbers) varietyCount++;
             if (hasSymbols) varietyCount++;
 
+            // Chuẩn hoá biến thể Leetspeak
+            const normalizedText = passwordText.toLowerCase()
+                .replace(/@/g, 'a')
+                .replace(/0/g, 'o')
+                .replace(/1/g, 'i')
+                .replace(/\$/g, 's')
+                .replace(/3/g, 'e')
+                .replace(/5/g, 's');
+
+            const commonWords = [
+                'password', 'matkhau', 'admin', 'qwerty', '123456', 'letmein', 
+                'welcome', 'iloveyou', 'abc123', 'monkey', 'dragon', 'football'
+            ];
+
+            let containsCommonWord = commonWords.some(word => normalizedText.includes(word));
+            let hasSequentialDigits = /(?:012|123|234|345|456|567|678|789|890|987|876|765|654|543|432|321|210)/.test(passwordText);
+            let hasRepeatedChars = /(.)\1{2,}/.test(passwordText);
+
             let strengthLabel = "Yếu";
             let fillPercentage = 25;
             let themeClass = "strength-description strength-weak";
             let barColor = "var(--color-danger)";
 
-            // Thang điểm tăng tiến liên tục, ngăn chặn chuỗi lặp đơn điệu
-            if ((passwordLength >= 20 && varietyCount >= 2) || (passwordLength >= 16 && varietyCount >= 4)) {
+            // Nếu phát hiện mẫu từ điển hoặc chuỗi ký tự liên tiếp -> Cưỡng chế hạ điểm
+            if (containsCommonWord || hasSequentialDigits || hasRepeatedChars) {
+                strengthLabel = "Yếu (Phát hiện từ điển hoặc chuỗi số/ký tự liên tiếp)";
+                fillPercentage = 25;
+                themeClass = "strength-description strength-weak";
+                barColor = "var(--color-danger)";
+            } else if ((passwordLength >= 20 && varietyCount >= 2) || (passwordLength >= 16 && varietyCount >= 4)) {
                 strengthLabel = "Rất mạnh";
                 fillPercentage = 100;
                 themeClass = "strength-description strength-very-strong";
@@ -1482,12 +1481,12 @@
             badgeElement.classList.toggle("is-invalid", !isValid);
         }
 
-        // Tự động nhận diện chuỗi Base64
         function detectInputFormat() {
             const rawVal = document.getElementById('input-text-data').value.trim();
             const badge = document.getElementById('detect-badge');
             const cleanVal = rawVal.replace(/\s+/g, '');
-            const isBase64Pattern = cleanVal.length >= 44 && cleanVal.length % 4 === 0 && /^[A-Za-z0-9+/=]+$/.test(cleanVal);
+            // Chuỗi mã hoá DTC_ENC_01 tối thiểu 72 ký tự Base64
+            const isBase64Pattern = cleanVal.length >= 72 && cleanVal.length % 4 === 0 && /^[A-Za-z0-9+/=]+$/.test(cleanVal);
 
             if (isBase64Pattern) {
                 badge.classList.remove('is-hidden');
@@ -1496,7 +1495,6 @@
             }
         }
 
-        // Định dạng dung lượng Byte chuẩn tiếng Việt
         function formatBytesToVietnamese(bytes) {
             if (bytes === 0) return '0 Byte';
             const k = 1024;
@@ -1507,10 +1505,8 @@
             return numStr + ' ' + units[i];
         }
 
-        // Khoá / Mở khoá tương tác khi Worker bận (Bảo vệ triệt để chống spam và đổi Tab gây lỗi)
         function setInteractionState(isBusy, context) {
             document.body.classList.toggle('is-processing', isBusy);
-            
             document.getElementById('tab-btn-text').disabled = isBusy;
             document.getElementById('tab-btn-file').disabled = isBusy;
 
@@ -1528,7 +1524,7 @@
         }
 
         // ============================================================
-        // XỬ LÝ VĂN BẢN VỚI WEB WORKER
+        // XỬ LÝ VĂN BẢN VỚI WEB WORKER (KHÔNG NÉN)
         // ============================================================
         function executeTextProcess(isEncryptMode) {
             const inputVal = document.getElementById('input-text-data').value;
@@ -1537,13 +1533,11 @@
             const resultPanel = document.getElementById('panel-text-result');
             const outputBox = document.getElementById('display-text-output');
             const errorAlert = document.getElementById('alert-text-error');
-            const ratioBadge = document.getElementById('ratio-text-badge');
             const resultTitle = document.getElementById('heading-text-result');
             const shareBtn = document.getElementById('btn-share-result-text');
 
             resultPanel.classList.add('is-hidden');
             errorAlert.classList.add('is-hidden');
-            ratioBadge.classList.add('is-hidden');
 
             if (!inputVal.trim()) {
                 showTextErrorMessage("Vui lòng nhập nội dung văn bản đầu vào.");
@@ -1567,29 +1561,11 @@
                 if (e.data.type === 'error') {
                     showTextErrorMessage(e.data.message);
                 } else if (e.data.type === 'success') {
-                    if (action === 'encryptText') {
-                        let ratioText = `Kích thước gốc: ${formatBytesToVietnamese(e.data.originalSize)} | Bản mã Base64: ${formatBytesToVietnamese(e.data.finalSize)}`;
-                        if (e.data.originalSize > 0) {
-                            const diff = e.data.originalSize - e.data.finalSize;
-                            if (diff > 0) {
-                                const percent = ((diff / e.data.originalSize) * 100).toFixed(1).replace('.', ',');
-                                ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
-                            } else {
-                                const percent = ((Math.abs(diff) / e.data.originalSize) * 100).toFixed(1).replace('.', ',');
-                                ratioText += ` (+${percent}% do phần đệm mã hoá/Base64)`;
-                            }
-                        }
-                        ratioBadge.textContent = ratioText;
-                        ratioBadge.classList.remove('is-hidden');
-                        resultTitle.textContent = "✓ Mã hoá & Nén Gzip thành công!";
-                        outputBox.textContent = e.data.result;
-                        resultPanel.classList.remove('is-hidden');
-                        if (shareBtn) shareBtn.classList.remove('is-hidden');
-                    } else {
-                        resultTitle.textContent = "✓ Giải mã & Giải nén thành công!";
-                        outputBox.textContent = e.data.result;
-                        resultPanel.classList.remove('is-hidden');
-                        if (shareBtn) shareBtn.classList.add('is-hidden');
+                    resultTitle.textContent = isEncryptMode ? "✓ Mã hoá thành công!" : "✓ Giải mã thành công!";
+                    outputBox.textContent = e.data.result;
+                    resultPanel.classList.remove('is-hidden');
+                    if (shareBtn) {
+                        shareBtn.classList.toggle('is-hidden', !isEncryptMode);
                     }
                 }
             };
@@ -1636,6 +1612,7 @@
             }
         }
 
+        // Chia sẻ liên kết chuẩn Zero-Knowledge: Dùng Hash Fragment (#data=) để không gửi bản mã lên Web Server
         function shareEncryptedLink() {
             const outputBox = document.getElementById('display-text-output');
             if (!outputBox) return;
@@ -1648,12 +1625,12 @@
             }
 
             const baseUrl = window.location.href.split('?')[0].split('#')[0];
-            const shareUrl = baseUrl + '?data=' + encodeURIComponent(base64Text);
+            const shareUrl = baseUrl + '#data=' + encodeURIComponent(base64Text);
 
             if (navigator.share) {
                 navigator.share({
                     title: 'Dữ liệu mã hoá - Dương Tấn Chánh',
-                    text: 'Dữ liệu mã hoá an toàn:\n' + base64Text + '\n\nLiên kết tự động giải mã:',
+                    text: 'Dữ liệu mã hoá an toàn:\n' + base64Text + '\n\nLiên kết tự động giải mã (Zero-Knowledge):',
                     url: shareUrl
                 }).catch((err) => {
                     if (err.name !== 'AbortError') {
@@ -1703,20 +1680,34 @@
             }, 2000);
         }
 
+        // Tự động nhận diện dữ liệu bóc tách trực tiếp (Bảo toàn 100% ký tự '+' trong Base64)
         function checkUrlSharedPayload() {
             let sharedData = '';
-            try {
-                if (window.location.search) {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    sharedData = urlParams.get('data') || urlParams.get('d') || '';
+            
+            // Ưu tiên đọc từ Hash Fragment (#data=)
+            if (window.location.hash) {
+                const hashContent = window.location.hash.replace(/^#/, '');
+                const match = hashContent.match(/(?:^|&)data=([^&]*)/);
+                if (match && match[1]) {
+                    try {
+                        sharedData = decodeURIComponent(match[1]);
+                    } catch (e) {
+                        sharedData = match[1];
+                    }
                 }
-            } catch (e) {}
+            }
 
-            if (!sharedData && window.location.hash) {
-                try {
-                    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
-                    sharedData = hashParams.get('data') || hashParams.get('d') || '';
-                } catch (e) {}
+            // Fallback đọc từ Query String (?data=) nếu có
+            if (!sharedData && window.location.search) {
+                const searchContent = window.location.search.replace(/^\?/, '');
+                const match = searchContent.match(/(?:^|&)data=([^&]*)/);
+                if (match && match[1]) {
+                    try {
+                        sharedData = decodeURIComponent(match[1]);
+                    } catch (e) {
+                        sharedData = match[1];
+                    }
+                }
             }
 
             if (sharedData) {
@@ -1748,7 +1739,7 @@
         window.addEventListener('popstate', checkUrlSharedPayload);
 
         // ============================================================
-        // XỬ LÝ TẬP TIN VỚI WEB WORKER & DIRECT FILE TRANSFER (0MS)
+        // XỬ LÝ TẬP TIN VỚI WEB WORKER (KHÔNG NÉN - SIÊU TỐC)
         // ============================================================
         const dropAreaElement = document.getElementById('area-drop-file');
 
@@ -1793,6 +1784,13 @@
         });
 
         function loadSelectedFile(file) {
+            // Chốt chặn an toàn: Ngăn chặn tràn RAM trên thiết bị di động
+            if (file.size > 300 * 1024 * 1024) {
+                document.getElementById('input-file-element').value = '';
+                showFileErrorMessage("Dung lượng tập tin vượt quá giới hạn an toàn của trình duyệt (tối đa 300MB). Vui lòng chọn tập tin nhỏ hơn.");
+                return;
+            }
+
             activeChosenFile = file;
             document.getElementById('label-selected-filename').textContent = file.name;
             document.getElementById('label-selected-filesize').textContent = formatBytesToVietnamese(file.size);
@@ -1845,12 +1843,10 @@
             const passwordVal = document.getElementById('password-file-field').value;
             const resultPanel = document.getElementById('panel-file-result');
             const errorAlert = document.getElementById('alert-file-error');
-            const ratioBadge = document.getElementById('ratio-file-badge');
             const successMsg = document.getElementById('label-file-success-message');
 
             resultPanel.classList.add('is-hidden');
             errorAlert.classList.add('is-hidden');
-            ratioBadge.classList.add('is-hidden');
 
             if (!activeChosenFile) {
                 showFileErrorMessage("Vui lòng chọn, kéo thả hoặc dán một tập tin để xử lý.");
@@ -1858,6 +1854,11 @@
             }
             if (!passwordVal) {
                 showFileErrorMessage("Vui lòng nhập mật mã bảo vệ tập tin.");
+                return;
+            }
+
+            if (activeChosenFile.size > 300 * 1024 * 1024) {
+                showFileErrorMessage("Tập tin vượt quá ngưỡng 300MB an toàn của trình duyệt.");
                 return;
             }
 
@@ -1893,20 +1894,7 @@
                         nameProcessedFile = evt.data.outputFilename;
 
                         if (action === 'encryptFile') {
-                            let ratioText = `Dung lượng gốc: ${formatBytesToVietnamese(evt.data.originalSize)} | Đã mã hoá: ${formatBytesToVietnamese(evt.data.finalSize)}`;
-                            if (evt.data.originalSize > 0) {
-                                const diff = evt.data.originalSize - evt.data.finalSize;
-                                if (diff > 0) {
-                                    const percent = ((diff / evt.data.originalSize) * 100).toFixed(1).replace('.', ',');
-                                    ratioText += ` (Tiết kiệm ${percent}% dung lượng nhờ nén Gzip)`;
-                                } else {
-                                    const percent = ((Math.abs(diff) / evt.data.originalSize) * 100).toFixed(1).replace('.', ',');
-                                    ratioText += ` (+${percent}% dung lượng do phần đệm mã hoá)`;
-                                }
-                            }
-                            ratioBadge.textContent = ratioText;
-                            ratioBadge.classList.remove('is-hidden');
-                            successMsg.textContent = `Tập tin "${evt.data.outputFilename}" đã được mã hoá thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
+                            successMsg.textContent = `Tập tin "${evt.data.outputFilename}" đã được mã hoá siêu tốc thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
                             document.getElementById('heading-file-result').textContent = "✓ Mã hoá tập tin thành công";
                         } else {
                             successMsg.textContent = `Tập tin gốc "${evt.data.outputFilename}" đã được phục hồi thành công. Nhấp nút "Tải xuống tập tin" để lưu về máy.`;
@@ -1920,7 +1908,7 @@
 
             cryptoWorker.addEventListener('message', onWorkerFileResponse);
 
-            // Tối ưu hoá tối đa: Bắn trực tiếp con trỏ File Handle sang Worker trong 0ms (Luồng chính 0MB RAM)
+            // Chuyển con trỏ tập tin sang Worker trong 0ms (Luồng chính 0MB RAM)
             cryptoWorker.postMessage({
                 taskId,
                 action,
